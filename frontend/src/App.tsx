@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { AuthGate } from './components/AuthGate'
 import { ToastProvider } from './components/Toasts'
 import { MusicDrawer } from './music/MusicDrawer'
 import { PlayerBar } from './music/PlayerBar'
@@ -26,17 +27,19 @@ export default function App() {
   const route = useRoute()
   const online = useOnline()
   return (
-    <ToastProvider>
-      {!online && (
-        <div className="banner" role="status">
-          You are offline. Changes stay in this window until the connection returns.
-        </div>
-      )}
-      <PlayerProvider>
-        {route.name === 'song' ? <SongEditor key={route.id} id={route.id} /> : <Dashboard />}
-        <MusicDrawer />
-        <PlayerBar />
-      </PlayerProvider>
-    </ToastProvider>
+    <AuthGate>
+      <ToastProvider>
+        {!online && (
+          <div className="banner" role="status">
+            You are offline. Changes stay in this window until the connection returns.
+          </div>
+        )}
+        <PlayerProvider>
+          {route.name === 'song' ? <SongEditor key={route.id} id={route.id} /> : <Dashboard />}
+          <MusicDrawer />
+          <PlayerBar />
+        </PlayerProvider>
+      </ToastProvider>
+    </AuthGate>
   )
 }

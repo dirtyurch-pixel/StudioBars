@@ -33,3 +33,6 @@ Never commit `.env`, lyrics, databases or audio. See `.gitignore` and `docs/plan
 - Meanings and word relations: WordNet 3.0, Princeton University (licence in `licenses/wordnet-LICENSE.txt`).
 - Word familiarity (optional): derived from `wordfreq` (CC BY-SA 4.0), see `licenses/wordfreq-NOTICE.txt`.
 - Optional online helper: this app uses the Datamuse API (https://www.datamuse.com/api/).
+
+## Using it on a phone or tablet (same Wi-Fi)
+On the computer that holds your songs: `STUDIO_BARS_ACCESS_PIN=123456 ./scripts/serve.sh` (Windows: `$env:STUDIO_BARS_ACCESS_PIN="123456"; .\scripts\serve.ps1`). Open the address it prints on your phone, enter the PIN, then use the browser's "Add to home screen". The computer must stay on. See `docs/decisions/0002-phone-access.md`.

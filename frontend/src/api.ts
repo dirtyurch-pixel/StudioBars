@@ -84,6 +84,8 @@ async function request(
   } catch {
     /* non-JSON error body */
   }
+  if (res.status === 401 && detail.code === 'PIN_REQUIRED')
+    window.dispatchEvent(new Event('sb-locked'))
   const message =
     typeof detail.message === 'string'
       ? detail.message
@@ -329,3 +331,9 @@ export const aiAccept = (id: string) =>
   json<{ ok: boolean }>(`/api/ai/suggestions/${id}/accept`, body('POST'))
 export const aiTest = () =>
   json<{ ok: boolean; month: AiStatus['usage'] }>('/api/ai/test', body('POST'))
+
+// ---------------------------------------------------------------- PIN lock (phone / tablet access)
+export const authStatus = () => json<{ required: boolean; ok: boolean }>('/api/auth/status')
+export const authLogin = (pin: string) =>
+  json<{ required: boolean; ok: boolean }>('/api/auth/login', body('POST', { pin }))
+export const authLogout = () => json<{ ok: boolean }>('/api/auth/logout', body('POST'))

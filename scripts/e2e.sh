@@ -21,7 +21,7 @@ cleanup() {
     echo "=== e2e failed (exit $code): backend log tail ==="; tail -40 "$TMP/back.log" 2>/dev/null || true
     echo "=== fake online service log ==="; tail -5 "$TMP/fake.log" 2>/dev/null || true
   fi
-  kill ${BACK:-} ${FRONT:-} ${FAKE:-} ${FAKEAI:-} 2>/dev/null || true; rm -rf "$TMP"
+  kill ${PHONE:-} ${BACK:-} ${FRONT:-} ${FAKE:-} ${FAKEAI:-} 2>/dev/null || true; rm -rf "$TMP"
 }
 trap cleanup EXIT
 node "$ROOT/e2e/fake_datamuse.cjs" 8765 >"$TMP/fake.log" 2>&1 &
@@ -39,6 +39,13 @@ for i in $(seq 1 40); do
   curl -sf localhost:8000/health >/dev/null && curl -sf localhost:5173 >/dev/null && break
   sleep 0.5
 done
+# phone/tablet mode: the built app served by the backend on ONE address, locked with a PIN (separate throwaway database)
+cd "$ROOT/frontend"
+VITE_API_URL="" node node_modules/vite/bin/vite.js build --outDir "$TMP/web" --emptyOutDir >"$TMP/build.log" 2>&1
+cd "$ROOT/backend"
+STUDIO_BARS_DB="$TMP/phone.db" STUDIO_BARS_ACCESS_PIN=246810 STUDIO_BARS_SERVE_FRONTEND="$TMP/web" \
+  uvicorn app.main:app --host 127.0.0.1 --port 8100 >"$TMP/phone.log" 2>&1 & PHONE=$!
+for i in $(seq 1 40); do curl -sf localhost:8100/health >/dev/null && break; sleep 0.5; done
 cd "$ROOT/e2e"
 run() { if [ -d node_modules ]; then node "$1"; else NODE_PATH="${NODE_PATH:-$(npm root -g)}" node "$1"; fi; }
 run phase1.cjs
@@ -46,3 +53,4 @@ run phase1b.cjs
 run phase2.cjs
 run phase3.cjs
 run phase4.cjs
+run phase7.cjs

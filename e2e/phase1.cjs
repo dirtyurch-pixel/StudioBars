@@ -11,10 +11,26 @@ const check = (name, ok, extra = '') => {
 const saved = (p) => p.locator('.save-saved').waitFor({ timeout: 8000 })
 const line = (p, n) => p.getByLabel(new RegExp(`^Line ${n}( \\(locked\\))?$`))
 
+
+// Diagnostics printed if a suite crashes: what the page was showing and which requests failed.
+const net = []
+let CURRENT = null
+const watch = (p) => {
+  CURRENT = p
+  p.on('requestfailed', (r) => net.push(`FAILED ${r.method()} ${r.url().slice(0, 110)} ${r.failure()?.errorText || ''}`))
+  p.on('response', (r) => { if (r.status() >= 400) net.push(`HTTP ${r.status()} ${r.request().method()} ${r.url().slice(0, 110)}`) })
+  p.on('console', (m) => { if (m.type() === 'error') net.push(`CONSOLE ${m.text().slice(0, 140)}`) })
+}
+const dump = async () => {
+  if (CURRENT) console.error('PAGE TEXT:', ((await CURRENT.locator('body').innerText({ timeout: 2000 }).catch(() => '(page unreadable)')) || '').replace(/\s+/g, ' ').slice(0, 700))
+  console.error('NETWORK PROBLEMS (last 10):', JSON.stringify(net.slice(-10), null, 1))
+}
+
 ;(async () => {
   const browser = await chromium.launch()
   const ctx = await browser.newContext({ acceptDownloads: true, viewport: { width: 1280, height: 900 } })
   const page = await ctx.newPage()
+  watch(page)
   const errors = []
   page.on('pageerror', (e) => errors.push(String(e)))
 
@@ -219,7 +235,8 @@ const line = (p, n) => p.getByLabel(new RegExp(`^Line ${n}( \\(locked\\))?$`))
   const failed = results.filter((r) => !r.ok)
   console.log(`\n${results.length - failed.length}/${results.length} browser checks passed`)
   process.exit(failed.length ? 1 : 0)
-})().catch((e) => {
+})().catch(async (e) => {
+  await dump()
   console.error('E2E CRASHED:', e.message)
   process.exit(2)
 })

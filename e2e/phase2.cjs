@@ -10,10 +10,26 @@ const check = (name, ok, extra = '') => {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const line = (p, n) => p.getByLabel(new RegExp(`^Line ${n}( \\(locked\\))?$`))
 
+
+// Diagnostics printed if a suite crashes: what the page was showing and which requests failed.
+const net = []
+let CURRENT = null
+const watch = (p) => {
+  CURRENT = p
+  p.on('requestfailed', (r) => net.push(`FAILED ${r.method()} ${r.url().slice(0, 110)} ${r.failure()?.errorText || ''}`))
+  p.on('response', (r) => { if (r.status() >= 400) net.push(`HTTP ${r.status()} ${r.request().method()} ${r.url().slice(0, 110)}`) })
+  p.on('console', (m) => { if (m.type() === 'error') net.push(`CONSOLE ${m.text().slice(0, 140)}`) })
+}
+const dump = async () => {
+  if (CURRENT) console.error('PAGE TEXT:', ((await CURRENT.locator('body').innerText({ timeout: 2000 }).catch(() => '(page unreadable)')) || '').replace(/\s+/g, ' ').slice(0, 700))
+  console.error('NETWORK PROBLEMS (last 10):', JSON.stringify(net.slice(-10), null, 1))
+}
+
 ;(async () => {
   const browser = await chromium.launch()
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } })
   const page = await ctx.newPage()
+  watch(page)
   const errors = []
   const hosts = new Set()
   let analyzeCalls = 0
@@ -215,7 +231,8 @@ const line = (p, n) => p.getByLabel(new RegExp(`^Line ${n}( \\(locked\\))?$`))
   const failed = results.filter((r) => !r.ok)
   console.log(`\n${results.length - failed.length}/${results.length} Phase 2 browser checks passed`)
   process.exit(failed.length ? 1 : 0)
-})().catch((e) => {
+})().catch(async (e) => {
+  await dump()
   console.error('E2E 2 CRASHED:', e.message.split('\n')[0], '\n', (e.stack || '').split('\n').filter((l) => l.includes('phase2.cjs')).slice(0, 3).join('\n'))
   process.exit(2)
 })

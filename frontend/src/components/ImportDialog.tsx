@@ -37,7 +37,8 @@ export function ImportDialog({
     const content = await f.text()
     setText(content)
     setFormat(guessFormat(f.name, content))
-    if (!title) setTitle(f.name.replace(/\.[^.]+$/, ''))
+    // use the CURRENT title: the user may have typed one while the file was being read
+    setTitle((current) => current || f.name.replace(/\.[^.]+$/, ''))
   }
 
   async function runPreview() {

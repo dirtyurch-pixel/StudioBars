@@ -55,6 +55,7 @@ const dump = async () => {
   const typeWord = async (w) => {
     await page.getByLabel('Word to look up').fill(w)
     await page.getByRole('button', { name: 'Look up' }).click()
+    await page.getByLabel(`About ${w}`).waitFor({ timeout: 8000 }) // the previous word's answer stays visible until this arrives
   }
   const sense = (name) => page.getByRole('article', { name })
 
@@ -69,7 +70,7 @@ const dump = async () => {
   check('the word\'s pronunciation is shown', await page.locator('.words-panel .ipa').first().isVisible())
 
   await line(page, 2).click()
-  await page.getByRole('article', { name: /meaning/ }).first().waitFor()
+  await page.getByLabel('About fast').waitFor({ timeout: 8000 })
   check('moving to another line looks up that line\'s last word (fast)', (await page.getByLabel('Word to look up').inputValue()) === 'fast')
   await page.getByRole('button', { name: /^adjective \(/ }).click()
   const adjCard = (await page.getByRole('article').allInnerTexts()).join('\n')

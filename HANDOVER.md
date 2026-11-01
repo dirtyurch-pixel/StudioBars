@@ -18,7 +18,7 @@
 
 ## Phase 3 test evidence (Linux container; not Windows, not a phone/tablet)
 - Backend: 255 pytest tests (all earlier ones plus WordNet file integrity and licence, reading and base forms, meanings by sense, synonym shift flags, line-aware ranking, every heteronym checked against the dictionary, the online helper incl. the real network code against a local test server, phrase bank, phrase rhymes, part-of-speech filter, security cases).
-- Frontend: 138 Vitest tests (Words panel, online helper, phrase bank, phrase rhymes, Rhymes panel changes).
+- Frontend: 141 Vitest tests (Words panel, online helper, phrase bank, phrase rhymes, Rhymes panel changes).
 - Browser: 62 Phase 3 checks plus 37 + 48 + 45 from earlier phases, run in sequence on one server, repeated.
 - One real request to the live Datamuse service (the single word "fade") confirmed the adapter handles its actual answers.
 
@@ -44,6 +44,8 @@
 - After opening a phrase's rhymes once, the Rhymes tab kept jumping back to phrase mode every time. The request is now used once.
 - The Words tab asked the server again on every keystroke and flickered; it now waits for a pause and keeps the last answer on screen.
 - Four entries in my heteronym table disagreed with the dictionary; found by a consistency test and corrected.
+- **Import dialog race (an old Phase 1 bug, found only by CI):** reading a chosen file takes a moment, and when it finished the dialog filled the title from the file name using a stale copy of the title, so a title you had already typed was replaced by the file name ("e2e"). It never failed on the fast development machine; it failed on the slower GitHub runner. Fixed (the current title is checked when applying), with a regression test proven to fail on the old code. To catch such things sooner, every browser suite now prints the page text and failed requests when it crashes, and the test script prints the backend log.
+- The online helper's rate limit was too tight for tapping through words quickly (a burst of 5); it is now a burst of 10 then about 2 per second.
 
 ## Open items for owner
 - Whether to keep the online helper once Datamuse needs a key (or leave it off).

@@ -1,5 +1,10 @@
 import type {
+  Analysis,
   Content,
+  CustomPron,
+  PhoneticsStatus,
+  RhymeResponse,
+  WordInfo,
   Genre,
   ImportPreview,
   PlaybackSaved,
@@ -203,3 +208,41 @@ export const getSongLink = (songId: string) =>
   json<SongAudioLink | null>(`/api/songs/${songId}/audio-link`)
 export const saveSongLink = (songId: string, link: Partial<SongAudioLink>) =>
   json<SongAudioLink | null>(`/api/songs/${songId}/audio-link`, body('PUT', link))
+
+// ---------------------------------------------------------------- phonetics (all local, no internet)
+export const getPhoneticsStatus = () => json<PhoneticsStatus>('/api/phonetics/status')
+export const analyzeLines = (lines: string[], signal?: AbortSignal) =>
+  json<Analysis>('/api/phonetics/analyze', body('POST', { lines }), signal)
+export const lookupWord = (word: string, signal?: AbortSignal) =>
+  json<WordInfo>(`/api/phonetics/word?word=${encodeURIComponent(word)}`, undefined, signal)
+export type RhymeQuery = {
+  word: string
+  qualities: string[]
+  includeIdentical: boolean
+  minSyllables?: number
+  maxSyllables?: number
+  endings: string[]
+  familiarity: 'any' | 'familiar' | 'common'
+  limit: number
+}
+export const searchRhymes = (q: RhymeQuery, signal?: AbortSignal) => {
+  const p = new URLSearchParams({
+    word: q.word,
+    qualities: q.qualities.join(','),
+    include_identical: String(q.includeIdentical),
+    endings: q.endings.join(','),
+    familiarity: q.familiarity,
+    limit: String(q.limit),
+  })
+  if (q.minSyllables) p.set('min_syllables', String(q.minSyllables))
+  if (q.maxSyllables) p.set('max_syllables', String(q.maxSyllables))
+  return json<RhymeResponse>(`/api/phonetics/rhymes?${p}`, undefined, signal)
+}
+export const listCustomPron = () => json<CustomPron[]>('/api/phonetics/custom')
+export const saveCustomPron = (
+  word: string,
+  data: { sounds_like?: string; phones?: string; note?: string },
+) => json<CustomPron>(`/api/phonetics/custom/${encodeURIComponent(word)}`, body('PUT', data))
+export const deleteCustomPron = async (word: string) => {
+  await request(`/api/phonetics/custom/${encodeURIComponent(word)}`, body('DELETE'))
+}

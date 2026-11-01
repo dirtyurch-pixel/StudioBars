@@ -77,4 +77,120 @@ describe('Pad', () => {
     fireEvent.click(screen.getByLabelText('Notes for line 2 (1)'))
     expect(p.onNotes).toHaveBeenCalledWith('b')
   })
+
+  describe('syllables and rhyme colours', () => {
+    const word = (text: string, start: number, o = {}) => ({
+      text,
+      start,
+      end: start + text.length,
+      status: 'known' as const,
+      syllables_min: 1,
+      syllables_max: 1,
+      is_end: false,
+      family: null as number | null,
+      ...o,
+    }) // fmt: skip
+    const analysis = (lineText: string, over = {}) => ({
+      byId: new Map([
+        [
+          'a',
+          {
+            text: lineText,
+            syllables: { min: 2, max: 2, exact: true, guessed: false },
+            words: [word('free', 0, { family: 0, is_end: true }), word('line', 5)],
+          },
+        ],
+      ]),
+      families: [{ id: 0, sound: 'iː', size: 2, end_count: 2 }],
+      unknown: [],
+      failed: false,
+      ...over,
+    }) // fmt: skip
+
+    function draw(extra = {}) {
+      const base = {
+        section,
+        activeLineId: null,
+        focusReq: null,
+        onText: vi.fn(),
+        onSplit: vi.fn(),
+        onBackspaceEmpty: vi.fn(),
+        onMergeUp: vi.fn(),
+        onPaste: vi.fn(() => true),
+        onActive: vi.fn(),
+        onToggleLock: vi.fn(),
+        onBlocked: vi.fn(),
+        onNotes: vi.fn(),
+      } // fmt: skip
+      return render(<Pad {...base} {...extra} />)
+    }
+
+    it('shows estimated syllables in the margin, not line numbers', () => {
+      const { container } = draw({
+        analysis: analysis('free line'),
+        syllableDisplay: 'syllables',
+        highlight: 'off',
+      })
+      const nums = [...container.querySelectorAll('.pad-num')].map((n) => n.textContent)
+      expect(nums[0]).toBe('2')
+      expect(container.querySelector('.pad-num')).toHaveAttribute(
+        'title',
+        expect.stringContaining('Estimated syllables'),
+      )
+    })
+
+    it('can show line numbers instead', () => {
+      const { container } = draw({ analysis: analysis('free line'), syllableDisplay: 'numbers' })
+      expect([...container.querySelectorAll('.pad-num')].map((n) => n.textContent)).toEqual([
+        '1',
+        '2',
+      ])
+    })
+
+    it('dims a number whose line has changed since it was counted', () => {
+      const { container } = draw({
+        analysis: analysis('free line (old text)'),
+        syllableDisplay: 'syllables',
+      })
+      expect(container.querySelector('.pad-num')).toHaveClass('stale')
+    })
+
+    it('says so when the server cannot be reached', () => {
+      const { container } = draw({
+        analysis: { byId: new Map(), families: [], unknown: [], failed: true },
+        syllableDisplay: 'syllables',
+      })
+      expect(container.querySelector('.pad-num')?.textContent).toBe('–')
+    })
+
+    it('draws a colour behind rhyming words without changing the line text', () => {
+      const { container } = draw({
+        analysis: analysis('free line'),
+        syllableDisplay: 'syllables',
+        highlight: 'all',
+      })
+      const mark = container.querySelector('.pad-hl .rf')
+      expect(mark?.textContent).toBe('free')
+      expect(container.querySelector('.pad-hl')).toHaveAttribute('aria-hidden', 'true')
+      expect(screen.getByLabelText('Line 1')).toHaveValue('free line')
+    })
+
+    it('draws nothing when colours are off', () => {
+      const { container } = draw({
+        analysis: analysis('free line'),
+        syllableDisplay: 'syllables',
+        highlight: 'off',
+      })
+      expect(container.querySelector('.pad-hl')).toBeNull()
+    })
+
+    it('reports a selected single word for lookup', () => {
+      const onSelectWord = vi.fn()
+      draw({ onSelectWord })
+      const input = screen.getByLabelText('Line 1') as HTMLInputElement
+      input.setSelectionRange(0, 4)
+      fireEvent.select(input)
+      expect(onSelectWord).toHaveBeenCalledWith('free')
+    })
+  })
 })

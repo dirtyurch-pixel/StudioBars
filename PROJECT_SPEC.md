@@ -13,3 +13,6 @@ Responsive Royal Blue & Amber UI with yellow ruled pad; song list (create, delet
 
 ## Phase 1B delivers
 Local music library (consented copy into private storage, validated by extension and contents), personal playlists (create/rename/delete, reorder, repeated tracks, delete without touching audio), a persistent player (play/pause, seek, previous/next, volume/mute, shuffle, repeat off/all/one, A–B loop, 0.75×–1.25× speed with pitch preserved, play-next queue), missing-file recovery with relink, remembered playback state, and the Writing Session foundation (song linked to music with saved loop, speed and position). See `docs/decisions/0004-music-player.md`.
+
+## Phase 2 delivers
+Offline pronunciation dictionary (CMU), syllable estimates per line (ranges for ambiguous words, `~` for guesses), rhyme finder (perfect / near / same vowels / same ending, plus homophones and rich rhymes on request) with syllable, ending-type and word-familiarity filters, rhyme-family colours for end and internal rhymes (on/off), word lookup from the cursor or selection, ambiguous-pronunciation chooser, unknown-word handling, and personal pronunciations. See `docs/decisions/0005-pronunciation-and-rhymes.md`.

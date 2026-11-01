@@ -129,6 +129,16 @@ MIGRATIONS: list[str] = [
         updated_at TEXT NOT NULL
     );
     """,
+    # Version 3: the owner's own word pronunciations (one per word; replaces the dictionary).
+    """
+    CREATE TABLE custom_pronunciations (
+        word TEXT PRIMARY KEY,
+        phones TEXT NOT NULL,
+        note TEXT NOT NULL DEFAULT '',
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+    """,
 ]
 
 

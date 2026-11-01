@@ -1,0 +1,34 @@
+NOTICE for backend/app/phonetics/data/frequency_en.tsv
+=======================================================
+
+This file is a DERIVED WORK: the 60,000 most frequent English words from the "large" English
+word list of the `wordfreq` package (version 3.1.1, by Robyn Speer), each with its Zipf
+frequency value. It is made with scripts/build_frequency_data.py.
+
+LICENCE OF THIS DATA FILE: Creative Commons Attribution-ShareAlike 4.0 International
+(https://creativecommons.org/licenses/by-sa/4.0/). If you redistribute or adapt this file you
+must keep this notice, give the credits below, and share your version under the same licence.
+This applies to this data file only. The Studio Bars source code is not changed by it, and the
+app works without the file (the "how familiar is this word" feature is simply switched off).
+
+wordfreq's code is licensed under the Apache License 2.0. Its data files may be redistributed
+under CC BY-SA 4.0 and contain data from the sources below. Credits required by those sources:
+
+- Google Books Ngrams and Syntactic Ngrams (http://books.google.com/ngrams). Google asks for
+  acknowledgement of the Google Books Ngram Viewer as the source, with a link to
+  http://books.google.com/ngrams.
+- The Leeds Internet Corpus, University of Leeds Centre for Translation Studies
+  (http://corpus.leeds.ac.uk/list.html)
+- Wikipedia, the free encyclopedia (http://www.wikipedia.org)
+- ParaCrawl, a multilingual Web crawl (https://paracrawl.eu)
+- OPUS OpenSubtitles 2018 (http://opus.nlpl.eu/OpenSubtitles.php), originating from the
+  OpenSubtitles project (http://www.opensubtitles.org/), used with attribution.
+- SUBTLEX word lists (SUBTLEX-US, SUBTLEX-UK and others) created by Marc Brysbaert et al.
+  (http://crr.ugent.be/programs-data/subtitle-frequencies). SUBTLEX is freely available data;
+  wordfreq and code derived from it must credit the SUBTLEX authors.
+- Word-frequency statistics from the streaming Twitter API (no Twitter content is republished).
+
+Citation: Robyn Speer. (2022). rspeer/wordfreq: v3.0 (v3.0.2). Zenodo.
+https://doi.org/10.5281/zenodo.7199437
+
+To remove this data: delete frequency_en.tsv. Nothing else needs to change.

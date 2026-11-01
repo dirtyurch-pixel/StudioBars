@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { SPEEDS, formatTime, loopActive } from './logic'
 import { usePlayer } from './playerContext'
 
+const EXPAND_DELAY_MS = 450
 const TEXT_FIELD =
   'input[data-line-input], textarea, input:not([type]), input[type="text"], input[type="search"]'
 
@@ -11,14 +12,27 @@ export function PlayerBar() {
   const [typing, setTyping] = useState(false)
 
   // On a phone, shrink to the essentials while a text field has the keyboard open.
+  // It grows back only after a short delay: a tap on a button takes focus away from the field
+  // the instant the finger lands, and growing at that moment would slide the bar over the
+  // button and lose the tap.
   useEffect(() => {
     const small = window.matchMedia?.('(max-width: 860px)')
-    const on = (e: FocusEvent) =>
-      setTyping(!!small?.matches && !!(e.target as HTMLElement)?.matches?.(TEXT_FIELD))
-    const off = () => setTyping(false)
+    let timer: ReturnType<typeof setTimeout> | undefined
+    const later = () => {
+      clearTimeout(timer)
+      timer = setTimeout(() => setTyping(false), EXPAND_DELAY_MS)
+    }
+    const on = (e: FocusEvent) => {
+      if (small?.matches && (e.target as HTMLElement)?.matches?.(TEXT_FIELD)) {
+        clearTimeout(timer)
+        setTyping(true)
+      } else later() // focus moved to a button or link: wait before growing, so the tap lands
+    }
+    const off = later
     document.addEventListener('focusin', on)
     document.addEventListener('focusout', off)
     return () => {
+      clearTimeout(timer)
       document.removeEventListener('focusin', on)
       document.removeEventListener('focusout', off)
     }

@@ -24,3 +24,4 @@ cd "$ROOT/e2e"
 run() { if [ -d node_modules ]; then node "$1"; else NODE_PATH="${NODE_PATH:-$(npm root -g)}" node "$1"; fi; }
 run phase1.cjs
 run phase1b.cjs
+run phase2.cjs

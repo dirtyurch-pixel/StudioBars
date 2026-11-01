@@ -18,6 +18,9 @@ const api = vi.hoisted(() => ({
   listPlaylists: vi.fn(),
   savePlaybackState: vi.fn(),
   saveSongLink: vi.fn(),
+  analyzeLines: vi.fn(),
+  getPhoneticsStatus: vi.fn(),
+  listCustomPron: vi.fn(),
 }))
 vi.mock('../api', async (orig) => ({ ...(await orig<typeof import('../api')>()), ...api }))
 
@@ -79,6 +82,16 @@ beforeEach(() => {
   api.getSongLink.mockResolvedValue(null)
   api.listPlaylists.mockResolvedValue([])
   api.savePlaybackState.mockResolvedValue({})
+  api.analyzeLines.mockResolvedValue({ lines: [], families: [], unknown_words: [] })
+  api.getPhoneticsStatus.mockResolvedValue({
+    dictionary_words: 1,
+    frequency_available: true,
+    pos_available: false,
+    custom_count: 0,
+    quality_help: {},
+    attribution: '',
+  })
+  api.listCustomPron.mockResolvedValue([])
 })
 afterEach(() => vi.useRealTimers())
 

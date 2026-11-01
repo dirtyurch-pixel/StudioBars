@@ -1,17 +1,30 @@
 """Studio Bars backend."""
 
 import os
+import threading
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from .phonetics.engine import get_dictionary
+from .phonetics_routes import router as phonetics_router
 from .routes import router
 from .service import ApiError
 
-APP_VERSION = "0.2.0-phase1b"
+APP_VERSION = "0.3.0-phase2"
 
-app = FastAPI(title="Studio Bars API", version=APP_VERSION)
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    threading.Thread(
+        target=get_dictionary, daemon=True
+    ).start()  # load the dictionary without blocking startup
+    yield
+
+
+app = FastAPI(title="Studio Bars API", version=APP_VERSION, lifespan=lifespan)
 
 # Only the local frontend may call the API from a browser.
 # STUDIO_BARS_FRONTEND_ORIGIN may hold several addresses separated by commas.
@@ -43,3 +56,4 @@ def health() -> dict[str, str]:
 
 
 app.include_router(router)
+app.include_router(phonetics_router)

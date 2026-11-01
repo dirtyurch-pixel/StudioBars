@@ -27,14 +27,27 @@ import {
 } from '../editor/content'
 import { useHistory } from '../editor/useHistory'
 import { SessionStrip, SongMusicPanel } from '../music/SongMusicPanel'
+import { lastWord } from '../phonetics/highlight'
+import { usePadSettings } from '../phonetics/padSettings'
+import { RhymePanel } from '../phonetics/RhymePanel'
+import { useLineAnalysis } from '../phonetics/useLineAnalysis'
 import { useSongLink } from '../music/useSongLink'
 import { goHome } from '../route'
-import { SECTION_TYPES, type Content, type Genre, type Revision, type SectionType } from '../types'
+import {
+  SECTION_TYPES,
+  type Content,
+  type Line,
+  type Genre,
+  type Revision,
+  type SectionType,
+} from '../types'
+
+const NO_LINES: Line[] = []
 
 type Phase = 'loading' | 'ready' | 'error' | 'missing'
 export type SaveStatus = 'saved' | 'unsaved' | 'saving' | 'offline' | 'error' | 'conflict'
 type Meta = { title: string; genres: Genre[]; bpm: number | null; time_signature: string | null }
-type Tool = 'notes' | 'music' | 'history' | 'files'
+type Tool = 'notes' | 'rhymes' | 'music' | 'history' | 'files'
 
 const STATUS_TEXT: Record<SaveStatus, string> = {
   saved: 'Saved',
@@ -86,6 +99,12 @@ export default function SongEditor({ id }: { id: string }) {
 
   const content = hist.content
   const section = content.find((s) => s.id === activeSectionId) ?? content[0] ?? null
+
+  // Phase 2: syllables, rhyme colours and the rhyme lookup
+  const pad = usePadSettings()
+  const [analysisNonce, setAnalysisNonce] = useState(0)
+  const [lookup, setLookup] = useState<{ word: string; nonce: number } | null>(null)
+  const analysis = useLineAnalysis(section?.lines ?? NO_LINES, analysisNonce)
 
   // ---------------------------------------------------------- loading
   const load = useCallback(async () => {
@@ -732,6 +751,44 @@ export default function SongEditor({ id }: { id: string }) {
               )}
             </div>
           )}
+          {optsOpen && (
+            <div className="pad-tools hide-focus" role="group" aria-label="Pad display">
+              <span className="seg" role="group" aria-label="Margin numbers">
+                <button
+                  className={pad.syllableDisplay === 'syllables' ? 'on' : ''}
+                  aria-pressed={pad.syllableDisplay === 'syllables'}
+                  onClick={() => pad.update({ syllableDisplay: 'syllables' })}
+                >
+                  Syllables
+                </button>
+                <button
+                  className={pad.syllableDisplay === 'numbers' ? 'on' : ''}
+                  aria-pressed={pad.syllableDisplay === 'numbers'}
+                  onClick={() => pad.update({ syllableDisplay: 'numbers' })}
+                >
+                  Line numbers
+                </button>
+              </span>
+              <span className="seg" role="group" aria-label="Rhyme colours">
+                {(
+                  [
+                    ['off', 'Colours off'],
+                    ['end', 'End rhymes'],
+                    ['all', 'All rhymes'],
+                  ] as const
+                ).map(([m, label]) => (
+                  <button
+                    key={m}
+                    className={pad.highlight === m ? 'on' : ''}
+                    aria-pressed={pad.highlight === m}
+                    onClick={() => pad.update({ highlight: m })}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </span>
+            </div>
+          )}
           <Pad
             section={section}
             activeLineId={activeLineId}
@@ -751,7 +808,16 @@ export default function SongEditor({ id }: { id: string }) {
               }
               return applyEdit(r) || true
             }}
-            onActive={setActiveLineId}
+            onActive={(lid) => {
+              setActiveLineId(lid)
+              const f = findLine(contentRef.current, lid)
+              const w = f ? lastWord(f.line.text) : ''
+              if (w) setLookup({ word: w, nonce: Date.now() })
+            }}
+            analysis={analysis}
+            syllableDisplay={pad.syllableDisplay}
+            highlight={pad.highlight}
+            onSelectWord={(w) => setLookup({ word: w, nonce: Date.now() })}
             onToggleLock={(lid) => void toggleLock(lid)}
             onBlocked={blocked}
             onNotes={(lid) => {
@@ -790,14 +856,36 @@ export default function SongEditor({ id }: { id: string }) {
             </button>
           </div>
           <p className="hint hide-focus">
-            Line numbers are just positions. Syllable estimates arrive with the rhyme tools in a
-            later phase.
+            {pad.syllableDisplay === 'syllables'
+              ? 'Margin numbers are estimated syllables, not bar numbers. A range means the line can be said more than one way; ~ means a guess.'
+              : 'Margin numbers are line positions, not bar numbers.'}
           </p>
+          {analysis.failed && (
+            <p className="hint hide-focus" role="status">
+              Syllable counts and rhyme colours are paused: the Studio Bars server cannot be
+              reached.
+            </p>
+          )}
+          {analysis.unknown.length > 0 && (
+            <p className="hint hide-focus">
+              Guessing how these sound: <b>{analysis.unknown.slice(0, 5).join(', ')}</b>.{' '}
+              <button
+                className="btn btn-ghost"
+                onClick={() => {
+                  setLookup({ word: analysis.unknown[0], nonce: Date.now() })
+                  setTool('rhymes')
+                  setToolsOpen(true)
+                }}
+              >
+                Teach the app
+              </button>
+            </p>
+          )}
         </section>
 
         <aside className={`ed-side hide-focus${toolsOpen ? ' open' : ''}`} aria-label="Tools">
           <div className="side-tabs" role="tablist">
-            {(['notes', 'music', 'history', 'files'] as Tool[]).map((t) => (
+            {(['notes', 'rhymes', 'music', 'history', 'files'] as Tool[]).map((t) => (
               <button
                 key={t}
                 role="tab"
@@ -810,11 +898,13 @@ export default function SongEditor({ id }: { id: string }) {
               >
                 {t === 'notes'
                   ? 'Notes'
-                  : t === 'music'
-                    ? 'Music'
-                    : t === 'history'
-                      ? 'History'
-                      : 'Export'}
+                  : t === 'rhymes'
+                    ? 'Rhymes'
+                    : t === 'music'
+                      ? 'Music'
+                      : t === 'history'
+                        ? 'History'
+                        : 'Export'}
               </button>
             ))}
             <button
@@ -831,6 +921,12 @@ export default function SongEditor({ id }: { id: string }) {
                 line={activeLine?.line ?? null}
                 lineNumber={(activeLine?.i ?? 0) + 1}
                 onSong={(s) => hist.patch((c) => mergeServerMeta(c, s.sections))}
+              />
+            )}
+            {tool === 'rhymes' && (
+              <RhymePanel
+                suggested={lookup}
+                onCustomChanged={() => setAnalysisNonce((n) => n + 1)}
               />
             )}
             {tool === 'music' && <SongMusicPanel songLink={songLink} />}

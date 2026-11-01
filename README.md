@@ -2,7 +2,7 @@
 
 English lyric-writing studio for Hip-Hop, R&B, House and Pop (working title). Local-first; Royal Blue & Amber design with a yellow ruled writing pad.
 
-**Status: Phase 1B (music player and playlists).** Lyric editor with locked lines, autosave, history, notes, import/export, plus a built-in music player with personal playlists, A–B loops, pitch-preserving speed and music linked to songs. No rhyme tools or AI yet. See `docs/planning/STUDIO_BARS_MASTER_BUILD_PLAN.md` for the full plan and `HANDOVER.md` for current state.
+**Status: Phase 2 (pronunciation and rhyme tools).** Lyric editor with locked lines, autosave, history, notes, import/export, a built-in music player with personal playlists, A–B loops, pitch-preserving speed and music linked to songs, and offline pronunciation tools: estimated syllables in the margin, rhyme colours, a rhyme finder with filters, and your own word pronunciations. No AI yet. See `docs/planning/STUDIO_BARS_MASTER_BUILD_PLAN.md` for the full plan and `HANDOVER.md` for current state.
 
 ## Run it
 Needs Node 22 LTS and Python 3.11+ (Git for cloning).
@@ -14,7 +14,9 @@ Then open http://localhost:5173. Backend API: http://localhost:8000/health (docs
 
 Your songs are stored in `data/private/studio_bars.db` and your imported music in `data/media/` on the computer running the backend. Both folders are git-ignored and nothing is uploaded anywhere.
 
-Music: click **♪ Library** at the bottom, tick the consent box, and add audio files (mp3, wav, flac, ogg, opus, m4a, aac). Playback shortcuts (only when you are not typing): Space play/pause, ←/→ seek 5 s, `[` set loop start, `]` set loop end, `\` clear loop, M mute.
+Music: click **♪ Library** at the bottom, tick the consent box, and add audio files (mp3, wav, flac, ogg, opus, m4a, aac). Rhymes: tap a line (or select one word) and open the **Rhymes** tab. Everything works offline. Pronunciation data: CMU Pronouncing Dictionary (see `licenses/`).
+
+Playback shortcuts (only when you are not typing): Space play/pause, ←/→ seek 5 s, `[` set loop start, `]` set loop end, `\` clear loop, M mute.
 
 ## Check everything
 `./scripts/check.sh` (lint, formatting, type-check, unit tests, build).

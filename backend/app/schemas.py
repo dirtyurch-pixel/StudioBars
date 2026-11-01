@@ -141,3 +141,18 @@ class SongAudioLinkIn(BaseModel):
     loop_b: float | None = Field(None, ge=0, le=86400)
     position_seconds: float = Field(0, ge=0, le=86400)
     speed: float = Field(1, ge=0.5, le=2)
+
+
+# ---------------------------------------------------------------- phonetics
+class AnalyzeIn(BaseModel):
+    lines: list[Annotated[str, StringConstraints(max_length=MAX_LINE_CHARS)]] = Field(
+        max_length=300
+    )
+
+
+class CustomPronIn(BaseModel):
+    sounds_like: Annotated[str, StringConstraints(strip_whitespace=True, max_length=40)] | None = (
+        None
+    )
+    phones: Annotated[str, StringConstraints(strip_whitespace=True, max_length=200)] | None = None
+    note: Annotated[str, StringConstraints(strip_whitespace=True, max_length=200)] = ""

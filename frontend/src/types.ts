@@ -112,3 +112,71 @@ export type SongAudioLink = {
   position_seconds: number
   speed: number
 }
+
+// ---------------------------------------------------------------- phonetics (Phase 2)
+export type WordStatus = 'known' | 'custom' | 'derived' | 'guess'
+export type Pronunciation = {
+  phones: string
+  ipa: string
+  syllables: number
+  stress: string
+  source: string
+}
+export type WordInfo = {
+  word: string
+  status: WordStatus
+  pronunciations: Pronunciation[]
+  syllables_min: number
+  syllables_max: number
+  ambiguous: boolean
+  note: string
+}
+export type LineSyllables = { min: number; max: number; exact: boolean; guessed: boolean }
+export type AnalyzedWord = {
+  text: string
+  start: number
+  end: number
+  status: WordStatus
+  syllables_min: number
+  syllables_max: number
+  is_end: boolean
+  family: number | null
+}
+export type RhymeFamily = { id: number; sound: string; size: number; end_count: number }
+export type Analysis = {
+  lines: { syllables: LineSyllables; words: AnalyzedWord[] }[]
+  families: RhymeFamily[]
+  unknown_words: string[]
+}
+export type RhymeQuality = 'homophone' | 'rich' | 'perfect' | 'near' | 'assonance' | 'consonance'
+export type RhymeResult = {
+  word: string
+  ipa: string
+  syllables: number
+  stress: string
+  ending: 'masculine' | 'feminine' | 'dactylic'
+  quality: RhymeQuality
+  zipf: number | null
+  custom: boolean
+}
+export type RhymeResponse = {
+  word: WordInfo
+  results: RhymeResult[]
+  total: number
+  notes: string[]
+}
+export type PhoneticsStatus = {
+  dictionary_words: number
+  frequency_available: boolean
+  pos_available: boolean
+  custom_count: number
+  quality_help: Record<RhymeQuality, string>
+  attribution: string
+}
+export type CustomPron = {
+  word: string
+  phones: string
+  ipa: string
+  syllables: number
+  note: string
+}

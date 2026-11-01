@@ -191,6 +191,70 @@ describe('player bar', () => {
     await waitFor(() => expect(bar).not.toHaveClass('compact'))
   })
 
+  it('does not grow back the instant focus leaves a field, so a tap on a button is not lost', async () => {
+    vi.stubGlobal('matchMedia', () => ({
+      matches: true,
+      addEventListener() {},
+      removeEventListener() {},
+    }))
+    setup()
+    await openLibraryAndPlay('Slow Tide')
+    const bar = screen.getByLabelText('Music player')
+    screen.getByLabelText('a lyric line').focus()
+    await waitFor(() => expect(bar).toHaveClass('compact'))
+    screen.getByLabelText('a lyric line').blur()
+    await new Promise((r) => setTimeout(r, 150)) // the moment a finger lands and lifts
+    expect(bar).toHaveClass('compact')
+    await waitFor(() => expect(bar).not.toHaveClass('compact'), { timeout: 2000 })
+  })
+
+  it('does not grow over a button the user is tapping while the keyboard is open', async () => {
+    vi.stubGlobal('matchMedia', () => ({
+      matches: true,
+      addEventListener() {},
+      removeEventListener() {},
+    }))
+    render(
+      <ToastProvider>
+        <PlayerProvider>
+          <input data-line-input aria-label="a lyric line" />
+          <button>Look up</button>
+          <PlayerBar />
+        </PlayerProvider>
+      </ToastProvider>,
+    )
+    const bar = screen.getByLabelText('Music player')
+    screen.getByLabelText('a lyric line').focus()
+    await waitFor(() => expect(bar).toHaveClass('compact'))
+    screen.getByText('Look up').focus() // what a tap does: focus leaves the field and lands on the button
+    await new Promise((r) => setTimeout(r, 150))
+    expect(bar).toHaveClass('compact') // still small at the moment the finger lifts
+    await waitFor(() => expect(bar).not.toHaveClass('compact'), { timeout: 2000 })
+  })
+
+  it('stays small when focus simply moves from one text field to another', async () => {
+    vi.stubGlobal('matchMedia', () => ({
+      matches: true,
+      addEventListener() {},
+      removeEventListener() {},
+    }))
+    render(
+      <ToastProvider>
+        <PlayerProvider>
+          <input data-line-input aria-label="first line" />
+          <input data-line-input aria-label="second line" />
+          <PlayerBar />
+        </PlayerProvider>
+      </ToastProvider>,
+    )
+    const bar = screen.getByLabelText('Music player')
+    screen.getByLabelText('first line').focus()
+    await waitFor(() => expect(bar).toHaveClass('compact'))
+    screen.getByLabelText('second line').focus()
+    await new Promise((r) => setTimeout(r, 600))
+    expect(bar).toHaveClass('compact')
+  })
+
   it('shows a clear message when the music server is unreachable', async () => {
     api.listTracks.mockRejectedValue(new Error('down'))
     setup()

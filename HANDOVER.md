@@ -1,36 +1,45 @@
 # Handover
 
 ## Current state
-- Phase 0 (foundation): done. Phase 1 (editor, locks, autosave, history, notes, import/export): done.
-- **Phase 1B (music player, playlists, speed, Writing Session foundation): built, tested here, awaiting owner review.** Phase 2 is NOT started and not authorised.
+- Phase 0 (foundation), Phase 1 (editor, locks, autosave, history, notes, import/export) and Phase 1B (music player, playlists) are done.
+- **Phase 2 (pronunciation, syllables and rhyme tools): built, tested here, awaiting owner review.** Phase 3 is NOT started and not authorised.
 
 ## How to run / check
 - Run: `./scripts/dev.sh` (Windows: `.\scripts\dev.ps1`, not yet run on Windows) then open http://localhost:5173
 - Unit + lint + type + build: `./scripts/check.sh`
-- Real-browser acceptance tests (both Phase 1 and 1B): `./scripts/e2e.sh` (throwaway database and media folder; needs Playwright Chromium)
+- Real-browser acceptance tests (Phase 1, 1B and 2): `./scripts/e2e.sh` (throwaway database and media folder; needs Playwright Chromium)
 
-## Phase 1B test evidence (Linux container; not Windows, not a phone/tablet)
-- Backend: 79 pytest tests (upload validation, fake/corrupt/oversize/chunked files, filename safety, Range streaming, playlists incl. duplicates/reorder, missing-file relink, playback state, song links, leakage checks).
-- Frontend: 60 Vitest tests (queue/shuffle/repeat rules, A–B loop rules, player controls, pitch/speed, keyboard guard while typing, compact mode, import consent and per-file reports).
-- Browser: 48 Phase 1B checks in real Chromium (plus the 37 Phase 1 checks), run three times in a row with the same result. They import 10 real WAV files plus a damaged WAV, a fake MP3 and a .txt (3 correctly refused), build playlists, play while typing/locking/saving/switching sections/navigating (the audio element is never reloaded), test pause/seek/next/previous/auto-advance/repeat/shuffle/mute, speed 0.85× and 0.75× with pitch preserved, A–B loop (stays inside, wraps, rejects A after B), link music to a song and restore it after reload (paused), delete a file and relink it, phone layout with the player collapsing while typing, and that no network traffic left localhost.
+## What Phase 2 added
+Offline CMU dictionary (126,052 words) with sound-based rhyme search; syllable estimates in the margin (range for ambiguous words, `~` for guesses); rhyme colours (end / all / off); a **Rhymes** tab with perfect / near / same-vowel / same-ending rhymes plus syllable, ending-type and familiarity filters; word lookup from the cursor line or a selected word; "Use only this one" for ambiguous words; unknown words can be taught ("sounds like…" or typed sounds); your pronunciations are saved and used everywhere. Design and rules: `docs/decisions/0005-pronunciation-and-rhymes.md`.
+
+## Phase 2 test evidence (Linux container; not Windows, not a phone/tablet)
+- Backend: 150 pytest tests, 71 of them new (data integrity hash, syllable counts incl. ambiguous words, rhyme quality levels, same-spelling/different-sound and different-spelling/same-sound cases, multisyllable rhymes, tokenizer offsets, contractions, -in' endings, hyphens, numbers, unknown words, custom pronunciations, filters, API validation, no network use, speed).
+- Frontend: 101 Vitest tests, 41 of them new (highlight/segment logic, margin labels, debounced analysis that discards stale answers and survives an outage, pad overlay, Rhymes panel states).
+- Browser: 44 Phase 2 checks plus the 37 Phase 1 and 48 Phase 1B checks, run in sequence on one server, repeated.
+- Measured: dictionary loads in ~0.9 s (in the background at start-up), ~130 MB memory, ~0.6 ms to analyse a verse, ~35 ms for the widest rhyme search.
+
+## Licensing (needs your attention)
+1. **CMU dictionary**: unmodified upstream data file + CMU's notice. The PyPI `cmudict` package is GPL-3.0, so it is *not* used.
+2. **Word-familiarity list** (`frequency_en.tsv`): derived from `wordfreq`, **CC BY-SA 4.0** with credits to Google Books Ngrams, Wikipedia, Leeds, ParaCrawl, OpenSubtitles and SUBTLEX (see `licenses/wordfreq-NOTICE.txt`). It is a separate, optional file in a public repository. If you prefer simpler licensing, delete it: the app keeps working and says the filter is unavailable. This is an owner decision.
 
 ## Known limitations (honest list)
-1. **Not tested on a real phone or tablet, and not on Windows.** Phone checks use a phone-sized browser window and a shrunk viewport to imitate the keyboard. Real mobile browsers differ (autoplay rules, background/lock-screen audio, codecs such as FLAC/Opus on iOS).
-2. **Browser audio support differs.** The test browser has no MP3/AAC codecs, so the checks used WAV. MP3/M4A/AAC import is validated by the server and by whether *your* browser can play the file; if it cannot, the file is reported and skipped.
-3. **Phone/tablet access is still the open decision** (`docs/decisions/0002-phone-access.md`). Music lives on the computer running the backend and does not sync between devices.
-4. Titles come from file names (editable). Tag reading and artwork are not included (tag libraries are GPL; artwork skipped).
-5. The "play next" queue lasts until the page reloads; the playing playlist is not refreshed if you edit it while it plays.
-6. Playlists reorder with ▲▼ buttons, not drag and drop.
-7. Audio is not part of backups yet (Phase 7). Deleting a track deletes its copied file.
-8. The API still has no sign-in; it listens on this computer only.
-9. `dev.ps1` still unrun on Windows; `npm audit` notices not reviewed.
-10. Earlier Phase 1 limitations still apply (see git history of this file).
+1. **Not tested on a real phone/tablet or on Windows.** Phone checks use a phone-sized browser window.
+2. **US pronunciations only** (CMU dictionary). British or regional ways of saying words need the "sounds like" tool. Rap and singing often stretch, drop or add syllables: counts are estimates from the dictionary, not a record of how you perform.
+3. **Part-of-speech filter is shown but disabled** (the dictionary has no word classes). It arrives with WordNet in Phase 3.
+4. Unknown words (slang, names, spellings like "2pac") get a vowel-group **guess** for syllables and cannot be searched for rhymes until you teach their sound. Numbers are read as plain numbers (808 → "eight hundred eight") and flagged as guesses.
+5. Rhyme colours are computed for the visible section only (not across sections) and use the first dictionary pronunciation of each word. Near rhymes appear in the Rhymes tab, not as colours. Phrase/multisyllable rhymes across word boundaries are Phase 5.
+6. Display choices (syllables vs line numbers, colour mode) are remembered on this device, not per song.
+7. A very long line scrolls sideways inside its box; the colour layer follows it, but this is only checked in desktop Chromium.
+8. Earlier limitations still apply (no phone access to the PC yet, music stays on the host computer, no sign-in on the local API, `dev.ps1` unrun on Windows, `npm audit` notices unreviewed).
 
-## Bugs found and fixed while testing 1B
-- Starting several requests together on a brand-new database could still fail about 1 time in 6 (switching to WAL mode was outside the lock). Fixed; 0 failures in 40 repeats.
-- If a track was linked to a song while playing from a playlist, later speed/loop changes were not saved to the link. Fixed.
+## Bugs found and fixed while testing Phase 2
+- On a phone, with a music track loaded, tapping any button while a text field had the keyboard open could **lose the tap**: the music bar grew over the button the instant focus left the field. The bar now waits before growing. (A Phase 1B interaction found only by Phase 2's tests; two new unit tests guard it.)
+- The new display toolbar pushed the writing pad down the phone screen; it now lives in the collapsed options drawer on phones.
+- Words you teach the app were buried under hundreds of dictionary rhymes; your own words now rank first within their rhyme quality.
+- Small words (me, you, my…) were ignored as rhymes everywhere; they are now ignored only mid-line, where they are filler, and count at line ends.
 
 ## Open items for owner
+- Keep or remove the CC BY-SA familiarity list (see Licensing)
 - Phone access model (docs/decisions/0002-phone-access.md)
-- Real-device test of typing + music on a phone/tablet once a way to run the app there exists
+- Real-device test of typing, rhyme tools and music on a phone/tablet once a way to run the app there exists
 - Plan fixes proposed earlier: phase numbering, split Phases 5 and 6, add LineTiming/ChordMark tables before they are needed

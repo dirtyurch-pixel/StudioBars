@@ -26,13 +26,15 @@ import {
   type Edit,
 } from '../editor/content'
 import { useHistory } from '../editor/useHistory'
+import { SessionStrip, SongMusicPanel } from '../music/SongMusicPanel'
+import { useSongLink } from '../music/useSongLink'
 import { goHome } from '../route'
 import { SECTION_TYPES, type Content, type Genre, type Revision, type SectionType } from '../types'
 
 type Phase = 'loading' | 'ready' | 'error' | 'missing'
 export type SaveStatus = 'saved' | 'unsaved' | 'saving' | 'offline' | 'error' | 'conflict'
 type Meta = { title: string; genres: Genre[]; bpm: number | null; time_signature: string | null }
-type Tool = 'notes' | 'history' | 'files'
+type Tool = 'notes' | 'music' | 'history' | 'files'
 
 const STATUS_TEXT: Record<SaveStatus, string> = {
   saved: 'Saved',
@@ -45,6 +47,7 @@ const STATUS_TEXT: Record<SaveStatus, string> = {
 
 export default function SongEditor({ id }: { id: string }) {
   const toast = useToast()
+  const songLink = useSongLink(id)
   const [phase, setPhase] = useState<Phase>('loading')
   const [loadError, setLoadError] = useState('')
   const [meta, setMeta] = useState<Meta | null>(null)
@@ -557,6 +560,7 @@ export default function SongEditor({ id }: { id: string }) {
         </div>
       )}
 
+      <SessionStrip songLink={songLink} />
       <div className="ed-grid">
         <section className="ed-main" aria-label="Lyrics">
           <div className="opts hide-focus">
@@ -793,7 +797,7 @@ export default function SongEditor({ id }: { id: string }) {
 
         <aside className={`ed-side hide-focus${toolsOpen ? ' open' : ''}`} aria-label="Tools">
           <div className="side-tabs" role="tablist">
-            {(['notes', 'history', 'files'] as Tool[]).map((t) => (
+            {(['notes', 'music', 'history', 'files'] as Tool[]).map((t) => (
               <button
                 key={t}
                 role="tab"
@@ -804,7 +808,13 @@ export default function SongEditor({ id }: { id: string }) {
                   setToolsOpen(true)
                 }}
               >
-                {t === 'notes' ? 'Notes' : t === 'history' ? 'History' : 'Export'}
+                {t === 'notes'
+                  ? 'Notes'
+                  : t === 'music'
+                    ? 'Music'
+                    : t === 'history'
+                      ? 'History'
+                      : 'Export'}
               </button>
             ))}
             <button
@@ -823,6 +833,7 @@ export default function SongEditor({ id }: { id: string }) {
                 onSong={(s) => hist.patch((c) => mergeServerMeta(c, s.sections))}
               />
             )}
+            {tool === 'music' && <SongMusicPanel songLink={songLink} />}
             {tool === 'history' && (
               <HistoryPanel revisions={revisions} onSnapshot={onSnapshot} onRestore={onRestore} />
             )}

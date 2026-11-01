@@ -9,15 +9,20 @@ from fastapi.responses import JSONResponse
 from .routes import router
 from .service import ApiError
 
-APP_VERSION = "0.1.0-phase1"
+APP_VERSION = "0.2.0-phase1b"
 
 app = FastAPI(title="Studio Bars API", version=APP_VERSION)
 
 # Only the local frontend may call the API from a browser.
-_origin = os.environ.get("STUDIO_BARS_FRONTEND_ORIGIN", "http://localhost:5173")
+# STUDIO_BARS_FRONTEND_ORIGIN may hold several addresses separated by commas.
+_origins = [
+    o.strip()
+    for o in os.environ.get("STUDIO_BARS_FRONTEND_ORIGIN", "http://localhost:5173").split(",")
+    if o.strip()
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[_origin, "http://127.0.0.1:5173"],
+    allow_origins=[*_origins, "http://127.0.0.1:5173"],
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
     allow_headers=["*"],
     expose_headers=["Content-Disposition"],

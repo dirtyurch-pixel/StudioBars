@@ -70,3 +70,45 @@ export type ImportPreview = {
 
 export const MAX_LINE_CHARS = 500
 export const MAX_LINES = 2000
+
+// ---------------------------------------------------------------- music
+export type Track = {
+  id: string
+  title: string
+  artist: string
+  album: string
+  duration: number | null
+  media_type: string
+  ext: string
+  size_bytes: number
+  added_at: string
+  available: boolean
+  file_version: string
+  duplicate_of?: string | null
+}
+export type PlaylistSummary = {
+  id: string
+  name: string
+  track_count: number
+  total_duration: number
+}
+export type PlaylistEntry = { entry_id: string; track: Track }
+export type PlaylistDetail = { id: string; name: string; entries: PlaylistEntry[] }
+export type RepeatMode = 'off' | 'all' | 'one'
+export type PlaybackSaved = {
+  track_id: string | null
+  playlist_id: string | null
+  position_seconds: number
+  repeat_mode: RepeatMode
+  shuffle_enabled: boolean
+  volume: number
+  speed: number
+}
+export type SongAudioLink = {
+  track_id: string | null
+  playlist_id: string | null
+  loop_a: number | null
+  loop_b: number | null
+  position_seconds: number
+  speed: number
+}

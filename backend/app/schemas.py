@@ -99,3 +99,45 @@ class ImportIn(BaseModel):
     content: str = Field(max_length=1_000_000)
     title: str | None = Field(None, max_length=200)
     genres: list[Genre] = Field(default_factory=list, max_length=4)
+
+
+# ---------------------------------------------------------------- music
+Name = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=200)]
+ShortText = Annotated[str, StringConstraints(strip_whitespace=True, max_length=200)]
+
+
+class TrackUpdate(BaseModel):
+    title: Name | None = None
+    artist: ShortText | None = None
+    album: ShortText | None = None
+
+
+class PlaylistIn(BaseModel):
+    name: Name
+
+
+class PlaylistAdd(BaseModel):
+    track_id: str = Field(min_length=1, max_length=64)
+
+
+class PlaylistOrder(BaseModel):
+    entry_ids: list[str] = Field(max_length=5000)
+
+
+class PlaybackStateIn(BaseModel):
+    track_id: str | None = None
+    playlist_id: str | None = None
+    position_seconds: float = Field(0, ge=0, le=86400)
+    repeat_mode: Literal["off", "all", "one"] = "off"
+    shuffle_enabled: bool = False
+    volume: float = Field(1, ge=0, le=1)
+    speed: float = Field(1, ge=0.5, le=2)
+
+
+class SongAudioLinkIn(BaseModel):
+    track_id: str | None = None
+    playlist_id: str | None = None
+    loop_a: float | None = Field(None, ge=0, le=86400)
+    loop_b: float | None = Field(None, ge=0, le=86400)
+    position_seconds: float = Field(0, ge=0, le=86400)
+    speed: float = Field(1, ge=0.5, le=2)

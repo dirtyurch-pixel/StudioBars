@@ -79,6 +79,56 @@ MIGRATIONS: list[str] = [
         SELECT RAISE(ABORT, 'LOCKED_LINE_CANNOT_BE_DELETED');
     END;
     """,
+    # Version 2: music library, playlists, playback state, song <-> audio links.
+    """
+    CREATE TABLE audio_tracks (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        artist TEXT NOT NULL DEFAULT '',
+        album TEXT NOT NULL DEFAULT '',
+        duration REAL,
+        media_type TEXT NOT NULL,
+        ext TEXT NOT NULL,
+        size_bytes INTEGER NOT NULL,
+        content_hash TEXT NOT NULL,
+        storage_name TEXT NOT NULL,
+        added_at TEXT NOT NULL
+    );
+    CREATE TABLE playlists (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+    CREATE TABLE playlist_tracks (
+        id TEXT PRIMARY KEY,
+        playlist_id TEXT NOT NULL REFERENCES playlists(id) ON DELETE CASCADE,
+        track_id TEXT NOT NULL REFERENCES audio_tracks(id) ON DELETE CASCADE,
+        position INTEGER NOT NULL
+    );
+    CREATE INDEX idx_playlist_tracks ON playlist_tracks(playlist_id, position);
+    CREATE TABLE playback_state (
+        id INTEGER PRIMARY KEY CHECK (id = 1),
+        track_id TEXT REFERENCES audio_tracks(id) ON DELETE SET NULL,
+        playlist_id TEXT REFERENCES playlists(id) ON DELETE SET NULL,
+        position_seconds REAL NOT NULL DEFAULT 0,
+        repeat_mode TEXT NOT NULL DEFAULT 'off' CHECK (repeat_mode IN ('off','all','one')),
+        shuffle_enabled INTEGER NOT NULL DEFAULT 0,
+        volume REAL NOT NULL DEFAULT 1,
+        speed REAL NOT NULL DEFAULT 1,
+        updated_at TEXT NOT NULL
+    );
+    CREATE TABLE song_audio_links (
+        song_id TEXT PRIMARY KEY REFERENCES songs(id) ON DELETE CASCADE,
+        track_id TEXT REFERENCES audio_tracks(id) ON DELETE SET NULL,
+        playlist_id TEXT REFERENCES playlists(id) ON DELETE SET NULL,
+        loop_a REAL,
+        loop_b REAL,
+        position_seconds REAL NOT NULL DEFAULT 0,
+        speed REAL NOT NULL DEFAULT 1,
+        updated_at TEXT NOT NULL
+    );
+    """,
 ]
 
 
@@ -106,13 +156,13 @@ def connect(path: str | None = None) -> sqlite3.Connection:
     conn = sqlite3.connect(path, isolation_level=None, check_same_thread=False, timeout=10)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
-    if path != ":memory:":
-        conn.execute("PRAGMA journal_mode = WAL")
     # Migrate once per database file, one thread at a time. Without this, two
     # requests arriving together on a brand-new database both try to create
     # the tables and one of them fails.
     if path == ":memory:" or path not in _migrated or not Path(path).exists():
         with _migrate_lock:
+            if path != ":memory:":
+                conn.execute("PRAGMA journal_mode = WAL")  # persistent; set once, under the lock
             migrate(conn)
             _migrated.add(path)
     return conn

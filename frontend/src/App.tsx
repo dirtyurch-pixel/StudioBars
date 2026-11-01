@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
 import { ToastProvider } from './components/Toasts'
+import { MusicDrawer } from './music/MusicDrawer'
+import { PlayerBar } from './music/PlayerBar'
+import { PlayerProvider } from './music/PlayerProvider'
 import Dashboard from './pages/Dashboard'
 import SongEditor from './pages/SongEditor'
 import { useRoute } from './route'
@@ -29,7 +32,11 @@ export default function App() {
           You are offline. Changes stay in this window until the connection returns.
         </div>
       )}
-      {route.name === 'song' ? <SongEditor key={route.id} id={route.id} /> : <Dashboard />}
+      <PlayerProvider>
+        {route.name === 'song' ? <SongEditor key={route.id} id={route.id} /> : <Dashboard />}
+        <MusicDrawer />
+        <PlayerBar />
+      </PlayerProvider>
     </ToastProvider>
   )
 }

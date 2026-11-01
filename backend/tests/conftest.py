@@ -9,6 +9,7 @@ def db_file(tmp_path, monkeypatch):
     path = str(tmp_path / "test.db")
     monkeypatch.setenv("STUDIO_BARS_DB", path)
     monkeypatch.setenv("STUDIO_BARS_AUTO_SNAPSHOT_SECONDS", "300")
+    monkeypatch.setenv("STUDIO_BARS_MEDIA_DIR", str(tmp_path / "media"))
     return path
 
 

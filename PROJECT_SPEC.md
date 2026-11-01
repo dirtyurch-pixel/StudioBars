@@ -10,3 +10,6 @@ Authoritative source: `docs/planning/STUDIO_BARS_MASTER_BUILD_PLAN.md` (v1.4) an
 
 ## Phase 1 delivers
 Responsive Royal Blue & Amber UI with yellow ruled pad; song list (create, delete to trash, restore); metadata and genres; sections (add, rename, retype, reorder, delete); line editor with stable IDs, paste splitting, undo/redo; lock protection (editor, API and database); SQLite with versioned migrations; autosave with visible status, offline retry and conflict detection; snapshots and restore; line notes; TXT/Markdown/JSON export; TXT/Markdown/JSON import with preview; keyboard shortcuts and Focus Mode. See `docs/decisions/0003-phase1-design.md`.
+
+## Phase 1B delivers
+Local music library (consented copy into private storage, validated by extension and contents), personal playlists (create/rename/delete, reorder, repeated tracks, delete without touching audio), a persistent player (play/pause, seek, previous/next, volume/mute, shuffle, repeat off/all/one, A–B loop, 0.75×–1.25× speed with pitch preserved, play-next queue), missing-file recovery with relink, remembered playback state, and the Writing Session foundation (song linked to music with saved loop, speed and position). See `docs/decisions/0004-music-player.md`.

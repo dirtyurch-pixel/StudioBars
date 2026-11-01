@@ -4,6 +4,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 TMP="$(mktemp -d)"
 export STUDIO_BARS_DB="$TMP/e2e.db"
+export STUDIO_BARS_MEDIA_DIR="$TMP/media"
+export MEDIA_DIR="$TMP/media"
 export STUDIO_BARS_AUTO_SNAPSHOT_SECONDS=300
 cleanup() { kill ${BACK:-} ${FRONT:-} 2>/dev/null || true; rm -rf "$TMP"; }
 trap cleanup EXIT
@@ -19,4 +21,6 @@ for i in $(seq 1 40); do
   sleep 0.5
 done
 cd "$ROOT/e2e"
-if [ -d node_modules ]; then node phase1.cjs; else NODE_PATH="${NODE_PATH:-$(npm root -g)}" node phase1.cjs; fi
+run() { if [ -d node_modules ]; then node "$1"; else NODE_PATH="${NODE_PATH:-$(npm root -g)}" node "$1"; fi; }
+run phase1.cjs
+run phase1b.cjs

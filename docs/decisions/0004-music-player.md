@@ -1,0 +1,11 @@
+# 0004 Music player design (Phase 1B)
+
+- **Where audio lives:** files you choose are copied (after you tick a consent box) into a private folder on the computer that runs the Studio Bars backend: `data/media/` (git-ignored), or the folder in `STUDIO_BARS_MEDIA_DIR`. Nothing is uploaded to the internet and nothing audio-related goes into Git, exports or backups-by-default. Browsers cannot keep access to arbitrary disk paths, so a managed copy is the reliable option.
+- **Safety:** only mp3, wav, flac, ogg, opus, m4a, aac. Each file is checked by extension *and* by its first bytes; filenames are never used as paths (files are stored under random ids); size limit 300 MB per file (`STUDIO_BARS_MAX_AUDIO_MB`); free disk space is checked; files stream with Range requests so seeking works; responses carry `nosniff`.
+- **Unsupported / damaged files:** the browser must be able to read the file before it is copied. Anything it cannot play is reported with a reason and skipped. No automatic conversion.
+- **One player for the whole app:** the audio element lives above every page and editor, so typing, switching sections, locking, saving, opening panels or going back to the song list never restarts it. Space/arrows/[ ] \ M shortcuts work only when you are not typing or focused on a control.
+- **Speed:** 0.75×–1.25× with pitch preserved (`preservesPitch`). If a browser cannot preserve pitch, the speed control is switched off and says so.
+- **A–B loop:** both points must be set and A must be before B. A loop only triggers when playback crosses B, so seeking past B by hand does not snap back.
+- **Remembering things:** last track, playlist, position, volume, repeat, shuffle and speed are saved. Music never starts by itself after a reload (browser rule and by design).
+- **Writing Session foundation:** a song can be linked to one track or one playlist, plus a saved loop, speed and position. Opening the song loads that music paused (unless other music is already playing). The link is not part of song exports.
+- **Not in Phase 1B (by design):** tag reading (needs a GPL library; titles come from file names and are editable), artwork, waveform, beat detection, a persistent up-next queue (it lasts until you reload), drag-to-reorder (▲▼ buttons instead), backup of audio files (Phase 7).

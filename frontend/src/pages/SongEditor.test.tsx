@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { ApiFail } from '../api'
 import { ToastProvider } from '../components/Toasts'
 import type { Song } from '../types'
+import { PlayerProvider } from '../music/PlayerProvider'
 import SongEditor from './SongEditor'
 
 const api = vi.hoisted(() => ({
@@ -11,6 +12,12 @@ const api = vi.hoisted(() => ({
   patchSong: vi.fn(),
   lockLine: vi.fn(),
   listRevisions: vi.fn(),
+  listTracks: vi.fn(),
+  getPlaybackState: vi.fn(),
+  getSongLink: vi.fn(),
+  listPlaylists: vi.fn(),
+  savePlaybackState: vi.fn(),
+  saveSongLink: vi.fn(),
 }))
 vi.mock('../api', async (orig) => ({ ...(await orig<typeof import('../api')>()), ...api }))
 
@@ -43,7 +50,9 @@ const mkSong = (over: Partial<Song> = {}): Song => ({
 const open = async () => {
   render(
     <ToastProvider>
-      <SongEditor id="song1234" />
+      <PlayerProvider>
+        <SongEditor id="song1234" />
+      </PlayerProvider>
     </ToastProvider>,
   )
   return screen.findByLabelText('Line 1')
@@ -57,6 +66,19 @@ beforeEach(() => {
   vi.resetAllMocks()
   api.getSong.mockResolvedValue(mkSong())
   api.listRevisions.mockResolvedValue([])
+  api.listTracks.mockResolvedValue([])
+  api.getPlaybackState.mockResolvedValue({
+    track_id: null,
+    playlist_id: null,
+    position_seconds: 0,
+    repeat_mode: 'off',
+    shuffle_enabled: false,
+    volume: 1,
+    speed: 1,
+  })
+  api.getSongLink.mockResolvedValue(null)
+  api.listPlaylists.mockResolvedValue([])
+  api.savePlaybackState.mockResolvedValue({})
 })
 afterEach(() => vi.useRealTimers())
 
@@ -167,7 +189,9 @@ describe('SongEditor states', () => {
     api.getSong.mockRejectedValue(new ApiFail('nope', { status: 404 }))
     render(
       <ToastProvider>
-        <SongEditor id="gone1234" />
+        <PlayerProvider>
+          <SongEditor id="gone1234" />
+        </PlayerProvider>
       </ToastProvider>,
     )
     expect(await screen.findByText('Song not found')).toBeInTheDocument()
@@ -179,7 +203,9 @@ describe('SongEditor states', () => {
       .mockResolvedValue(mkSong())
     render(
       <ToastProvider>
-        <SongEditor id="song1234" />
+        <PlayerProvider>
+          <SongEditor id="song1234" />
+        </PlayerProvider>
       </ToastProvider>,
     )
     expect(await screen.findByRole('alert')).toHaveTextContent(/Cannot reach/)

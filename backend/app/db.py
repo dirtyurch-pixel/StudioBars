@@ -163,6 +163,38 @@ MIGRATIONS: list[str] = [
     );
     CREATE INDEX idx_phrase_tags_tag ON phrase_tags(tag);
     """,
+    # Version 5: AI co-writer. Usage log (for the monthly spending limit) and the suggestions the AI made.
+    """
+    CREATE TABLE ai_usage (
+        id TEXT PRIMARY KEY,
+        ts TEXT NOT NULL,
+        month TEXT NOT NULL,
+        provider TEXT NOT NULL,
+        model TEXT NOT NULL,
+        task TEXT NOT NULL,
+        input_tokens INTEGER NOT NULL DEFAULT 0,
+        output_tokens INTEGER NOT NULL DEFAULT 0,
+        cost_usd REAL NOT NULL DEFAULT 0,
+        ok INTEGER NOT NULL DEFAULT 1
+    );
+    CREATE INDEX idx_ai_usage_month ON ai_usage(month);
+    CREATE TABLE ai_suggestions (
+        id TEXT PRIMARY KEY,
+        song_id TEXT NOT NULL REFERENCES songs(id) ON DELETE CASCADE,
+        section_id TEXT,
+        target_line_id TEXT,
+        task TEXT NOT NULL,
+        provider TEXT NOT NULL,
+        model TEXT NOT NULL,
+        context_hash TEXT NOT NULL,
+        text TEXT NOT NULL,
+        reason TEXT NOT NULL DEFAULT '',
+        settings_json TEXT NOT NULL DEFAULT '{}',
+        created_at TEXT NOT NULL,
+        accepted_at TEXT
+    );
+    CREATE INDEX idx_ai_suggestions_song ON ai_suggestions(song_id, created_at);
+    """,
 ]
 
 

@@ -162,6 +162,38 @@ export function addLineAfter(content: Content, lineId: string): Edit | null {
   return { content: mapLines(content, f.s, lines), focusId: fresh.id, caret: 0 }
 }
 
+/**
+ * Put AI-suggested text on a NEW line below `afterLineId` (or at the end of the section).
+ * If that line is an empty, unlocked line the text goes into it instead of leaving a gap.
+ * Never touches a locked line.
+ */
+export function insertLineWithText(
+  content: Content,
+  sectionId: string,
+  afterLineId: string | null,
+  text: string,
+): Edit | null {
+  const sIdx = content.findIndex((s) => s.id === sectionId)
+  if (sIdx < 0) return null
+  const clean = text
+    .replace(/[\r\n]+/g, ' ')
+    .trim()
+    .slice(0, MAX_LINE_CHARS)
+  if (!clean) return null
+  const lines = content[sIdx].lines.slice()
+  let i = afterLineId ? lines.findIndex((l) => l.id === afterLineId) : -1
+  if (i < 0) i = lines.length - 1
+  const at = lines[i]
+  if (at && at.text.trim() === '' && !at.is_locked) {
+    lines[i] = { ...at, text: clean }
+    return { content: mapLines(content, sIdx, lines), focusId: at.id, caret: clean.length }
+  }
+  if (countLines(content) >= MAX_LINES) return null
+  const fresh = blankLine(clean)
+  lines.splice(i + 1, 0, fresh)
+  return { content: mapLines(content, sIdx, lines), focusId: fresh.id, caret: clean.length }
+}
+
 // ------------------------------------------------------------ sections
 
 export function addSection(content: Content, label: string): { content: Content; id: string } {

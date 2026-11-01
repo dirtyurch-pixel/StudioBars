@@ -8,6 +8,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from .ai_routes import router as ai_router
 from .lexicon.wordnet import get_wordnet
 from .lexicon_routes import router as lexicon_router
 from .phonetics.engine import get_dictionary
@@ -15,7 +16,7 @@ from .phonetics_routes import router as phonetics_router
 from .routes import router
 from .service import ApiError
 
-APP_VERSION = "0.4.0-phase3"
+APP_VERSION = "0.5.0-phase4"
 
 
 @asynccontextmanager
@@ -60,3 +61,4 @@ def health() -> dict[str, str]:
 app.include_router(router)
 app.include_router(phonetics_router)
 app.include_router(lexicon_router)
+app.include_router(ai_router)

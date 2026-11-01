@@ -2,7 +2,7 @@
 
 English lyric-writing studio for Hip-Hop, R&B, House and Pop (working title). Local-first; Royal Blue & Amber design with a yellow ruled writing pad.
 
-**Status: Phase 3 (word meanings, phrase bank, optional online helper).** Lyric editor with locked lines, autosave, history, notes, import/export, a built-in music player with personal playlists, A–B loops, pitch-preserving speed and music linked to songs, offline pronunciation and rhyme tools (estimated syllables, rhyme colours, a rhyme finder with filters, your own word pronunciations), a word-meaning dictionary and thesaurus (WordNet), a personal phrase and slang bank, and an optional online word helper that is off by default. No AI yet. See `docs/planning/STUDIO_BARS_MASTER_BUILD_PLAN.md` for the full plan and `HANDOVER.md` for current state.
+**Status: Phase 4 (AI co-writer, off until you set it up).** Lyric editor with locked lines, autosave, history, notes, import/export, a built-in music player with personal playlists, A–B loops, pitch-preserving speed and music linked to songs, offline pronunciation and rhyme tools (estimated syllables, rhyme colours, a rhyme finder with filters, your own word pronunciations), a word-meaning dictionary and thesaurus (WordNet), a personal phrase and slang bank, and an optional online word helper that is off by default. An optional AI co-writer (Claude, or a free local model) that only suggests lines: you choose Insert or Replace, locked lines are never touched, and a monthly spending limit applies. See `docs/planning/STUDIO_BARS_MASTER_BUILD_PLAN.md` for the full plan and `HANDOVER.md` for current state.
 
 ## Run it
 Needs Node 22 LTS and Python 3.11+ (Git for cloning).

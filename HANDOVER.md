@@ -2,12 +2,13 @@
 
 ## Current state
 - Phase 0 (foundation), Phase 1 (editor, locks, autosave, history, notes, import/export), Phase 1B (music player, playlists) and Phase 2 (pronunciation, syllables, rhymes) are done.
-- **Phase 3 (word meanings, phrase bank, optional online helper): built, tested here, awaiting owner review.** Phase 4 is NOT started and not authorised.
+- Phase 3 (word meanings, phrase bank, optional online helper) done.
+- **Phase 4 (AI co-writer): built, tested here against local stand-ins for Claude, awaiting owner review.** Phase 5 is NOT started and not authorised.
 
 ## How to run / check
 - Run: `./scripts/dev.sh` (Windows: `.\scripts\dev.ps1`, not yet run on Windows) then open http://localhost:5173
 - Unit + lint + type + build: `./scripts/check.sh`
-- Real-browser acceptance tests (Phases 1, 1B, 2, 3): `./scripts/e2e.sh` (throwaway database and media folder; the online helper is pointed at a local stand-in, so no test touches the internet; needs Playwright Chromium)
+- Real-browser acceptance tests (Phases 1, 1B, 2, 3, 4): `./scripts/e2e.sh` (throwaway database and media folder; the online helper and the AI co-writer are pointed at local stand-ins, so no test touches the internet or spends money; needs Playwright Chromium)
 
 ## What Phase 3 added
 - **Words tab**: meanings from WordNet 3.0 shown one meaning at a time (definition, examples, synonyms, opposites, "a kind of", "kinds of it", related, imagery), common meaning first, **⚠ on synonyms whose meaning may shift**, meanings ordered by what fits the line you are on, and how each meaning of lead/tear/bass/wind… is said.
@@ -15,6 +16,22 @@
 - **My phrases**: personal slang/phrase bank (meaning, "sounds like", tags, search, tag filter, export).
 - **Online ideas** (Datamuse): **off by default**, sends only one typed word, saved answers, offline fallback.
 - Design, rules and licence notes: `docs/decisions/0006-meanings-phrases-online.md`.
+
+## What Phase 4 added (AI co-writer)
+- **AI tab** (off until set up). Tasks: next line, rewrite, shorter, more conversational, stronger imagery, stronger punchline, more emotion, rhyme help, hook ideas, structure ideas, critique.
+- **The AI only proposes.** Candidates are labelled "AI suggestion" with a local syllable estimate and a rhyme badge (both computed by this app, never taken from the AI). You choose Preview, Insert below, Replace (asks first) or Copy. Insert/Replace use the same guarded edit path as typing, so **a locked line can never change**, and Undo works. Locked lines are sent as read-only context; asking to rewrite a locked line is refused before anything is sent.
+- **Two steps, always:** "Show what will be sent" (no network, shows the exact text, section list, estimated and worst-case cost) then "Send to AI". The server refuses to send unless the text you saw is still exactly what would be sent.
+- **Your key stays on the host computer** (`data/private/ai_key_anthropic`, owner-only, git-ignored) or in the `STUDIO_BARS_AI_KEY`/`ANTHROPIC_API_KEY` environment variable. The browser sends it once and is never sent it back (only the last 4 characters). It is never logged.
+- **Monthly spending limit** (default $5): each request is checked before sending using its worst-case cost; usage is counted from the token counts the provider reports.
+- **Providers:** Claude through the official `anthropic` SDK (default model Claude Opus 5.5; Haiku 5.5, Sonnet 5.5 and Fable 5.1 selectable with a per-request cost estimate), or any OpenAI-compatible server such as Ollama (free, local, prices default to 0).
+- Bad answers (not JSON, markdown, labels, duplicates, copies of your own lines, refusals) are dropped; if nothing usable is left you see "nothing was changed".
+- Design and rules: `docs/decisions/0007-ai-cowriter.md`.
+
+## Phase 4 test evidence (Linux container; not Windows, not a phone/tablet)
+- Backend: 303 pytest tests (48 new: key never returned or logged, no AI writes to the lyric tables, locked-line refusal and read-only context, hash must match, changed song invalidates it, budget blocks before sending, rate limit, every provider error mapped to a plain message without leaking the key or lyrics, refusal, malformed answers, offline, OpenAI-compatible adapter, prompt-injection text stays data).
+- Frontend: 156 Vitest tests (AI panel, setup, insert operation).
+- Browser: 28 Phase 4 checks plus 37 + 48 + 45 + 62 from earlier phases, run in sequence.
+- **Not tested:** a real call to Claude. No key was available here and a key must never be pasted into chat. The code path is exercised against local servers that speak Claude's wire format through the real SDK; the first real call happens when you add your key on your computer and press "Test connection".
 
 ## Phase 3 test evidence (Linux container; not Windows, not a phone/tablet)
 - Backend: 255 pytest tests (all earlier ones plus WordNet file integrity and licence, reading and base forms, meanings by sense, synonym shift flags, line-aware ranking, every heteronym checked against the dictionary, the online helper incl. the real network code against a local test server, phrase bank, phrase rhymes, part-of-speech filter, security cases).
@@ -35,7 +52,7 @@
 5. **Phrase rhymes are experimental**: they use the first dictionary pronunciation of each word, compare only the end of the phrase, and only find single words and your own saved phrases/words (not arbitrary multi-word rhymes).
 6. The online helper cannot be used after Datamuse starts requiring a key until a key mechanism is added. Offline saved answers are kept 7 days as "fresh" and longer as "saved".
 7. A heteronym table covers about 23 words; other same-spelling words show one pronunciation. The dictionary lacks the "argument" sound of *row*.
-8. Nothing in Phase 3 inserts text into your lyrics (no suggestion buttons yet; that arrives with Phase 4's review-before-insert rules).
+8. AI limits: it cannot verify that a suggested line is original (it is told not to quote songs, but you must judge); syllable counts are estimates; the AI sees only what the preview shows; the SDK retries a failed request once. Server-side model fallbacks are deliberately NOT enabled (needs your decision).
 9. Earlier limitations still apply (no phone access to the PC yet, music stays on the host computer, local API has no sign-in, `dev.ps1` unrun on Windows, `npm audit` notices unreviewed, US pronunciations only).
 
 ## Bugs found and fixed while testing Phase 3

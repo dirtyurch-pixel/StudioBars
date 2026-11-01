@@ -1368,3 +1368,131 @@ label.chip-btn:focus-within {
   opacity: 0.65;
   transition: opacity 0.15s;
 }
+
+/* ---------------------------------------------------------------- Phase 4: AI co-writer */
+.ai-panel,
+.ai-setup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ai-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.ai-h {
+  margin: 4px 0;
+  font-size: 15px;
+}
+.ai-note,
+.ai-meter {
+  font-size: 13px;
+  margin: 0;
+}
+.ai-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.ai-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.ai-check {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 14px;
+}
+.ai-check input {
+  margin-top: 4px;
+  min-width: 18px;
+  min-height: 18px;
+}
+.ai-disclose,
+.ai-send {
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ai-send p,
+.ai-disclose p {
+  margin: 0;
+}
+.ai-pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 12px;
+  max-height: 240px;
+  overflow: auto;
+}
+.ai-err {
+  color: #ff9aa8;
+  margin: 0;
+}
+.ai-ok {
+  color: var(--ok);
+  margin: 0;
+}
+.ai-results {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ai-card {
+  background: var(--panel-dark);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ai-text {
+  font-size: 16px;
+  margin: 0;
+}
+.ai-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+}
+.ai-tag {
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 6px;
+  padding: 0 6px;
+}
+.ai-rhyme {
+  color: var(--ok);
+}
+.ai-reason {
+  margin: 0;
+  font-size: 13px;
+}
+.ai-compare {
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+.ai-compare p {
+  margin: 2px 0;
+}
+.chip-word.on {
+  border-color: var(--accent);
+  background: var(--panel-dark);
+}

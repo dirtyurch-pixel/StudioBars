@@ -7,3 +7,4 @@ Later phases, to verify at the time of use and record here with full notices:
 - Princeton WordNet 3.0 (Phase 3): DONE, unmodified files, full licence kept with every copy (`wordnet-LICENSE.txt`), checksum manifest tested
 - Datamuse API (Phase 3, online, optional, off by default): terms read 2026-11-01. Free and keyless until 1 Feb 2027, then an API key is required (100,000 requests/day/key). **Acknowledgement: this app uses the Datamuse API (https://www.datamuse.com/api/) for the optional online helper.** See `docs/decisions/0006-meanings-phrases-online.md`.
 - Word frequency: DONE for Phase 2 (derived list, CC BY-SA 4.0, optional). Part-of-speech data: DONE in Phase 3 (WordNet).
+- Anthropic Python SDK `anthropic` 2.3.0 (Phase 4, MIT licence, listed in `backend/requirements.txt`): used only when you turn the AI on with a Claude key. Claude is a trademark of Anthropic; this app is not made or endorsed by Anthropic. See `docs/decisions/0007-ai-cowriter.md`.

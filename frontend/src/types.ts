@@ -268,3 +268,107 @@ export type PhraseRhymes = {
   total: number
   results: PhraseRhymeResult[]
 }
+
+// ---------------------------------------------------------------- Phase 4: AI co-writer
+
+export type AiTaskId =
+  | 'next_line'
+  | 'rewrite'
+  | 'shorter'
+  | 'conversational'
+  | 'imagery'
+  | 'punchline'
+  | 'emotion'
+  | 'rhyme'
+  | 'hook'
+  | 'structure'
+  | 'critique'
+
+export type AiTaskInfo = {
+  id: AiTaskId
+  label: string
+  kind: 'lines' | 'notes'
+  needs_line: boolean
+  needs_rhyme: boolean
+  whole_song: boolean
+}
+
+export type AiUsage = {
+  month: string
+  spent_usd: number
+  requests: number
+  cap_usd: number
+  remaining_usd: number
+}
+
+export type AiStatus = {
+  enabled: boolean
+  provider: 'anthropic' | 'openai_compat'
+  model: string
+  base_url: string
+  cap_usd: number
+  price_in: number
+  price_out: number
+  key: { configured: boolean; source: 'env' | 'file' | null; hint: string | null }
+  usage: AiUsage
+  models: { id: string; label: string; typical_request_usd: number }[]
+  providers: { id: string; label: string }[]
+  tasks: AiTaskInfo[]
+  ready: boolean
+  disclosure: string
+}
+
+export type AiSettingsIn = Partial<{
+  enabled: boolean
+  provider: string
+  model: string
+  base_url: string
+  cap_usd: number
+  price_in: number
+  price_out: number
+}>
+
+export type AiRequest = {
+  song_id: string
+  section_id: string
+  task: AiTaskId
+  target_line_id?: string | null
+  rhyme_with_line_id?: string | null
+  count?: number
+  instruction?: string
+  target_syllables?: number | null
+  include_other_sections?: boolean
+}
+
+export type AiPrepared = {
+  hash: string
+  provider: string
+  model: string
+  system: string
+  user: string
+  sent: { sections: string[]; lines: number }
+  est_input_tokens: number
+  max_output_tokens: number
+  est_cost_usd: number
+  worst_cost_usd: number
+  over_budget: boolean
+  usage: AiUsage
+}
+
+export type AiCandidate = {
+  id: string
+  text: string
+  reason: string
+  syllables: { min: number; max: number; exact: boolean; guessed: boolean }
+  rhymes_with_target: string | null
+}
+
+export type AiResult = {
+  kind: 'lines' | 'notes'
+  model: string
+  suggestions: AiCandidate[]
+  notes: string[]
+  target_line_id?: string | null
+  usage: { input_tokens: number; output_tokens: number; cost_usd: number }
+  month: AiUsage
+}

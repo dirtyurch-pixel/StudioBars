@@ -1,4 +1,9 @@
 import type {
+  AiPrepared,
+  AiRequest,
+  AiResult,
+  AiSettingsIn,
+  AiStatus,
   Analysis,
   Content,
   CustomPron,
@@ -305,3 +310,22 @@ export const phraseRhymes = (
     undefined,
     signal,
   )
+
+// ---------------------------------------------------------------- AI co-writer (Phase 4)
+// The key is sent to the local server once and is never returned.
+export const getAiStatus = (signal?: AbortSignal) =>
+  json<AiStatus>('/api/ai/status', undefined, signal)
+export const putAiSettings = (data: AiSettingsIn) =>
+  json<AiStatus>('/api/ai/settings', body('PUT', data))
+export const putAiKey = (provider: string, key: string) =>
+  json<AiStatus>('/api/ai/key', body('PUT', { provider, key }))
+export const deleteAiKey = (provider: string) =>
+  json<AiStatus>(`/api/ai/key?provider=${encodeURIComponent(provider)}`, body('DELETE'))
+export const aiPrepare = (req: AiRequest, signal?: AbortSignal) =>
+  json<AiPrepared>('/api/ai/prepare', body('POST', req), signal)
+export const aiSuggest = (req: AiRequest, ackHash: string, signal?: AbortSignal) =>
+  json<AiResult>('/api/ai/suggest', body('POST', { ...req, ack_hash: ackHash }), signal)
+export const aiAccept = (id: string) =>
+  json<{ ok: boolean }>(`/api/ai/suggestions/${id}/accept`, body('POST'))
+export const aiTest = () =>
+  json<{ ok: boolean; month: AiStatus['usage'] }>('/api/ai/test', body('POST'))

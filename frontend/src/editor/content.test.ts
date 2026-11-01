@@ -3,6 +3,7 @@ import type { Content } from '../types'
 import {
   deleteSection,
   findLine,
+  insertLineWithText,
   lockViolations,
   mergeServerMeta,
   mergeUp,
@@ -116,5 +117,39 @@ describe('sections and sync', () => {
   it('toPayload sends only ids and text, never lock flags', () => {
     const p = toPayload(mk())
     expect(p[0].lines[1]).toEqual({ id: 'b', text: 'beta' })
+  })
+})
+
+describe('insertLineWithText (AI insert)', () => {
+  const mk = (): Content => [
+    {
+      id: 's1',
+      label: 'Verse',
+      section_type: 'verse',
+      lines: [
+        { id: 'a', text: 'one', is_locked: true, comments: [] },
+        { id: 'b', text: 'two', is_locked: false, comments: [] },
+      ],
+    },
+  ]
+  it('adds a new line below the chosen line and leaves a locked line alone', () => {
+    const c = mk()
+    const e = insertLineWithText(c, 's1', 'a', 'new words')!
+    expect(e.content[0].lines.map((l) => l.text)).toEqual(['one', 'new words', 'two'])
+    expect(lockViolations(c, e.content)).toEqual([])
+  })
+  it('fills an empty unlocked line instead of leaving a gap', () => {
+    const c = mk()
+    c[0].lines[1].text = ''
+    const e = insertLineWithText(c, 's1', 'b', 'filled')!
+    expect(e.content[0].lines.map((l) => l.text)).toEqual(['one', 'filled'])
+  })
+  it('appends at the end when no line is chosen and cleans the text', () => {
+    const e = insertLineWithText(mk(), 's1', null, '  hello\nthere ')!
+    expect(e.content[0].lines[e.content[0].lines.length - 1]?.text).toBe('hello there')
+  })
+  it('refuses empty text or an unknown section', () => {
+    expect(insertLineWithText(mk(), 's1', 'b', '   ')).toBeNull()
+    expect(insertLineWithText(mk(), 'nope', 'b', 'x')).toBeNull()
   })
 })

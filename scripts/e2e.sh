@@ -10,17 +10,24 @@ export FAKE_DM="http://127.0.0.1:8765"
 # the online word helper points at a local stand-in, so tests never touch the internet
 export STUDIO_BARS_DATAMUSE_URL="$FAKE_DM"
 export STUDIO_BARS_AUTO_SNAPSHOT_SECONDS=300
+# the AI co-writer talks to a local stand-in (never the real Claude), and its key file goes in the throwaway folder
+export FAKE_AI="http://127.0.0.1:8766"
+export STUDIO_BARS_AI_ANTHROPIC_URL="$FAKE_AI"
+export STUDIO_BARS_AI_KEY_DIR="$TMP/private"
+unset ANTHROPIC_API_KEY STUDIO_BARS_AI_KEY
 cleanup() {
   code=$?
   if [ "$code" -ne 0 ]; then
     echo "=== e2e failed (exit $code): backend log tail ==="; tail -40 "$TMP/back.log" 2>/dev/null || true
     echo "=== fake online service log ==="; tail -5 "$TMP/fake.log" 2>/dev/null || true
   fi
-  kill ${BACK:-} ${FRONT:-} ${FAKE:-} 2>/dev/null || true; rm -rf "$TMP"
+  kill ${BACK:-} ${FRONT:-} ${FAKE:-} ${FAKEAI:-} 2>/dev/null || true; rm -rf "$TMP"
 }
 trap cleanup EXIT
 node "$ROOT/e2e/fake_datamuse.cjs" 8765 >"$TMP/fake.log" 2>&1 &
 FAKE=$!
+node "$ROOT/e2e/fake_ai.cjs" 8766 >"$TMP/fakeai.log" 2>&1 &
+FAKEAI=$!
 cd "$ROOT/backend"
 if [ ! -d .venv ]; then python3 -m venv .venv && .venv/bin/pip install -q -r requirements-dev.txt; fi
 . .venv/bin/activate
@@ -38,3 +45,4 @@ run phase1.cjs
 run phase1b.cjs
 run phase2.cjs
 run phase3.cjs
+run phase4.cjs

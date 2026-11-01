@@ -231,6 +231,29 @@ MIGRATIONS: list[str] = [
         PRIMARY KEY (song_id, line_id)
     );
     """,
+    # Version 7: songs the writer approved for their private "Writing DNA" profile (the profile itself is never stored).
+    """
+    CREATE TABLE dna_songs (
+        song_id TEXT PRIMARY KEY REFERENCES songs(id) ON DELETE CASCADE,
+        approved_at TEXT NOT NULL
+    );
+    """,
+    # Version 8: scratch vocal takes (audio files live in the media folder; this table holds their details).
+    """
+    CREATE TABLE vocal_takes (
+        id TEXT PRIMARY KEY,
+        song_id TEXT NOT NULL REFERENCES songs(id) ON DELETE CASCADE,
+        storage_name TEXT NOT NULL,
+        ext TEXT NOT NULL,
+        media_type TEXT NOT NULL,
+        size_bytes INTEGER NOT NULL,
+        duration_ms INTEGER NOT NULL DEFAULT 0,
+        offset_ms INTEGER NOT NULL DEFAULT 0,
+        note TEXT NOT NULL DEFAULT '',
+        created_at TEXT NOT NULL
+    );
+    CREATE INDEX idx_vocal_takes_song ON vocal_takes(song_id, created_at);
+    """,
 ]
 
 

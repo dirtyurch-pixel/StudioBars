@@ -41,6 +41,7 @@ export function AiPanel(p: Props) {
   const [instruction, setInstruction] = useState('')
   const [syl, setSyl] = useState('')
   const [others, setOthers] = useState(false)
+  const [persona, setPersona] = useState('co_writer')
   const [prepared, setPrepared] = useState<{ req: AiRequest; data: AiPrepared } | null>(null)
   const [busy, setBusy] = useState<'prepare' | 'send' | null>(null)
   const [result, setResult] = useState<AiResult | null>(null)
@@ -101,6 +102,7 @@ export function AiPanel(p: Props) {
       instruction: instruction.trim(),
       target_syllables: Number.isInteger(n) && n > 0 ? n : null,
       include_other_sections: others,
+      persona,
     }
   }
 
@@ -232,6 +234,25 @@ export function AiPanel(p: Props) {
           </label>
         </div>
       )}
+      <label className="ai-field">
+        <span>Writing style of the helper</span>
+        <select
+          className="input"
+          aria-label="Helper style"
+          value={persona}
+          onChange={(e) => {
+            setPersona(e.target.value)
+            setPrepared(null)
+          }}
+        >
+          {status.personas.map((x) => (
+            <option key={x.id} value={x.id}>
+              {x.label}
+            </option>
+          ))}
+        </select>
+        <span className="muted">{status.personas.find((x) => x.id === persona)?.text}</span>
+      </label>
       <label className="ai-field">
         <span>Anything else? (optional, short)</span>
         <input

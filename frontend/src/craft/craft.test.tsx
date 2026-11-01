@@ -18,6 +18,11 @@ const api = vi.hoisted(() => ({
   putPlan: vi.fn(),
   scanSong: vi.fn(),
   getChains: vi.fn(),
+  getDna: vi.fn(),
+  getDnaApproved: vi.fn(),
+  approveDna: vi.fn(),
+  removeDna: vi.fn(),
+  clearDna: vi.fn(),
 }))
 vi.mock('../api', async (orig) => ({ ...(await orig<typeof import('../api')>()), ...api }))
 
@@ -167,6 +172,16 @@ describe('Scan', () => {
       ],
       reused_phrases: [],
       filler: [],
+      singability: [
+        {
+          line_id: 'l1',
+          section: 'Verse',
+          kind: 'long',
+          text: 'a very long line',
+          detail: 'About 18 syllables is a lot for one breath.',
+          breath_after: 6,
+        },
+      ],
       structure: {
         sections: [
           {
@@ -189,6 +204,8 @@ describe('Scan', () => {
     expect(screen.getByText('looks intentional')).toBeInTheDocument()
     expect(screen.getByText(/no chorus or hook/)).toBeInTheDocument()
     expect(screen.getByText(/Estimates, not verdicts/)).toBeInTheDocument()
+    expect(screen.getByText(/lot for one breath/)).toBeInTheDocument()
+    expect(screen.getByText(/not from a recording/)).toBeInTheDocument()
   })
 
   it('finds rhyme chains at the chosen strictness', async () => {
@@ -247,5 +264,42 @@ describe('Plan', () => {
         tags: [],
       }),
     )
+  })
+})
+
+describe('My style', () => {
+  it('only includes a song after the writer chooses, and forgets on request', async () => {
+    api.getDnaApproved.mockResolvedValue([])
+    api.approveDna.mockResolvedValue(undefined)
+    api.getDna.mockResolvedValue({
+      empty: false,
+      songs: [{ id: 'song1', title: 'Rain' }],
+      lines: 8,
+      avg_syllables_per_line: 9.5,
+      avg_words_per_line: 6,
+      end_rhyme_share: 0.5,
+      vocabulary_variety: 0.7,
+      favourite_words: [{ word: 'night', count: 4 }],
+      common_openers: [{ word: 'i', count: 3 }],
+      rhyme_sounds: [{ sound: 'aɪt', uses: 5 }],
+      note: 'never sent to the AI',
+    })
+    open(props(), 'My style')
+    expect(api.getDna).not.toHaveBeenCalled() // nothing is computed until asked
+    fireEvent.click(await screen.findByRole('button', { name: 'Include this song in my style' }))
+    await waitFor(() => expect(api.approveDna).toHaveBeenCalledWith('song1'))
+    fireEvent.click(screen.getByRole('button', { name: 'Show my style' }))
+    expect(await screen.findByText(/night \(4\)/)).toBeInTheDocument()
+    expect(screen.getByText(/50%/)).toBeInTheDocument()
+  })
+
+  it('forgetting everything asks first', async () => {
+    api.getDnaApproved.mockResolvedValue(['song1'])
+    api.clearDna.mockResolvedValue(undefined)
+    open(props(), 'My style')
+    fireEvent.click(await screen.findByRole('button', { name: 'Forget everything…' }))
+    expect(api.clearDna).not.toHaveBeenCalled()
+    fireEvent.click(screen.getByRole('button', { name: 'Yes, forget all' }))
+    await waitFor(() => expect(api.clearDna).toHaveBeenCalled())
   })
 })

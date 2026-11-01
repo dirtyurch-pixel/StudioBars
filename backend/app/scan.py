@@ -162,6 +162,47 @@ def scan_structure(song: dict, resolver: Resolver) -> dict:
     return {"sections": sections, "notes": notes, "disclaimer": "Estimates from the dictionary and simple rules. These are prompts to think about, not verdicts."}  # fmt: skip
 
 
+# ---------------------------------------------------------------- singability / breath (estimates)
+
+LONG_LINE = 14
+CROWDED_RUN = 5  # consonant sounds in a row, counting across word boundaries
+
+
+def singability(song: dict, resolver: Resolver) -> list[dict]:
+    notes = []
+    for sec in song["sections"]:
+        for ln in sec["lines"]:
+            text = ln["text"]
+            if not text.strip():
+                continue
+            toks = tokenize(text)
+            infos = [resolver.lookup(t.norm) for t in toks]
+            syl = sum((i.syl_min + i.syl_max) / 2 for i in infos)
+            if syl > LONG_LINE:
+                # suggest a breath at the comma/dash/word closest to the middle
+                breaks = [t.end for t in toks[:-1] if text[t.end : t.end + 1] in ",;:-—"] or [
+                    toks[len(toks) // 2 - 1].end
+                ]
+                mid = len(text) / 2
+                at = min(breaks, key=lambda b: abs(b - mid))
+                notes.append({"line_id": ln["id"], "section": sec["label"], "kind": "long", "text": text, "detail": f"About {round(syl)} syllables is a lot for one breath. A breath could go after “{text[:at].split()[-1]}”.", "breath_after": at})  # fmt: skip
+            run, worst, where = 0, 0, ""
+            for t, info in zip(toks, infos, strict=True):
+                if not info.has_phones:
+                    run = 0
+                    continue
+                for p in info.prons[0].phones:
+                    if is_vowel(p):
+                        run = 0
+                    else:
+                        run += 1
+                        if run > worst:
+                            worst, where = run, t.text
+            if worst >= CROWDED_RUN:
+                notes.append({"line_id": ln["id"], "section": sec["label"], "kind": "crowded", "text": text, "detail": f"Several consonants pile up near “{where}” ({worst} in a row), which can be hard to say quickly.", "breath_after": None})  # fmt: skip
+    return notes[:60]
+
+
 # ---------------------------------------------------------------- internal rhyme chains
 
 STRICTNESS = {

@@ -2,10 +2,11 @@
 
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Header, Query, Request
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field, StrictBool, StringConstraints
 
-from . import craft, scan
+from . import craft, dna, scan, vocals
 from .phonetics import engine
 from .phonetics.words import Resolver
 from .phonetics_routes import load_custom
@@ -145,7 +146,12 @@ def syllables(text: str = Query(..., max_length=500), conn=Depends(get_conn)):
 @router.get("/songs/{song_id}/scan")
 def scan_song(song_id: str, conn=Depends(get_conn)):
     song = load_song(conn, song_id)
-    return {**scan.scan_text(song), "structure": scan.scan_structure(song, _resolver(conn))}
+    res = _resolver(conn)
+    return {
+        **scan.scan_text(song),
+        "structure": scan.scan_structure(song, res),
+        "singability": scan.singability(song, res),
+    }
 
 
 @router.post("/chains")
@@ -153,3 +159,73 @@ def chains(body: ChainsIn, conn=Depends(get_conn)):
     if not any(t.strip() for t in body.lines):
         raise ApiError(422, "EMPTY", "Give some lines to look at.")
     return scan.rhyme_chains(body.lines, _resolver(conn), body.strictness)
+
+
+@router.get("/dna")
+def get_dna(conn=Depends(get_conn)):
+    return dna.profile(conn, _resolver(conn))
+
+
+@router.put("/dna/songs/{song_id}")
+def dna_approve(song_id: str, conn=Depends(get_conn)):
+    return dna.approve(conn, song_id)
+
+
+@router.delete("/dna/songs/{song_id}")
+def dna_remove(song_id: str, conn=Depends(get_conn)):
+    return dna.remove(conn, song_id)
+
+
+@router.delete("/dna")
+def dna_clear(conn=Depends(get_conn)):
+    return dna.clear(conn)
+
+
+@router.get("/dna/approved")
+def dna_approved(conn=Depends(get_conn)):
+    return dna.approved_ids(conn)
+
+
+# ---------------------------------------------------------------- scratch vocal takes
+
+
+class VocalPatch(BaseModel):
+    note: str | None = Field(None, max_length=200)
+    offset_ms: int | None = None
+
+
+@router.get("/songs/{song_id}/vocals")
+def list_vocals(song_id: str, conn=Depends(get_conn)):
+    return vocals.list_takes(conn, song_id)
+
+
+@router.post("/songs/{song_id}/vocals", status_code=201)
+async def upload_vocal(
+    song_id: str,
+    request: Request,
+    content_type: str = Header(...),
+    x_duration_ms: str | None = Header(None),
+    x_offset_ms: str | None = Header(None),
+    conn=Depends(get_conn),
+):
+    return await vocals.receive(conn, request, song_id, content_type, x_duration_ms, x_offset_ms)
+
+
+@router.patch("/vocals/{take_id}")
+def patch_vocal(take_id: str, body: VocalPatch, conn=Depends(get_conn)):
+    return vocals.update(conn, take_id, body.note, body.offset_ms)
+
+
+@router.delete("/vocals/{take_id}", status_code=204)
+def delete_vocal(take_id: str, conn=Depends(get_conn)):
+    vocals.delete(conn, take_id)
+
+
+@router.get("/vocals/{take_id}/audio")
+def vocal_audio(take_id: str, conn=Depends(get_conn)):
+    path, media_type = vocals.file_for(conn, take_id)
+    return FileResponse(
+        path,
+        media_type=media_type,
+        headers={"Cache-Control": "private, max-age=3600", "X-Content-Type-Options": "nosniff"},
+    )  # noqa: E501

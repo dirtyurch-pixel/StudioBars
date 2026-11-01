@@ -1,4 +1,6 @@
 import type {
+  VocalTake,
+  Dna,
   Chains,
   CraftItem,
   FlowGrid,
@@ -391,3 +393,33 @@ export const getSyllables = (text: string, signal?: AbortSignal) =>
 export const scanSong = (songId: string) => json<ScanResult>(`/api/craft/songs/${songId}/scan`)
 export const getChains = (lines: string[], strictness: string) =>
   json<Chains>('/api/craft/chains', body('POST', { lines, strictness }))
+export const getDna = () => json<Dna>('/api/craft/dna')
+export const getDnaApproved = () => json<string[]>('/api/craft/dna/approved')
+export const approveDna = async (songId: string) => {
+  await request(`/api/craft/dna/songs/${songId}`, body('PUT'))
+}
+export const removeDna = async (songId: string) => {
+  await request(`/api/craft/dna/songs/${songId}`, body('DELETE'))
+}
+export const clearDna = async () => {
+  await request('/api/craft/dna', body('DELETE'))
+}
+
+// scratch vocal takes (Phase 6)
+export const listVocals = (songId: string) => json<VocalTake[]>(`/api/craft/songs/${songId}/vocals`)
+export const uploadVocal = (songId: string, blob: Blob, durationMs: number, offsetMs: number) =>
+  json<VocalTake>(`/api/craft/songs/${songId}/vocals`, {
+    method: 'POST',
+    body: blob,
+    headers: {
+      'Content-Type': blob.type || 'audio/webm',
+      'X-Duration-Ms': String(Math.round(durationMs)),
+      'X-Offset-Ms': String(Math.round(offsetMs)),
+    },
+  })
+export const patchVocal = (id: string, data: { note?: string; offset_ms?: number }) =>
+  json<VocalTake>(`/api/craft/vocals/${id}`, body('PATCH', data))
+export const deleteVocal = async (id: string) => {
+  await request(`/api/craft/vocals/${id}`, body('DELETE'))
+}
+export const vocalUrl = (id: string) => `${BASE}/api/craft/vocals/${id}/audio`

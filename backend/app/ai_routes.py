@@ -22,6 +22,8 @@ Task = Literal[
     "punchline",
     "emotion",
     "rhyme",
+    "metaphor",
+    "wordplay",
     "hook",
     "structure",
     "critique",
@@ -53,6 +55,7 @@ class AiRequest(BaseModel):
     instruction: Annotated[str, StringConstraints(max_length=200)] = ""
     target_syllables: int | None = Field(None, ge=1, le=40)
     include_other_sections: bool = False
+    persona: Literal["co_writer", "editor", "rhyme", "vocal_coach", "critic"] = "co_writer"
 
 
 class SuggestIn(AiRequest):

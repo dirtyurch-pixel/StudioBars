@@ -104,6 +104,20 @@ export function ScanTab({ songId, sectionLines }: CraftProps) {
             </p>
           ))}
 
+          <h4 className="ai-h">Singability and breath ({scan.singability.length})</h4>
+          {scan.singability.length === 0 && (
+            <p className="muted">No very long or crowded lines found.</p>
+          )}
+          {scan.singability.map((n, i) => (
+            <p key={i}>
+              <span className="ai-tag">{n.kind === 'long' ? 'long line' : 'crowded sounds'}</span>{' '}
+              {n.section}: <span className="muted">{n.text}</span> {n.detail}
+            </p>
+          ))}
+          <p className="muted ai-note">
+            Breath and crowding are estimates from the dictionary, not from a recording.
+          </p>
+
           <h4 className="ai-h">Filler words ({scan.filler.length})</h4>
           {scan.filler.map((f, i) => (
             <p key={i}>

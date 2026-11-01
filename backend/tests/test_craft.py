@@ -1,3 +1,5 @@
+import itertools
+
 import pytest
 
 from app import scan
@@ -5,16 +7,19 @@ from app.phonetics import engine
 from app.phonetics.words import Resolver
 from tests.conftest import make_song, to_content
 
+_n = itertools.count()
+
 
 def song_with(client, sections, genres=("hip-hop",)):
     song = make_song(client, genres=list(genres))
+    tag = next(_n)
     c = to_content(song)
     c["sections"] = [
         {
-            "id": f"sect-{i:04d}",
+            "id": f"sect-{tag}-{i:04d}",
             "label": lab,
             "section_type": typ,
-            "lines": [{"id": f"line-{i}{j:03d}", "text": t} for j, t in enumerate(lines)],
+            "lines": [{"id": f"line-{tag}-{i}{j:03d}", "text": t} for j, t in enumerate(lines)],
         }
         for i, (lab, typ, lines) in enumerate(sections)
     ]
@@ -394,3 +399,149 @@ def test_chains_endpoint(client):
         client.post("/api/craft/chains", json={"lines": ["x"], "strictness": "wild"}).status_code
         == 422
     )
+
+
+# ---------------------------------------------------------------- Writing DNA
+
+
+def test_dna_is_empty_until_the_writer_approves_a_song(client):
+    song_with(client, [("Verse", "verse", ["night light bright", "night light bright"])])
+    assert client.get("/api/craft/dna").json() == {"songs": [], "empty": True}
+
+
+def test_dna_describes_only_approved_songs_and_forgets_on_removal(client):
+    a = song_with(
+        client,
+        [
+            (
+                "Verse",
+                "verse",
+                [
+                    "I chase the midnight rain tonight",
+                    "I count the shadows every night",
+                    "I chase the silver light",
+                    "I watch the city light",
+                ],
+            )
+        ],
+    )
+    b = song_with(client, [("Verse", "verse", ["secretword secretword secretword"])])
+    assert client.put(f"/api/craft/dna/songs/{a['id']}").status_code == 200
+    p = client.get("/api/craft/dna").json()
+    assert p["lines"] == 4 and [s["id"] for s in p["songs"]] == [a["id"]]
+    assert "secretword" not in str(p) and p["avg_syllables_per_line"] > 5
+    assert {"word": "i", "count": 4} in p["common_openers"]
+    assert any(w["word"] in ("night", "light") for w in p["favourite_words"])
+    assert p["end_rhyme_share"] is not None and "never sent to the AI" in p["note"]
+    client.put(f"/api/craft/dna/songs/{b['id']}")
+    assert "secretword" in str(client.get("/api/craft/dna").json())
+    client.delete(f"/api/craft/dna/songs/{b['id']}")
+    assert "secretword" not in str(client.get("/api/craft/dna").json())
+    assert client.delete("/api/craft/dna").status_code == 200
+    assert client.get("/api/craft/dna").json()["empty"] is True
+
+
+def test_dna_ignores_deleted_songs_and_unknown_ids(client):
+    a = song_with(client, [("Verse", "verse", ["one two three four"])])
+    client.put(f"/api/craft/dna/songs/{a['id']}")
+    client.delete(f"/api/songs/{a['id']}")
+    assert client.get("/api/craft/dna").json()["empty"] is True
+    assert client.put("/api/craft/dna/songs/nope-nope").status_code == 404
+
+
+def test_dna_never_reaches_the_ai_prompt(client):
+    from app.ai import prompts
+
+    assert "dna" not in prompts.SYSTEM.lower() and "dna" not in prompts.build.__code__.co_names
+
+
+def test_singability_flags_long_and_crowded_lines(client):
+    long_line = "I keep on running through the city streets tonight, thinking about everything that we could never really say"
+    crowded = "Next strikes stressed me out"
+    song = song_with(client, [("Verse", "verse", [long_line, crowded, "Short and sweet"])])
+    notes = client.get(f"/api/craft/songs/{song['id']}/scan").json()["singability"]
+    kinds = {(n["kind"], n["text"]) for n in notes}
+    assert ("long", long_line) in kinds and ("crowded", crowded) in kinds
+    assert not any(n["text"] == "Short and sweet" for n in notes)
+    long_note = next(n for n in notes if n["kind"] == "long")
+    assert long_note["breath_after"] == long_line.index("tonight,") + len(
+        "tonight"
+    )  # the comma nearest the middle
+
+
+# ---------------------------------------------------------------- scratch vocal takes
+
+WEBM = b"\x1a\x45\xdf\xa3" + b"\x00" * 200
+WAV = b"RIFF\x24\x00\x00\x00WAVEfmt " + b"\x00" * 60
+
+
+def upload(client, song_id, data=WEBM, mime="audio/webm;codecs=opus", **hdr):
+    return client.post(
+        f"/api/craft/songs/{song_id}/vocals", content=data, headers={"Content-Type": mime, **hdr}
+    )
+
+
+def test_vocal_take_round_trip(client, tmp_path):
+    song = song_with(client, [("Verse", "verse", ["one"])])
+    r = upload(client, song["id"], **{"X-Duration-Ms": "4200", "X-Offset-Ms": "1500"})
+    assert r.status_code == 201, r.text
+    t = r.json()
+    assert (
+        t["duration_ms"] == 4200
+        and t["offset_ms"] == 1500
+        and t["available"]
+        and t["media_type"] == "audio/webm"
+    )
+    assert client.get(f"/api/craft/songs/{song['id']}/vocals").json()[0]["id"] == t["id"]
+    audio = client.get(f"/api/craft/vocals/{t['id']}/audio")
+    assert (
+        audio.status_code == 200
+        and audio.content == WEBM
+        and audio.headers["content-type"] == "audio/webm"
+    )
+    p = client.patch(
+        f"/api/craft/vocals/{t['id']}", json={"note": "  take two, tighter ", "offset_ms": -120}
+    )
+    assert p.json()["note"] == "take two, tighter" and p.json()["offset_ms"] == -120
+    files = list((tmp_path / "media").glob("vocal-*"))
+    assert len(files) == 1
+    assert client.delete(f"/api/craft/vocals/{t['id']}").status_code == 204
+    assert not list((tmp_path / "media").glob("vocal-*")) and not list(
+        (tmp_path / "media").glob(".incoming-*")
+    )
+    assert client.get(f"/api/craft/vocals/{t['id']}/audio").status_code == 404
+
+
+def test_vocal_take_rejects_bad_uploads_and_leaves_no_files(client, tmp_path):
+    song = song_with(client, [("Verse", "verse", ["one"])])
+    media = tmp_path / "media"
+    assert upload(client, song["id"], b"not audio at all", "audio/webm").status_code == 422
+    assert upload(client, song["id"], b"", "audio/webm").status_code == 422
+    assert upload(client, song["id"], WEBM, "text/html").status_code == 415
+    assert (
+        upload(client, song["id"], WEBM, "audio/webm", **{"X-Offset-Ms": "abc"}).status_code == 422
+    )
+    assert (
+        upload(client, song["id"], WEBM, "audio/webm", **{"X-Duration-Ms": "-5"}).status_code == 422
+    )
+    assert upload(client, "nope-nope", WEBM).status_code == 404
+    assert upload(client, song["id"], WAV, "audio/wav").status_code == 201  # other formats work too
+    assert not list(media.glob(".incoming-*")) and len(list(media.glob("vocal-*"))) == 1
+
+
+def test_vocal_take_size_limit(client, tmp_path, monkeypatch):
+    from app import vocals
+
+    monkeypatch.setattr(vocals, "MAX_TAKE_BYTES", 100)
+    song = song_with(client, [("Verse", "verse", ["one"])])
+    assert upload(client, song["id"], WEBM).status_code == 413
+    assert not list((tmp_path / "media").glob(".incoming-*"))
+
+
+def test_vocal_takes_do_not_touch_lyrics_or_locks(client):
+    song = song_with(client, [("Verse", "verse", ["locked line stays"])])
+    lid = song["sections"][0]["lines"][0]["id"]
+    client.post(f"/api/lines/{lid}/lock")
+    before = lyric_dump(client, song["id"])
+    assert upload(client, song["id"]).status_code == 201
+    assert lyric_dump(client, song["id"]) == before

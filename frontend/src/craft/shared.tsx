@@ -37,3 +37,16 @@ export function useLoad<T>(fn: () => Promise<T>, deps: unknown[]) {
   }, deps)
   return { data, error, reload, setData }
 }
+
+export function recordingSupported(): { ok: boolean; why: string } {
+  if (typeof MediaRecorder === 'undefined' || !navigator.mediaDevices?.getUserMedia) {
+    return { ok: false, why: 'This browser cannot record audio.' }
+  }
+  if (!window.isSecureContext) {
+    return {
+      ok: false,
+      why: 'Browsers only allow the microphone on a secure connection (https:// or localhost). Over plain http:// on your Wi-Fi it is blocked. Record on the computer running Studio Bars, or put the app behind https (for example with a private tunnel such as Tailscale).',
+    }
+  }
+  return { ok: true, why: '' }
+}

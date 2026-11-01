@@ -280,6 +280,8 @@ export type AiTaskId =
   | 'punchline'
   | 'emotion'
   | 'rhyme'
+  | 'metaphor'
+  | 'wordplay'
   | 'hook'
   | 'structure'
   | 'critique'
@@ -314,6 +316,7 @@ export type AiStatus = {
   models: { id: string; label: string; typical_request_usd: number }[]
   providers: { id: string; label: string }[]
   tasks: AiTaskInfo[]
+  personas: { id: string; label: string; text: string }[]
   ready: boolean
   disclosure: string
 }
@@ -338,6 +341,7 @@ export type AiRequest = {
   instruction?: string
   target_syllables?: number | null
   include_other_sections?: boolean
+  persona?: string
 }
 
 export type AiPrepared = {
@@ -446,6 +450,14 @@ export type ScanResult = {
   }[]
   reused_phrases: { phrase: string; count: number; line_ids: string[] }[]
   filler: { line_id: string; section: string; words: string[]; text: string }[]
+  singability: {
+    line_id: string
+    section: string
+    kind: 'long' | 'crowded'
+    text: string
+    detail: string
+    breath_after: number | null
+  }[]
   structure: {
     sections: {
       label: string
@@ -474,4 +486,32 @@ export type Chains = {
   }[]
   strictness: string
   note: string
+}
+
+export type Dna =
+  | { empty: true; songs: [] }
+  | {
+      empty: false
+      songs: { id: string; title: string }[]
+      lines: number
+      avg_syllables_per_line: number | null
+      avg_words_per_line: number | null
+      end_rhyme_share: number | null
+      vocabulary_variety: number | null
+      favourite_words: { word: string; count: number }[]
+      common_openers: { word: string; count: number }[]
+      rhyme_sounds: { sound: string; uses: number }[]
+      note: string
+    }
+
+export type VocalTake = {
+  id: string
+  song_id: string
+  duration_ms: number
+  offset_ms: number
+  note: string
+  size_bytes: number
+  media_type: string
+  created_at: string
+  available: boolean
 }

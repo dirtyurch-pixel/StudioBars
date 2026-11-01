@@ -41,6 +41,10 @@ const status = (over: Partial<AiStatus> = {}): AiStatus =>
     usage,
     models: [{ id: 'claude-opus-5-5', label: 'Claude Opus 5.5', typical_request_usd: 0.016 }],
     providers: [{ id: 'anthropic', label: 'Claude (Anthropic)' }],
+    personas: [
+      { id: 'co_writer', label: 'Co-writer', text: 'collaborative' },
+      { id: 'critic', label: 'Critical reviewer', text: 'strict' },
+    ],
     tasks: [
       task('next_line', 'Next line'),
       task('rewrite', 'Rewrite this line', { needs_line: true }),
@@ -141,6 +145,15 @@ describe('AiPanel', () => {
       prepared.hash,
       expect.anything(),
     )
+  })
+
+  it('sends the chosen helper style and shows what it means', async () => {
+    show()
+    fireEvent.change(await screen.findByLabelText('Helper style'), { target: { value: 'critic' } })
+    expect(screen.getByText('strict')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Show what will be sent' }))
+    await screen.findByRole('region', { name: 'What will be sent' })
+    expect(api.aiPrepare).toHaveBeenCalledWith(expect.objectContaining({ persona: 'critic' }))
   })
 
   it('does not send if the song could not be saved first', async () => {

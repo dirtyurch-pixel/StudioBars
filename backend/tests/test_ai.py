@@ -443,3 +443,38 @@ def test_database_has_no_ai_writes_to_lyrics_tables(client, fake, setup):
     before = snap()
     assert go(client, req(song, sid))[0].status_code == 200
     assert snap() == before
+
+
+# ---------------------------------------------------------------- Phase 6: personas, metaphor, wordplay
+
+
+def test_persona_changes_only_the_visible_instructions(client, fake, setup):
+    song, sid, _ = setup
+    a = client.post("/api/ai/prepare", json=req(song, sid)).json()
+    b = client.post("/api/ai/prepare", json=req(song, sid, persona="vocal_coach")).json()
+    assert "collaborative co-writer" in a["system"] and "vocal coach" in b["system"]
+    assert a["user"] == b["user"] and a["hash"] != b["hash"]
+    assert "Never" in b["system"] and "[LOCKED]" in b["system"]  # the safety rules are always kept
+    assert client.post("/api/ai/prepare", json=req(song, sid, persona="pirate")).status_code == 422
+    assert {p["id"] for p in client.get("/api/ai/status").json()["personas"]} == {
+        "co_writer",
+        "editor",
+        "rhyme",
+        "vocal_coach",
+        "critic",
+    }
+
+
+@pytest.mark.parametrize("task", ["metaphor", "wordplay"])
+def test_metaphor_and_wordplay_need_an_unlocked_target_line(client, fake, setup, task):
+    song, sid, ids = setup
+    assert (
+        client.post("/api/ai/prepare", json=req(song, sid, task)).status_code == 422
+    )  # no line chosen
+    client.post(f"/api/lines/{ids[1]}/lock")
+    assert (
+        client.post("/api/ai/prepare", json=req(song, sid, task, target_line_id=ids[1])).status_code
+        == 423
+    )
+    r, _ = go(client, req(song, sid, task, target_line_id=ids[0]))
+    assert r.status_code == 200 and r.json()["target_line_id"] == ids[0]

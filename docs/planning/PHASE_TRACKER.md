@@ -12,7 +12,7 @@
 | Phase 3 | Word meanings, dictionary and phrase tools | BUILT - awaiting owner review (see HANDOVER.md) |
 | Phase 4 | AI co-writer, safe suggestions and structured outputs | BUILT - awaiting owner review (see HANDOVER.md) |
 | Phase 5 | Advanced lyric writing, hooks, flow, song timing | BUILT (core set; see docs/decisions/0008) - awaiting owner review |
-| Phase 6 | Vocal recording, audio sync, analysis, training | NOT STARTED |
+| Phase 6 | Vocal recording, audio sync, analysis, training | BUILT (core set; see docs/decisions/0009) - awaiting owner review |
 | Phase 7 | Windows packaging, responsive/mobile and release verification | NOT STARTED |
 | Phase 8 | Melody sketchpad, hum-to-melody, lyric-to-melody fit, chords | NOT STARTED |
 | Future | Multi-user collaboration | DEFERRED / SEPARATE APPROVAL |

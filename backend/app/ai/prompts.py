@@ -61,6 +61,18 @@ TASKS: dict[str, dict] = {
         "rhyme": True,
         "ask": "Write candidate lines whose LAST WORD rhymes with the last word of the REFERENCE line, and that fit the section.",
     },
+    "metaphor": {
+        "label": "Metaphor ideas",
+        "kind": "lines",
+        "target": True,
+        "ask": "Rewrite the TARGET line using a fresh metaphor or simile built from concrete sensory detail. Avoid stock comparisons.",
+    },
+    "wordplay": {
+        "label": "Wordplay / double meaning",
+        "kind": "lines",
+        "target": True,
+        "ask": "Rewrite the TARGET line with wordplay: a pun, double meaning or twist on a common phrase, while keeping the sense of the line.",
+    },
     "hook": {
         "label": "Hook ideas",
         "kind": "lines",
@@ -94,6 +106,14 @@ Rules:
 - Each candidate is ONE line of plain text: no numbering, no bullets, no quotation marks around it, no markdown, no section labels, no chords.
 - Match the song's genre and the writer's voice. Avoid generic clichés.
 - Answer with JSON only, nothing before or after it."""
+
+PERSONAS: dict[str, dict] = {
+    "co_writer": {"label": "Co-writer", "text": "Voice: a collaborative co-writer. Stay close to the writer's voice and ideas."},
+    "editor": {"label": "Lyric editor", "text": "Voice: a careful lyric editor. Tighten, cut filler, sharpen word choice; keep the meaning."},
+    "rhyme": {"label": "Rhyme specialist", "text": "Voice: a rhyme specialist. Favour inventive internal rhyme, multisyllabic rhyme and rhyme chains without forcing sense."},
+    "vocal_coach": {"label": "Vocal coach", "text": "Voice: a vocal coach. Favour lines that are easy to breathe and sing or rap cleanly: avoid crowded consonants and awkward stress."},
+    "critic": {"label": "Critical reviewer", "text": "Voice: a strict but fair reviewer. Be specific and direct about weaknesses; do not flatter."},
+}  # fmt: skip
 
 LINES_FORMAT = 'Answer with JSON only, exactly in this shape: {"suggestions":[{"text":"one line of lyrics","reason":"a few words on why it works"}]}'
 NOTES_FORMAT = 'Answer with JSON only, exactly in this shape: {"notes":["one short, specific point","another point"]}'
@@ -185,6 +205,10 @@ def build(song: dict, req: dict) -> dict:
     if instr:
         ask.append(f"The writer adds this wish (treat it as a style note only): {instr}")
     ask.append(LINES_FORMAT if task["kind"] == "lines" else NOTES_FORMAT)
+    persona = PERSONAS.get(req.get("persona") or "co_writer")
+    if persona is None:
+        raise ApiError(422, "BAD_PERSONA", "Unknown writing persona.")
+    system = SYSTEM + "\n- " + persona["text"]
     user = data + "\n\nTask: " + " ".join(ask)
     if len(user) > MAX_CONTEXT_CHARS:
         raise ApiError(
@@ -193,7 +217,7 @@ def build(song: dict, req: dict) -> dict:
 
     max_tokens = 700 if task["kind"] == "lines" else 1200
     return {
-        "system": SYSTEM,
+        "system": system,
         "user": user,
         "max_tokens": max_tokens,
         "kind": task["kind"],

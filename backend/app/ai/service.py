@@ -46,6 +46,7 @@ def status(conn) -> dict:
         "models": models,
         "providers": [{"id": k, "label": v} for k, v in PROVIDER_LABELS.items()],
         "tasks": [{"id": k, "label": v["label"], "kind": v["kind"], "needs_line": v["target"], "needs_rhyme": bool(v.get("rhyme")), "whole_song": bool(v.get("whole"))} for k, v in prompts.TASKS.items()],
+        "personas": [{"id": k, "label": v["label"], "text": v["text"]} for k, v in prompts.PERSONAS.items()],
         "ready": _ready(s),
         "disclosure": (
             "When you press Send, the text shown in “What will be sent” (your title, genres and the lines of the sections listed) "

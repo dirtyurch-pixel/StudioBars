@@ -195,6 +195,42 @@ MIGRATIONS: list[str] = [
     );
     CREATE INDEX idx_ai_suggestions_song ON ai_suggestions(song_id, created_at);
     """,
+    # Version 6: Phase 5 craft tools. Vault (song_id NULL) and concept board (per song), alternative takes,
+    # a per-song plan, and flow grids. None of these touch the lyric tables.
+    """
+    CREATE TABLE craft_items (
+        id TEXT PRIMARY KEY,
+        song_id TEXT REFERENCES songs(id) ON DELETE CASCADE,
+        kind TEXT NOT NULL,
+        text TEXT NOT NULL,
+        tags TEXT NOT NULL DEFAULT '[]',
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+    CREATE INDEX idx_craft_items_song ON craft_items(song_id, kind);
+    CREATE TABLE alt_takes (
+        id TEXT PRIMARY KEY,
+        song_id TEXT NOT NULL REFERENCES songs(id) ON DELETE CASCADE,
+        line_id TEXT NOT NULL,
+        text TEXT NOT NULL,
+        favourite INTEGER NOT NULL DEFAULT 0,
+        note TEXT NOT NULL DEFAULT '',
+        created_at TEXT NOT NULL
+    );
+    CREATE INDEX idx_alt_takes_line ON alt_takes(song_id, line_id);
+    CREATE TABLE song_plan (
+        song_id TEXT PRIMARY KEY REFERENCES songs(id) ON DELETE CASCADE,
+        plan_json TEXT NOT NULL DEFAULT '{}',
+        updated_at TEXT NOT NULL
+    );
+    CREATE TABLE flow_grids (
+        song_id TEXT NOT NULL REFERENCES songs(id) ON DELETE CASCADE,
+        line_id TEXT NOT NULL,
+        grid_json TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        PRIMARY KEY (song_id, line_id)
+    );
+    """,
 ]
 
 

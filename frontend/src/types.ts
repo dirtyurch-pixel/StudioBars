@@ -372,3 +372,106 @@ export type AiResult = {
   usage: { input_tokens: number; output_tokens: number; cost_usd: number }
   month: AiUsage
 }
+
+// ---------------------------------------------------------------- Phase 5: craft tools
+
+export type CraftItem = {
+  id: string
+  song_id: string | null
+  kind: string
+  text: string
+  tags: string[]
+  created_at: string
+}
+export const VAULT_KINDS = ['hook', 'punchline', 'bar', 'rhyme', 'idea'] as const
+export const CONCEPT_KINDS = [
+  'theme',
+  'character',
+  'scene',
+  'title',
+  'mood',
+  'arc',
+  'hook',
+  'idea',
+] as const
+
+export type Take = {
+  id: string
+  line_id: string
+  text: string
+  favourite: boolean
+  note: string
+  created_at: string
+}
+export type Plan = {
+  scene: string
+  conflict: string
+  turning_point: string
+  emotional_arc: string
+  notes: string
+}
+export const PLAN_LABELS: [keyof Plan, string][] = [
+  ['scene', 'Scene: where and when'],
+  ['conflict', 'Conflict: what is the tension?'],
+  ['turning_point', 'Turning point: what changes?'],
+  ['emotional_arc', 'Emotional arc: where does the feeling go?'],
+  ['notes', 'Other notes'],
+]
+
+export type Subdivision = '8th' | '16th' | 'triplet'
+export const SLOTS_PER_BAR: Record<Subdivision, number> = { '8th': 8, '16th': 16, triplet: 12 }
+export type FlowGrid = {
+  subdivision: Subdivision
+  bars: number
+  assign: (number | null)[]
+  accents: boolean[]
+  rests: number[]
+}
+export type SyllableInfo = {
+  word: string
+  word_index: number
+  stress: 0 | 1 | 2 | null
+  first: boolean
+  guess: boolean
+}
+
+export type ScanResult = {
+  cliches: { line_id: string; section: string; phrase: string; text: string }[]
+  repeated_lines: {
+    text: string
+    count: number
+    line_ids: string[]
+    sections: string[]
+    intentional: boolean
+  }[]
+  reused_phrases: { phrase: string; count: number; line_ids: string[] }[]
+  filler: { line_id: string; section: string; words: string[]; text: string }[]
+  structure: {
+    sections: {
+      label: string
+      type: string
+      lines: number
+      avg_syllables: number | null
+      spread: number | null
+      rhyme_families: number
+      end_rhyme_share: number | null
+    }[]
+    notes: string[]
+    disclaimer: string
+  }
+}
+export type Chains = {
+  chains: {
+    members: {
+      line: number
+      word: string
+      start: number
+      end: number
+      alternate_pronunciations: boolean
+    }[]
+    internal: boolean
+    weakest_link: string | null
+  }[]
+  strictness: string
+  note: string
+}

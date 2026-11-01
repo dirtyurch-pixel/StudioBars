@@ -53,4 +53,5 @@ run phase1b.cjs
 run phase2.cjs
 run phase3.cjs
 run phase4.cjs
+run phase5.cjs
 run phase7.cjs

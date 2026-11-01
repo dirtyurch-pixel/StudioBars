@@ -1,4 +1,11 @@
 import type {
+  Chains,
+  CraftItem,
+  FlowGrid,
+  Plan,
+  ScanResult,
+  SyllableInfo,
+  Take,
   AiPrepared,
   AiRequest,
   AiResult,
@@ -337,3 +344,50 @@ export const authStatus = () => json<{ required: boolean; ok: boolean }>('/api/a
 export const authLogin = (pin: string) =>
   json<{ required: boolean; ok: boolean }>('/api/auth/login', body('POST', { pin }))
 export const authLogout = () => json<{ ok: boolean }>('/api/auth/logout', body('POST'))
+
+// ---------------------------------------------------------------- craft tools (Phase 5)
+export const listCraft = (songId: string | null, kind?: string, q = '', tag = '') => {
+  const p = new URLSearchParams()
+  if (songId) p.set('song_id', songId)
+  if (kind) p.set('kind', kind)
+  if (q.trim()) p.set('q', q.trim())
+  if (tag) p.set('tag', tag)
+  return json<CraftItem[]>(`/api/craft/items?${p}`)
+}
+export const addCraft = (data: {
+  song_id: string | null
+  kind: string
+  text: string
+  tags: string[]
+}) => json<CraftItem>('/api/craft/items', body('POST', data))
+export const deleteCraft = async (id: string) => {
+  await request(`/api/craft/items/${id}`, body('DELETE'))
+}
+export const listTakes = (songId: string, lineId: string) =>
+  json<Take[]>(`/api/craft/songs/${songId}/takes?line_id=${encodeURIComponent(lineId)}`)
+export const addTake = (songId: string, lineId: string, text: string, note = '') =>
+  json<Take>(`/api/craft/songs/${songId}/takes`, body('POST', { line_id: lineId, text, note }))
+export const setTakeFavourite = (id: string, favourite: boolean) =>
+  json<Take>(`/api/craft/takes/${id}/favourite`, body('PUT', { favourite }))
+export const deleteTake = async (id: string) => {
+  await request(`/api/craft/takes/${id}`, body('DELETE'))
+}
+export const getPlan = (songId: string) => json<Plan>(`/api/craft/songs/${songId}/plan`)
+export const putPlan = (songId: string, plan: Plan) =>
+  json<Plan>(`/api/craft/songs/${songId}/plan`, body('PUT', plan))
+export const getGrids = (songId: string) =>
+  json<Record<string, FlowGrid>>(`/api/craft/songs/${songId}/grids`)
+export const putGrid = (songId: string, lineId: string, grid: FlowGrid) =>
+  json<FlowGrid>(`/api/craft/songs/${songId}/grids/${lineId}`, body('PUT', grid))
+export const deleteGrid = async (songId: string, lineId: string) => {
+  await request(`/api/craft/songs/${songId}/grids/${lineId}`, body('DELETE'))
+}
+export const getSyllables = (text: string, signal?: AbortSignal) =>
+  json<{ syllables: SyllableInfo[] }>(
+    `/api/craft/syllables?text=${encodeURIComponent(text)}`,
+    undefined,
+    signal,
+  )
+export const scanSong = (songId: string) => json<ScanResult>(`/api/craft/songs/${songId}/scan`)
+export const getChains = (lines: string[], strictness: string) =>
+  json<Chains>('/api/craft/chains', body('POST', { lines, strictness }))

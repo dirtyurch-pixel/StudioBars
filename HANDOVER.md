@@ -5,7 +5,9 @@
 - Phase 3 (word meanings, phrase bank, optional online helper) done.
 - **Phase 4 (AI co-writer): built, tested here against local stand-ins for Claude, awaiting owner review.** Phase 5 is NOT started and not authorised.
 
-- **Phone/tablet mode (owner request, outside the original phase order): built.** One address, mandatory PIN, installable. Phases 5-8 are NOT built.
+- **Phone/tablet mode (owner request, outside the original phase order): built.** One address, mandatory PIN, installable. 
+
+- **Phase 5 (Craft tab: Flow grid, Takes, Vault, Plan/idea board, Scan + rhyme chains): built, tested here.** Details and what is NOT included: `docs/decisions/0008-craft-tools.md`. Phases 6-8 not built yet.
 
 ## How to run / check
 - Run: `./scripts/dev.sh` (Windows: `.\scripts\dev.ps1`, not yet run on Windows) then open http://localhost:5173

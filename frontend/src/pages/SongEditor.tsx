@@ -33,6 +33,7 @@ import { usePadSettings } from '../phonetics/padSettings'
 import { RhymePanel } from '../phonetics/RhymePanel'
 import { WordsPanel } from '../words/WordsPanel'
 import { AiPanel } from '../ai/AiPanel'
+import { CraftPanel } from '../craft/CraftPanel'
 import { useLineAnalysis } from '../phonetics/useLineAnalysis'
 import { useSongLink } from '../music/useSongLink'
 import { goHome } from '../route'
@@ -50,7 +51,7 @@ const NO_LINES: Line[] = []
 type Phase = 'loading' | 'ready' | 'error' | 'missing'
 export type SaveStatus = 'saved' | 'unsaved' | 'saving' | 'offline' | 'error' | 'conflict'
 type Meta = { title: string; genres: Genre[]; bpm: number | null; time_signature: string | null }
-type Tool = 'notes' | 'rhymes' | 'words' | 'ai' | 'music' | 'history' | 'files'
+type Tool = 'notes' | 'rhymes' | 'words' | 'ai' | 'craft' | 'music' | 'history' | 'files'
 
 const STATUS_TEXT: Record<SaveStatus, string> = {
   saved: 'Saved',
@@ -900,34 +901,36 @@ export default function SongEditor({ id }: { id: string }) {
 
         <aside className={`ed-side hide-focus${toolsOpen ? ' open' : ''}`} aria-label="Tools">
           <div className="side-tabs" role="tablist">
-            {(['notes', 'rhymes', 'words', 'ai', 'music', 'history', 'files'] as Tool[]).map(
-              (t) => (
-                <button
-                  key={t}
-                  role="tab"
-                  aria-selected={tool === t}
-                  className={`tab${tool === t ? ' on' : ''}`}
-                  onClick={() => {
-                    setTool(t)
-                    setToolsOpen(true)
-                  }}
-                >
-                  {t === 'notes'
-                    ? 'Notes'
-                    : t === 'rhymes'
-                      ? 'Rhymes'
-                      : t === 'words'
-                        ? 'Words'
-                        : t === 'ai'
-                          ? 'AI'
+            {(
+              ['notes', 'rhymes', 'words', 'ai', 'craft', 'music', 'history', 'files'] as Tool[]
+            ).map((t) => (
+              <button
+                key={t}
+                role="tab"
+                aria-selected={tool === t}
+                className={`tab${tool === t ? ' on' : ''}`}
+                onClick={() => {
+                  setTool(t)
+                  setToolsOpen(true)
+                }}
+              >
+                {t === 'notes'
+                  ? 'Notes'
+                  : t === 'rhymes'
+                    ? 'Rhymes'
+                    : t === 'words'
+                      ? 'Words'
+                      : t === 'ai'
+                        ? 'AI'
+                        : t === 'craft'
+                          ? 'Craft'
                           : t === 'music'
                             ? 'Music'
                             : t === 'history'
                               ? 'History'
                               : 'Export'}
-                </button>
-              ),
-            )}
+              </button>
+            ))}
             <button
               className="btn btn-ghost side-toggle"
               onClick={() => setToolsOpen((v) => !v)}
@@ -987,6 +990,28 @@ export default function SongEditor({ id }: { id: string }) {
                 lastLineId={section?.lines[section.lines.length - 1]?.id ?? null}
                 saveNow={saveNow}
                 lineText={(lid) => findLine(contentRef.current, lid)?.line.text ?? null}
+                onInsert={(text, after) =>
+                  !!section &&
+                  applyEdit(insertLineWithText(contentRef.current, section.id, after, text))
+                }
+                onReplace={(lid, text) => apply(setLineText(contentRef.current, lid, text))}
+              />
+            )}
+            {tool === 'craft' && (
+              <CraftPanel
+                songId={id}
+                sectionLines={section?.lines ?? NO_LINES}
+                activeLine={
+                  activeLine && section?.lines.some((l) => l.id === activeLine.line.id)
+                    ? {
+                        id: activeLine.line.id,
+                        text: activeLine.line.text,
+                        locked: activeLine.line.is_locked,
+                        number: activeLine.i + 1,
+                      }
+                    : null
+                }
+                bpm={meta?.bpm ?? null}
                 onInsert={(text, after) =>
                   !!section &&
                   applyEdit(insertLineWithText(contentRef.current, section.id, after, text))

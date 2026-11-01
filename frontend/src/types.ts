@@ -515,3 +515,8 @@ export type VocalTake = {
   created_at: string
   available: boolean
 }
+
+export type MelodySketch = {
+  notes: { id?: string; start16: number; len16: number; midi: number }[]
+  chords: Record<string, string>
+}

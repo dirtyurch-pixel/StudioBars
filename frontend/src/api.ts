@@ -1,4 +1,5 @@
 import type {
+  MelodySketch,
   VocalTake,
   Dna,
   Chains,
@@ -423,3 +424,14 @@ export const deleteVocal = async (id: string) => {
   await request(`/api/craft/vocals/${id}`, body('DELETE'))
 }
 export const vocalUrl = (id: string) => `${BASE}/api/craft/vocals/${id}/audio`
+
+// melody sketch and chords (Phase 8)
+export const getMelody = (songId: string) => json<MelodySketch>(`/api/craft/songs/${songId}/melody`)
+export const putMelody = (songId: string, sketch: Omit<MelodySketch, never>) =>
+  json<MelodySketch>(
+    `/api/craft/songs/${songId}/melody`,
+    body('PUT', {
+      notes: sketch.notes.map(({ start16, len16, midi }) => ({ start16, len16, midi })),
+      chords: sketch.chords,
+    }),
+  )

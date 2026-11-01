@@ -23,6 +23,8 @@ const api = vi.hoisted(() => ({
   approveDna: vi.fn(),
   removeDna: vi.fn(),
   clearDna: vi.fn(),
+  getMelody: vi.fn(),
+  putMelody: vi.fn(),
 }))
 vi.mock('../api', async (orig) => ({ ...(await orig<typeof import('../api')>()), ...api }))
 
@@ -301,5 +303,65 @@ describe('My style', () => {
     expect(api.clearDna).not.toHaveBeenCalled()
     fireEvent.click(screen.getByRole('button', { name: 'Yes, forget all' }))
     await waitFor(() => expect(api.clearDna).toHaveBeenCalled())
+  })
+})
+
+describe('Melody', () => {
+  it('lets the writer place notes and chords by hand, and saves them without touching lyrics', async () => {
+    api.getMelody.mockResolvedValue({ notes: [], chords: {} })
+    api.putMelody.mockImplementation(
+      async (_id: string, m: { notes: unknown[]; chords: Record<string, string> }) => m,
+    )
+    const p = open(props(), 'Melody')
+    fireEvent.click(await screen.findByRole('button', { name: 'C4 step 1' }))
+    expect(screen.getByRole('button', { name: 'C4 step 1 note' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'C4 step 2 note' })).toBeInTheDocument() // default length is an eighth = 2 steps
+    fireEvent.click(screen.getByRole('button', { name: 'E4 step 5' }))
+    fireEvent.change(screen.getByLabelText('Chord for bar 1'), { target: { value: 'Am' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Save sketch' }))
+    await waitFor(() => expect(api.putMelody).toHaveBeenCalled())
+    const sent = api.putMelody.mock.calls[0][1]
+    expect(sent.notes).toEqual([
+      { start16: 0, len16: 2, midi: 60 },
+      { start16: 4, len16: 2, midi: 64 },
+    ])
+    expect(sent.chords).toEqual({ '0': 'Am' })
+    expect(await screen.findByText(/lyrics were not touched/)).toBeInTheDocument()
+    expect(p.onReplace).not.toHaveBeenCalled()
+    expect(p.onInsert).not.toHaveBeenCalled()
+  })
+
+  it('clicking a note again removes it', async () => {
+    api.getMelody.mockResolvedValue({
+      notes: [{ id: 'n1', start16: 0, len16: 2, midi: 60 }],
+      chords: {},
+    })
+    open(props(), 'Melody')
+    fireEvent.click(await screen.findByRole('button', { name: 'C4 step 2 note' }))
+    expect(screen.queryByRole('button', { name: 'C4 step 1 note' })).not.toBeInTheDocument()
+  })
+
+  it('shows the server’s plain message for a chord it does not understand', async () => {
+    const { ApiFail } = await import('../api')
+    api.getMelody.mockResolvedValue({ notes: [], chords: {} })
+    api.putMelody.mockRejectedValue(
+      new ApiFail('“H9” is not a chord symbol I understand', { status: 422, code: 'BAD_CHORD' }),
+    )
+    open(props(), 'Melody')
+    fireEvent.change(await screen.findByLabelText('Chord for bar 1'), { target: { value: 'H9' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Save sketch' }))
+    expect(await screen.findByText(/not a chord symbol/)).toBeInTheDocument()
+  })
+
+  it('compares syllables with notes in plain words', async () => {
+    api.getMelody.mockResolvedValue({
+      notes: [{ id: 'n1', start16: 0, len16: 2, midi: 60 }],
+      chords: {},
+    })
+    api.getSyllables.mockResolvedValue({ syllables: [sy('rain', 1), sy('on', 0), sy('glass', 1)] })
+    open(props(), 'Melody')
+    await screen.findByRole('button', { name: 'C4 step 1 note' })
+    fireEvent.click(screen.getByRole('button', { name: 'Check lyric fit' }))
+    expect(await screen.findByText(/3 syllables but only 1 note:/)).toBeInTheDocument()
   })
 })

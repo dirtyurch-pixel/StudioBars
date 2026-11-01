@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { DnaTab } from './DnaTab'
 import { FlowTab } from './FlowTab'
+import { MelodyTab } from './MelodyTab'
 import { PlanTab } from './PlanTab'
 import { RecordTab } from './RecordTab'
 import { ScanTab } from './ScanTab'
@@ -16,6 +17,7 @@ const TABS = [
   ['scan', 'Scan'],
   ['dna', 'My style'],
   ['record', 'Record'],
+  ['melody', 'Melody'],
 ] as const
 
 export function CraftPanel(p: CraftProps) {
@@ -41,6 +43,7 @@ export function CraftPanel(p: CraftProps) {
       {tab === 'scan' && <ScanTab {...p} />}
       {tab === 'dna' && <DnaTab {...p} />}
       {tab === 'record' && <RecordTab {...p} />}
+      {tab === 'melody' && <MelodyTab {...p} />}
     </div>
   )
 }

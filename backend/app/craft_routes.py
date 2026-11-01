@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, Header, Query, Request
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field, StrictBool, StringConstraints
 
-from . import craft, dna, scan, vocals
+from . import craft, dna, melody, scan, vocals
 from .phonetics import engine
 from .phonetics.words import Resolver
 from .phonetics_routes import load_custom
@@ -229,3 +229,29 @@ def vocal_audio(take_id: str, conn=Depends(get_conn)):
         media_type=media_type,
         headers={"Cache-Control": "private, max-age=3600", "X-Content-Type-Options": "nosniff"},
     )  # noqa: E501
+
+
+# ---------------------------------------------------------------- melody sketch and chords
+
+
+class NoteIn(BaseModel):
+    start16: int
+    len16: int
+    midi: int
+
+
+class MelodyIn(BaseModel):
+    notes: list[NoteIn] = Field(default_factory=list, max_length=melody.MAX_NOTES)
+    chords: dict[str, Annotated[str, StringConstraints(max_length=12)]] = Field(
+        default_factory=dict, max_length=melody.MAX_BARS
+    )
+
+
+@router.get("/songs/{song_id}/melody")
+def get_melody(song_id: str, conn=Depends(get_conn)):
+    return melody.get(conn, song_id)
+
+
+@router.put("/songs/{song_id}/melody")
+def put_melody(song_id: str, body: MelodyIn, conn=Depends(get_conn)):
+    return melody.put(conn, song_id, [n.model_dump() for n in body.notes], body.chords)

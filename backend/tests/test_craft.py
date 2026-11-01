@@ -545,3 +545,84 @@ def test_vocal_takes_do_not_touch_lyrics_or_locks(client):
     before = lyric_dump(client, song["id"])
     assert upload(client, song["id"]).status_code == 201
     assert lyric_dump(client, song["id"]) == before
+
+
+# ---------------------------------------------------------------- melody sketch and chords
+
+
+def test_melody_round_trip_replaces_everything(client):
+    song = song_with(client, [("Verse", "verse", ["one"])])
+    url = f"/api/craft/songs/{song['id']}/melody"
+    assert client.get(url).json() == {"notes": [], "chords": {}}
+    r = client.put(
+        url,
+        json={
+            "notes": [
+                {"start16": 4, "len16": 2, "midi": 64},
+                {"start16": 0, "len16": 4, "midi": 60},
+            ],
+            "chords": {"0": "C", "1": " Am7 ", "2": ""},
+        },
+    )
+    assert r.status_code == 200
+    got = r.json()
+    assert [(n["start16"], n["midi"]) for n in got["notes"]] == [(0, 60), (4, 64)] and got[
+        "chords"
+    ] == {"0": "C", "1": "Am7"}
+    assert client.put(url, json={"notes": [], "chords": {}}).json() == {"notes": [], "chords": {}}
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        {"notes": [{"start16": -1, "len16": 1, "midi": 60}]},
+        {"notes": [{"start16": 0, "len16": 0, "midi": 60}]},
+        {"notes": [{"start16": 0, "len16": 1, "midi": 20}]},
+        {"notes": [{"start16": 0, "len16": 1, "midi": 100}]},
+        {"notes": [{"start16": 1020, "len16": 8, "midi": 60}]},
+        {"notes": [{"start16": 0, "len16": 4, "midi": 60}, {"start16": 2, "len16": 4, "midi": 60}]},
+        {"chords": {"0": "H9"}},
+        {"chords": {"0": "C; DROP TABLE"}},
+        {"chords": {"x": "C"}},
+        {"chords": {"99": "C"}},
+    ],
+)
+def test_melody_rejects_nonsense_and_keeps_the_old_sketch(client, bad):
+    song = song_with(client, [("Verse", "verse", ["one"])])
+    url = f"/api/craft/songs/{song['id']}/melody"
+    client.put(url, json={"notes": [{"start16": 0, "len16": 2, "midi": 60}], "chords": {"0": "C"}})
+    assert client.put(url, json={"notes": [], "chords": {}, **bad}).status_code in (422,)
+    assert (
+        client.get(url).json()["chords"] == {"0": "C"} and len(client.get(url).json()["notes"]) == 1
+    )
+
+
+def test_overlap_of_different_pitches_is_fine_and_chords_accept_common_symbols(client):
+    song = song_with(client, [("Verse", "verse", ["one"])])
+    url = f"/api/craft/songs/{song['id']}/melody"
+    ok = {
+        str(i): c for i, c in enumerate(["C", "Am", "G7", "Fmaj7", "D/F#", "Bbm", "Esus4", "Cadd9"])
+    }
+    r = client.put(
+        url,
+        json={
+            "notes": [
+                {"start16": 0, "len16": 4, "midi": 60},
+                {"start16": 2, "len16": 4, "midi": 64},
+            ],
+            "chords": ok,
+        },
+    )
+    assert r.status_code == 200 and len(r.json()["notes"]) == 2 and r.json()["chords"] == ok
+
+
+def test_melody_does_not_touch_lyrics_and_follows_the_song_when_deleted(client):
+    song = song_with(client, [("Verse", "verse", ["lyric stays"])])
+    before = lyric_dump(client, song["id"])
+    client.put(
+        f"/api/craft/songs/{song['id']}/melody",
+        json={"notes": [{"start16": 0, "len16": 1, "midi": 60}], "chords": {}},
+    )
+    assert lyric_dump(client, song["id"]) == before
+    client.delete(f"/api/songs/{song['id']}")
+    assert client.get(f"/api/craft/songs/{song['id']}/melody").status_code == 404

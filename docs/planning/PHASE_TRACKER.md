@@ -13,8 +13,8 @@
 | Phase 4 | AI co-writer, safe suggestions and structured outputs | BUILT - awaiting owner review (see HANDOVER.md) |
 | Phase 5 | Advanced lyric writing, hooks, flow, song timing | BUILT (core set; see docs/decisions/0008) - awaiting owner review |
 | Phase 6 | Vocal recording, audio sync, analysis, training | BUILT (core set; see docs/decisions/0009) - awaiting owner review |
-| Phase 7 | Windows packaging, responsive/mobile and release verification | NOT STARTED |
-| Phase 8 | Melody sketchpad, hum-to-melody, lyric-to-melody fit, chords | NOT STARTED |
+| Phase 7 | Windows packaging, responsive/mobile and release verification | PARTLY BUILT (launchers, PIN, installable web app, checklist; no .exe; Windows and real devices untested) - awaiting owner review |
+| Phase 8 | Melody sketchpad, hum-to-melody, lyric-to-melody fit, chords | BUILT (core set; see docs/decisions/0010) - awaiting owner review |
 | Future | Multi-user collaboration | DEFERRED / SEPARATE APPROVAL |
 
 For each completed stage record: approval, acceptance tests, GitHub branch, full SHA, remote push confirmation, handover, limitations and user sign-off.

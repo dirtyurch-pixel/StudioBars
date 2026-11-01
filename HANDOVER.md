@@ -7,7 +7,7 @@
 
 - **Phone/tablet mode (owner request, outside the original phase order): built.** One address, mandatory PIN, installable. 
 
-- **Phase 5 (Craft tab: Flow grid, Takes, Vault, Plan/idea board, Scan + rhyme chains): built, tested here.** Details and what is NOT included: `docs/decisions/0008-craft-tools.md`. - **Phase 6 (core set): helper styles, metaphor/wordplay, My style, singability, scratch vocal recorder: built, tested here.** See `docs/decisions/0009-ai-personas-style-recording.md` for limits (microphone needs https or localhost; no waveform/transcription/training yet). Phases 7-8 not built yet.
+- **Phase 5 (Craft tab: Flow grid, Takes, Vault, Plan/idea board, Scan + rhyme chains): built, tested here.** Details and what is NOT included: `docs/decisions/0008-craft-tools.md`. - **Phase 6 (core set): helper styles, metaphor/wordplay, My style, singability, scratch vocal recorder: built, tested here.** See `docs/decisions/0009-ai-personas-style-recording.md` for limits (microphone needs https or localhost; no waveform/transcription/training yet). - **Phase 8 (core): melody sketch, chords, hum-to-melody, lyric fit: built, tested here.** **Phase 7 (partial): Windows launchers (`start-studio-bars.bat`, `start-studio-bars-phone.bat`) and release checklist (`docs/RELEASE_CHECKLIST.md`); no installer; nothing tested on Windows or real devices.** Read `docs/RELEASE_CHECKLIST.md` first.
 
 ## How to run / check
 - Run: `./scripts/dev.sh` (Windows: `.\scripts\dev.ps1`, not yet run on Windows) then open http://localhost:5173

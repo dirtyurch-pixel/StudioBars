@@ -1560,3 +1560,54 @@ label.chip-btn:focus-within {
   color: var(--muted);
   border-style: dashed;
 }
+
+/* ---------------------------------------------------------------- Phase 8: melody sketch */
+.mel-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px;
+  max-width: 100%;
+}
+.mel-chords {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 6px;
+  margin-left: 34px;
+  min-width: max-content;
+}
+.mel-grid {
+  display: grid;
+  gap: 1px;
+  width: max-content;
+}
+.mel-label {
+  font-size: 10px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+}
+.mel-label.black {
+  opacity: 0.6;
+}
+.mel-cell {
+  width: 28px;
+  height: 22px;
+  min-height: 22px;
+  padding: 0;
+  background: var(--bg);
+  border: 0;
+  border-bottom: 1px solid var(--line);
+}
+.mel-cell.beat {
+  border-left: 1px solid var(--line);
+}
+.mel-cell.bar {
+  border-left: 2px solid var(--accent);
+}
+.mel-cell.on {
+  background: var(--selected);
+}
+.mel-cell.on.head {
+  background: var(--accent);
+}

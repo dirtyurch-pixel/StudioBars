@@ -254,6 +254,23 @@ MIGRATIONS: list[str] = [
     );
     CREATE INDEX idx_vocal_takes_song ON vocal_takes(song_id, created_at);
     """,
+    # Version 9: melody sketch (notes on a 16th-note grid) and chord marks per bar. Never touches the lyric tables.
+    """
+    CREATE TABLE melody_notes (
+        id TEXT PRIMARY KEY,
+        song_id TEXT NOT NULL REFERENCES songs(id) ON DELETE CASCADE,
+        start16 INTEGER NOT NULL,
+        len16 INTEGER NOT NULL,
+        midi INTEGER NOT NULL
+    );
+    CREATE INDEX idx_melody_notes_song ON melody_notes(song_id, start16);
+    CREATE TABLE chord_marks (
+        song_id TEXT NOT NULL REFERENCES songs(id) ON DELETE CASCADE,
+        bar INTEGER NOT NULL,
+        symbol TEXT NOT NULL,
+        PRIMARY KEY (song_id, bar)
+    );
+    """,
 ]
 
 

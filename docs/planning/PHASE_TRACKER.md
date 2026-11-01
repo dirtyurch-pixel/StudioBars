@@ -6,7 +6,7 @@
 |---|---|---|
 | Review | Specification, dependencies, risk assessment | READY FOR REVIEW |
 | Phase 0 | Windows environment, architecture, repo setup once authorised | BUILT - awaiting owner review (see HANDOVER.md) |
-| Phase 1 | Reliable editor, saving, notes, focus, basic import | NOT STARTED |
+| Phase 1 | Reliable editor, saving, notes, focus, basic import | BUILT - awaiting owner review (see HANDOVER.md) |
 | Phase 1B | Music player, playlists, loops, variable speed, Writing Session foundation | NOT STARTED |
 | Phase 2 | Phonetics, syllables, rhyme engine and filters | NOT STARTED |
 | Phase 3 | Word meanings, dictionary and phrase tools | NOT STARTED |

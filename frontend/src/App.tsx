@@ -1,17 +1,35 @@
-import { BackendStatus } from './BackendStatus'
+import { useEffect, useState } from 'react'
+import { ToastProvider } from './components/Toasts'
+import Dashboard from './pages/Dashboard'
+import SongEditor from './pages/SongEditor'
+import { useRoute } from './route'
+
+function useOnline() {
+  const [on, setOn] = useState(() => navigator.onLine)
+  useEffect(() => {
+    const a = () => setOn(true)
+    const b = () => setOn(false)
+    window.addEventListener('online', a)
+    window.addEventListener('offline', b)
+    return () => {
+      window.removeEventListener('online', a)
+      window.removeEventListener('offline', b)
+    }
+  }, [])
+  return on
+}
 
 export default function App() {
+  const route = useRoute()
+  const online = useOnline()
   return (
-    <main className="mx-auto max-w-xl p-6">
-      <h1 className="text-3xl font-bold">Studio Bars</h1>
-      <p style={{ color: 'var(--muted)' }}>Phase 0 foundation. No features yet.</p>
-      <div
-        className="my-4 rounded-xl p-4"
-        style={{ background: 'var(--paper)', color: 'var(--paper-ink)' }}
-      >
-        Writing pad placeholder
-      </div>
-      <BackendStatus />
-    </main>
+    <ToastProvider>
+      {!online && (
+        <div className="banner" role="status">
+          You are offline. Changes stay in this window until the connection returns.
+        </div>
+      )}
+      {route.name === 'song' ? <SongEditor key={route.id} id={route.id} /> : <Dashboard />}
+    </ToastProvider>
   )
 }

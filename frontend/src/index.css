@@ -1,0 +1,28 @@
+@import 'tailwindcss';
+
+/* Royal Blue & Amber design tokens (master plan section 2). */
+:root {
+  --bg: #09152e;
+  --panel: #1746a2;
+  --panel-dark: #101f42;
+  --paper: #fff0b3;
+  --paper-ink: #172036;
+  --paper-rule: #a5b4c5;
+  --accent: #ffba24;
+  --selected: #3478f6;
+  --surface-text: #f8faff;
+  --muted: #b7c5e1;
+  --danger: #d84359;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--surface-text);
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}

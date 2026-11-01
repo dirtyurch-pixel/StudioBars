@@ -158,6 +158,8 @@ const dump = async () => {
   await page.getByLabel('Back to my songs').click()
   await page.getByRole('button', { name: 'Import' }).click()
   await page.setInputFiles('#im-file', { name: 'e2e.json', mimeType: 'application/json', buffer: Buffer.from(exported) })
+  // wait until the dialog has finished reading the file and filled in the file name, THEN type our own title
+  await page.waitForFunction(() => document.querySelector('#im-title')?.value === 'e2e')
   await page.getByLabel('Title (optional)').fill('E2E Rain (imported)')
   await page.getByRole('button', { name: 'Preview' }).click()
   await page.getByLabel('Import preview').waitFor()

@@ -2,6 +2,12 @@ import type {
   Analysis,
   Content,
   CustomPron,
+  Meanings,
+  OnlineKind,
+  OnlineResult,
+  OnlineStatus,
+  PhraseItem,
+  PhraseRhymes,
   PhoneticsStatus,
   RhymeResponse,
   WordInfo,
@@ -221,6 +227,7 @@ export type RhymeQuery = {
   includeIdentical: boolean
   minSyllables?: number
   maxSyllables?: number
+  pos?: string
   endings: string[]
   familiarity: 'any' | 'familiar' | 'common'
   limit: number
@@ -236,6 +243,7 @@ export const searchRhymes = (q: RhymeQuery, signal?: AbortSignal) => {
   })
   if (q.minSyllables) p.set('min_syllables', String(q.minSyllables))
   if (q.maxSyllables) p.set('max_syllables', String(q.maxSyllables))
+  if (q.pos) p.set('pos', q.pos)
   return json<RhymeResponse>(`/api/phonetics/rhymes?${p}`, undefined, signal)
 }
 export const listCustomPron = () => json<CustomPron[]>('/api/phonetics/custom')
@@ -246,3 +254,54 @@ export const saveCustomPron = (
 export const deleteCustomPron = async (word: string) => {
   await request(`/api/phonetics/custom/${encodeURIComponent(word)}`, body('DELETE'))
 }
+
+// ---------------------------------------------------------------- meanings (WordNet, local)
+export const getMeanings = (word: string, context: string, around = '', signal?: AbortSignal) => {
+  const p = new URLSearchParams({ word })
+  if (context.trim()) p.set('context', context.slice(0, 600))
+  if (around.trim()) p.set('around', around.slice(0, 600))
+  return json<Meanings>(`/api/lexicon/word?${p}`, undefined, signal)
+}
+
+// ---------------------------------------------------------------- optional online helper
+export const getOnlineStatus = () => json<OnlineStatus>('/api/lexicon/online/status')
+export const setOnlineEnabled = (enabled: boolean) =>
+  json<OnlineStatus>('/api/lexicon/online/settings', body('PUT', { enabled }))
+export const getOnlineWords = (word: string, kind: OnlineKind, signal?: AbortSignal) =>
+  json<OnlineResult>(
+    `/api/lexicon/online/words?word=${encodeURIComponent(word)}&kind=${kind}`,
+    undefined,
+    signal,
+  )
+
+// ---------------------------------------------------------------- phrase bank
+export const listPhrases = (q = '', tag = '', signal?: AbortSignal) => {
+  const p = new URLSearchParams({ limit: '200' })
+  if (q.trim()) p.set('q', q.trim())
+  if (tag) p.set('tag', tag)
+  return json<{ total: number; items: PhraseItem[] }>(`/api/phrases?${p}`, undefined, signal)
+}
+export const listPhraseTags = () => json<{ tag: string; count: number }[]>('/api/phrases/tags')
+export type PhraseInput = { phrase: string; meaning: string; sounds_like: string; tags: string[] }
+export const createPhrase = (data: PhraseInput) =>
+  json<PhraseItem>('/api/phrases', body('POST', data))
+export const updatePhrase = (id: string, data: Partial<PhraseInput>) =>
+  json<PhraseItem>(`/api/phrases/${id}`, body('PATCH', data))
+export const deletePhrase = async (id: string) => {
+  await request(`/api/phrases/${id}`, body('DELETE'))
+}
+export const exportPhrases = async () => {
+  const res = await request('/api/phrases/export')
+  return res.blob()
+}
+export const phraseRhymes = (
+  phrase: string,
+  syllables: number,
+  qualities: string[],
+  signal?: AbortSignal,
+) =>
+  json<PhraseRhymes>(
+    `/api/phonetics/phrase-rhymes?${new URLSearchParams({ phrase, syllables: String(syllables), qualities: qualities.join(','), limit: '80' })}`,
+    undefined,
+    signal,
+  )

@@ -16,3 +16,6 @@ Local music library (consented copy into private storage, validated by extension
 
 ## Phase 2 delivers
 Offline pronunciation dictionary (CMU), syllable estimates per line (ranges for ambiguous words, `~` for guesses), rhyme finder (perfect / near / same vowels / same ending, plus homophones and rich rhymes on request) with syllable, ending-type and word-familiarity filters, rhyme-family colours for end and internal rhymes (on/off), word lookup from the cursor or selection, ambiguous-pronunciation chooser, unknown-word handling, and personal pronunciations. See `docs/decisions/0005-pronunciation-and-rhymes.md`.
+
+## Phase 3 delivers
+WordNet 3.0 meanings by sense (definitions, examples, synonyms flagged when the meaning may shift, opposites, kinds, imagery), line-aware ordering of meanings, pronunciation by meaning for same-spelling words, a working part-of-speech filter for rhymes, a personal phrase and slang bank (searchable, tagged, exportable), experimental phrase rhymes, and an optional, off-by-default online word helper with disclosure, rate limiting, caching and offline fallback. See `docs/decisions/0006-meanings-phrases-online.md`.

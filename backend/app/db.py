@@ -139,6 +139,30 @@ MIGRATIONS: list[str] = [
         updated_at TEXT NOT NULL
     );
     """,
+    # Version 4: app settings, cache for the optional online helper, personal phrase bank.
+    """
+    CREATE TABLE app_settings (key TEXT PRIMARY KEY, value TEXT NOT NULL);
+    CREATE TABLE online_cache (
+        key TEXT PRIMARY KEY,
+        body TEXT NOT NULL,
+        fetched_at TEXT NOT NULL
+    );
+    CREATE TABLE phrases (
+        id TEXT PRIMARY KEY,
+        phrase TEXT NOT NULL,
+        phrase_key TEXT NOT NULL UNIQUE,
+        meaning TEXT NOT NULL DEFAULT '',
+        sounds_like TEXT NOT NULL DEFAULT '',
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+    CREATE TABLE phrase_tags (
+        phrase_id TEXT NOT NULL REFERENCES phrases(id) ON DELETE CASCADE,
+        tag TEXT NOT NULL,
+        PRIMARY KEY (phrase_id, tag)
+    );
+    CREATE INDEX idx_phrase_tags_tag ON phrase_tags(tag);
+    """,
 ]
 
 

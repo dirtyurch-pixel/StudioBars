@@ -83,7 +83,7 @@ const line = (p, n) => p.getByLabel(new RegExp(`^Line ${n}( \\(locked\\))?$`))
   check('perfect rhymes for "shade" include made, grade and fade', ['made', 'grade', 'fade'].every((w) => words.some((x) => x.startsWith(w))), JSON.stringify(words.slice(0, 20)))
   check('rhymes are about sound: "said" does not rhyme with "shade"', !words.some((x) => x.startsWith('said')))
   check('the dictionary is credited', await page.getByText(/CMU Pronouncing Dictionary/).isVisible())
-  check('the part-of-speech filter explains why it is unavailable', await page.getByLabel('Part of speech').isDisabled() && (await page.getByText(/Part-of-speech filtering/).count()) >= 1)
+  check('the part-of-speech filter is now available (WordNet data arrived in Phase 3)', await page.getByLabel('Part of speech').isEnabled())
 
   await page.getByLabel('Fewest syllables').selectOption('2')
   await page.getByLabel('Most syllables').selectOption('2')

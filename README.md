@@ -2,7 +2,7 @@
 
 English lyric-writing studio for Hip-Hop, R&B, House and Pop (working title). Local-first; Royal Blue & Amber design with a yellow ruled writing pad.
 
-**Status: Phase 2 (pronunciation and rhyme tools).** Lyric editor with locked lines, autosave, history, notes, import/export, a built-in music player with personal playlists, A–B loops, pitch-preserving speed and music linked to songs, and offline pronunciation tools: estimated syllables in the margin, rhyme colours, a rhyme finder with filters, and your own word pronunciations. No AI yet. See `docs/planning/STUDIO_BARS_MASTER_BUILD_PLAN.md` for the full plan and `HANDOVER.md` for current state.
+**Status: Phase 3 (word meanings, phrase bank, optional online helper).** Lyric editor with locked lines, autosave, history, notes, import/export, a built-in music player with personal playlists, A–B loops, pitch-preserving speed and music linked to songs, offline pronunciation and rhyme tools (estimated syllables, rhyme colours, a rhyme finder with filters, your own word pronunciations), a word-meaning dictionary and thesaurus (WordNet), a personal phrase and slang bank, and an optional online word helper that is off by default. No AI yet. See `docs/planning/STUDIO_BARS_MASTER_BUILD_PLAN.md` for the full plan and `HANDOVER.md` for current state.
 
 ## Run it
 Needs Node 22 LTS and Python 3.11+ (Git for cloning).
@@ -14,7 +14,9 @@ Then open http://localhost:5173. Backend API: http://localhost:8000/health (docs
 
 Your songs are stored in `data/private/studio_bars.db` and your imported music in `data/media/` on the computer running the backend. Both folders are git-ignored and nothing is uploaded anywhere.
 
-Music: click **♪ Library** at the bottom, tick the consent box, and add audio files (mp3, wav, flac, ogg, opus, m4a, aac). Rhymes: tap a line (or select one word) and open the **Rhymes** tab. Everything works offline. Pronunciation data: CMU Pronouncing Dictionary (see `licenses/`).
+Music: click **♪ Library** at the bottom, tick the consent box, and add audio files (mp3, wav, flac, ogg, opus, m4a, aac). Words tab: meanings, synonyms (with a warning when a word's meaning may shift), opposites and imagery from WordNet; "My phrases" is your own slang bank; "Online ideas" is optional and off until you switch it on.
+
+Rhymes: tap a line (or select one word) and open the **Rhymes** tab. Everything works offline. Pronunciation data: CMU Pronouncing Dictionary (see `licenses/`).
 
 Playback shortcuts (only when you are not typing): Space play/pause, ←/→ seek 5 s, `[` set loop start, `]` set loop end, `\` clear loop, M mute.
 
@@ -25,3 +27,9 @@ Playback shortcuts (only when you are not typing): Space play/pause, ←/→ see
 
 ## Privacy
 Never commit `.env`, lyrics, databases or audio. See `.gitignore` and `docs/planning/GITHUB_WORKFLOW.md`.
+
+## Credits
+- Pronunciations: CMU Pronouncing Dictionary, Carnegie Mellon University.
+- Meanings and word relations: WordNet 3.0, Princeton University (licence in `licenses/wordnet-LICENSE.txt`).
+- Word familiarity (optional): derived from `wordfreq` (CC BY-SA 4.0), see `licenses/wordfreq-NOTICE.txt`.
+- Optional online helper: this app uses the Datamuse API (https://www.datamuse.com/api/).

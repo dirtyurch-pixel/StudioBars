@@ -1256,3 +1256,115 @@ label.chip-btn:focus-within {
   outline: 3px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* ------------------------------------------------------------------ meanings, online helper, phrase bank (Phase 3) */
+.words-panel .word-title {
+  font-size: 20px;
+}
+.source-note b {
+  color: var(--surface-text);
+}
+.sense {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: grid;
+  gap: 6px;
+}
+.sense.best {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.sense header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: center;
+}
+.sense .pos {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 12px;
+  color: var(--accent);
+}
+.sense .def {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.45;
+}
+.sense .example {
+  margin: 0;
+  color: var(--muted);
+  font-style: italic;
+  font-size: 14px;
+}
+.said {
+  margin: 0;
+  font-size: 14px;
+  color: var(--surface-text);
+  background: rgba(52, 120, 246, 0.15);
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+.chip-row {
+  display: grid;
+  gap: 4px;
+}
+.chip-label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.chip-word.shifty {
+  border-style: dashed;
+}
+.chip-word sup {
+  font-size: 10px;
+}
+.chip-online {
+  cursor: default;
+  border-color: #3a6fb0;
+}
+.origin {
+  margin: 0;
+  font-size: 13px;
+}
+.origin-live {
+  color: #8fd0ff;
+}
+.origin-saved {
+  color: var(--accent);
+}
+.online-switch .check {
+  align-items: flex-start;
+}
+.experimental {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px dashed var(--accent);
+  border-radius: 10px;
+  color: #ffe29a;
+  font-size: 13px;
+}
+.phrase-list .phrase-main {
+  display: grid;
+  gap: 2px;
+  flex: 1 1 160px;
+  min-width: 0;
+}
+.phrase-list .phrase-main small {
+  color: var(--muted);
+}
+.phrase-list .warn {
+  color: #ffcf7a;
+}
+.seg[role='tablist'] {
+  flex-wrap: wrap;
+}
+.updating {
+  opacity: 0.65;
+  transition: opacity 0.15s;
+}

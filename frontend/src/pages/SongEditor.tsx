@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import * as api from '../api'
 import { ApiFail } from '../api'
 import { GenrePicker } from '../components/GenrePicker'
@@ -30,6 +30,7 @@ import { SessionStrip, SongMusicPanel } from '../music/SongMusicPanel'
 import { lastWord } from '../phonetics/highlight'
 import { usePadSettings } from '../phonetics/padSettings'
 import { RhymePanel } from '../phonetics/RhymePanel'
+import { WordsPanel } from '../words/WordsPanel'
 import { useLineAnalysis } from '../phonetics/useLineAnalysis'
 import { useSongLink } from '../music/useSongLink'
 import { goHome } from '../route'
@@ -47,7 +48,7 @@ const NO_LINES: Line[] = []
 type Phase = 'loading' | 'ready' | 'error' | 'missing'
 export type SaveStatus = 'saved' | 'unsaved' | 'saving' | 'offline' | 'error' | 'conflict'
 type Meta = { title: string; genres: Genre[]; bpm: number | null; time_signature: string | null }
-type Tool = 'notes' | 'rhymes' | 'music' | 'history' | 'files'
+type Tool = 'notes' | 'rhymes' | 'words' | 'music' | 'history' | 'files'
 
 const STATUS_TEXT: Record<SaveStatus, string> = {
   saved: 'Saved',
@@ -104,7 +105,19 @@ export default function SongEditor({ id }: { id: string }) {
   const pad = usePadSettings()
   const [analysisNonce, setAnalysisNonce] = useState(0)
   const [lookup, setLookup] = useState<{ word: string; nonce: number } | null>(null)
+  const [phraseReq, setPhraseReq] = useState<{ phrase: string; nonce: number } | null>(null)
+  const clearPhraseReq = useCallback(() => setPhraseReq(null), [])
   const analysis = useLineAnalysis(section?.lines ?? NO_LINES, analysisNonce)
+  // the line being written, and (separately) the lines beside it
+  const { lineContext, aroundContext } = useMemo(() => {
+    const ls = section?.lines ?? NO_LINES
+    const i = ls.findIndex((l) => l.id === activeLineId)
+    if (i < 0) return { lineContext: '', aroundContext: '' }
+    return {
+      lineContext: ls[i].text.slice(0, 600),
+      aroundContext: [ls[i - 1]?.text, ls[i + 1]?.text].filter(Boolean).join(' ').slice(0, 600),
+    }
+  }, [section, activeLineId])
 
   // ---------------------------------------------------------- loading
   const load = useCallback(async () => {
@@ -885,7 +898,7 @@ export default function SongEditor({ id }: { id: string }) {
 
         <aside className={`ed-side hide-focus${toolsOpen ? ' open' : ''}`} aria-label="Tools">
           <div className="side-tabs" role="tablist">
-            {(['notes', 'rhymes', 'music', 'history', 'files'] as Tool[]).map((t) => (
+            {(['notes', 'rhymes', 'words', 'music', 'history', 'files'] as Tool[]).map((t) => (
               <button
                 key={t}
                 role="tab"
@@ -900,11 +913,13 @@ export default function SongEditor({ id }: { id: string }) {
                   ? 'Notes'
                   : t === 'rhymes'
                     ? 'Rhymes'
-                    : t === 'music'
-                      ? 'Music'
-                      : t === 'history'
-                        ? 'History'
-                        : 'Export'}
+                    : t === 'words'
+                      ? 'Words'
+                      : t === 'music'
+                        ? 'Music'
+                        : t === 'history'
+                          ? 'History'
+                          : 'Export'}
               </button>
             ))}
             <button
@@ -926,7 +941,26 @@ export default function SongEditor({ id }: { id: string }) {
             {tool === 'rhymes' && (
               <RhymePanel
                 suggested={lookup}
+                phraseRequest={phraseReq}
+                onPhraseHandled={clearPhraseReq}
                 onCustomChanged={() => setAnalysisNonce((n) => n + 1)}
+              />
+            )}
+            {tool === 'words' && (
+              <WordsPanel
+                suggested={lookup}
+                context={lineContext}
+                around={aroundContext}
+                contextKey={activeLineId ?? ''}
+                onLookup={(w) => setLookup({ word: w, nonce: Date.now() })}
+                onOpenRhymes={(w) => {
+                  setLookup({ word: w, nonce: Date.now() })
+                  setTool('rhymes')
+                }}
+                onPhraseRhymes={(ph) => {
+                  setPhraseReq({ phrase: ph, nonce: Date.now() })
+                  setTool('rhymes')
+                }}
               />
             )}
             {tool === 'music' && <SongMusicPanel songLink={songLink} />}

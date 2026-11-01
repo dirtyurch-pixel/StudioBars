@@ -380,7 +380,7 @@ def test_migrations_include_custom_pronunciations(db_file):
 def test_status_endpoint(client):
     s = client.get("/api/phonetics/status").json()
     assert s["dictionary_words"] > 120_000 and s["frequency_available"] is True
-    assert s["pos_available"] is False and "perfect" in s["quality_help"]
+    assert s["pos_available"] is True and "perfect" in s["quality_help"]
 
 
 def test_word_endpoint(client):
@@ -406,7 +406,6 @@ def test_rhyme_endpoint(client):
         "ending",
         "zipf",
     } <= set(first)
-    assert any("Part-of-speech" in n for n in r["notes"])
     page2 = client.get(
         "/api/phonetics/rhymes", params={"word": "fade", "limit": 5, "offset": 5}
     ).json()

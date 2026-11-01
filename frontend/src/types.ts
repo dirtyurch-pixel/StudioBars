@@ -180,3 +180,91 @@ export type CustomPron = {
   syllables: number
   note: string
 }
+
+// ---------------------------------------------------------------- meanings, online helper, phrase bank (Phase 3)
+export type MeaningShift = { rank: number; of: number; usually_means: string }
+export type Synonym = { word: string; shift?: MeaningShift }
+export type Chip = { word: string; via?: string }
+export type Sense = {
+  id: string
+  pos: 'n' | 'v' | 'a' | 'r'
+  pos_label: string
+  sense_no: number
+  of: number
+  lemma: string
+  definition: string
+  examples: string[]
+  synonyms: Synonym[]
+  similar: Synonym[]
+  antonyms: Chip[]
+  broader: Chip[]
+  narrower: Chip[]
+  related: Chip[]
+  imagery: Chip[]
+  said_as: { phones: string; ipa: string; in_dictionary: boolean } | null
+  fit: { score: number; matched: string[]; best: boolean } | null
+}
+export type Meanings = {
+  word: string
+  found: boolean
+  forms: string[]
+  senses: Sense[]
+  pos_counts: Record<string, number>
+  total_senses: number
+  context_used: boolean
+  reordered: boolean
+  notes: string[]
+  source: string
+}
+export type OnlineStatus = {
+  enabled: boolean
+  service: string
+  host: string
+  cached_answers: number
+  sends: string
+  key_notice: string
+}
+export type OnlineKind = 'related' | 'associated' | 'rhymes' | 'near-rhymes'
+export type OnlineResult = {
+  source: string
+  online: boolean
+  from_cache: boolean
+  stale: boolean
+  fetched_at: string
+  query: { word: string; kind: OnlineKind }
+  sent: string
+  results: { word: string; score: number | null }[]
+  notice: string | null
+}
+export type PhrasePron = {
+  known: boolean
+  syllables_min: number
+  syllables_max: number
+  ipa: string
+  unknown_words: string[]
+  guessed?: boolean
+}
+export type PhraseItem = {
+  id: string
+  phrase: string
+  meaning: string
+  sounds_like: string
+  tags: string[]
+  pronunciation: PhrasePron
+}
+export type PhraseRhymeResult = {
+  text: string
+  kind: 'word' | 'mine'
+  quality: 'perfect' | 'near' | 'assonance'
+  ipa: string
+  syllables: number
+}
+export type PhraseRhymes = {
+  phrase: string
+  syllables: number
+  tail_ipa: string
+  experimental: boolean
+  notes: string[]
+  total: number
+  results: PhraseRhymeResult[]
+}

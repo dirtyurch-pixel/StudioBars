@@ -156,3 +156,42 @@ class CustomPronIn(BaseModel):
     )
     phones: Annotated[str, StringConstraints(strip_whitespace=True, max_length=200)] | None = None
     note: Annotated[str, StringConstraints(strip_whitespace=True, max_length=200)] = ""
+
+
+# ---------------------------------------------------------------- phrase bank & online helper
+Tag = Annotated[
+    str, StringConstraints(strip_whitespace=True, to_lower=True, min_length=1, max_length=30)
+]
+
+
+class PhraseIn(BaseModel):
+    phrase: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=120)]
+    meaning: Annotated[str, StringConstraints(strip_whitespace=True, max_length=500)] = ""
+    sounds_like: Annotated[str, StringConstraints(strip_whitespace=True, max_length=120)] = ""
+    tags: list[Tag] = Field(default_factory=list, max_length=10)
+
+    @field_validator("phrase", "sounds_like")
+    @classmethod
+    def _one_line(cls, v: str) -> str:
+        return _no_newlines(v)
+
+    @field_validator("tags")
+    @classmethod
+    def _unique_tags(cls, v: list[str]) -> list[str]:
+        return list(dict.fromkeys(v))
+
+
+class PhraseUpdate(BaseModel):
+    phrase: (
+        Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=120)]
+        | None
+    ) = None
+    meaning: Annotated[str, StringConstraints(strip_whitespace=True, max_length=500)] | None = None
+    sounds_like: Annotated[str, StringConstraints(strip_whitespace=True, max_length=120)] | None = (
+        None
+    )
+    tags: list[Tag] | None = Field(None, max_length=10)
+
+
+class OnlineSettingsIn(BaseModel):
+    enabled: bool

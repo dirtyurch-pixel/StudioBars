@@ -5,10 +5,12 @@ import sqlite3
 
 from fastapi import APIRouter, Depends, Query
 
+from . import phrases as phrase_bank
 from .db import tx
+from .lexicon.wordnet import POS_FROM_NAME, get_wordnet
 from .phonetics import engine
 from .phonetics.engine import Phones, readable_ipa
-from .phonetics.words import Resolver, analyze_lines, custom_phones, norm_word
+from .phonetics.words import Resolver, analyze_lines, custom_phones, norm_word, tokenize
 from .routes import get_conn
 from .schemas import AnalyzeIn, CustomPronIn
 from .service import ApiError, now
@@ -47,7 +49,7 @@ def status(conn=Depends(get_conn)):
     return {
         "dictionary_words": len(d.prons),
         "frequency_available": d.has_frequency,
-        "pos_available": False,
+        "pos_available": True,
         "custom_count": conn.execute("SELECT COUNT(*) FROM custom_pronunciations").fetchone()[0],
         "quality_help": QUALITY_HELP,
         "attribution": "Pronunciations: CMU Pronouncing Dictionary (Carnegie Mellon University).",
@@ -75,6 +77,7 @@ def rhymes(
     max_syllables: int | None = Query(None, ge=1, le=12),
     endings: str = "",
     familiarity: str = Query("familiar", pattern="^(any|familiar|common)$"),
+    pos: str | None = Query(None, pattern="^(noun|verb|adjective|adverb)$"),
     limit: int = Query(60, ge=1, le=300),
     offset: int = Query(0, ge=0, le=5000),
     conn=Depends(get_conn),
@@ -100,9 +103,6 @@ def rhymes(
             "Word-familiarity data is not installed, so results are not filtered or sorted by how common a word is."
         )
         min_zipf = None
-    notes.append(
-        "Part-of-speech filtering is not available yet: it needs the word-meaning data planned for Phase 3."
-    )
     out = {"word": info.to_json(), "results": [], "total": 0, "notes": notes}
     if not info.has_phones:
         notes.insert(
@@ -123,6 +123,19 @@ def rhymes(
         overridden=set(custom),
         prefer=set(custom),
     )
+    if pos:
+        wn, want_pos, kept, skipped = get_wordnet(), POS_FROM_NAME[pos], [], 0
+        for c in cands:
+            usual = wn.usual_pos(c.word)
+            if usual is None:
+                skipped += 1
+            elif usual == want_pos:
+                kept.append(c)
+        cands = kept
+        notes.append(
+            f"Showing words that are usually used as a {pos} (per WordNet)."
+            + (f" {skipped} words WordNet does not know were left out." if skipped else "")
+        )
     out["total"] = len(cands)
     out["results"] = [
         {
@@ -219,3 +232,108 @@ def delete_custom(word: str, conn=Depends(get_conn)):
         cur = conn.execute("DELETE FROM custom_pronunciations WHERE word=?", (w,))
         if cur.rowcount == 0:
             raise ApiError(404, "NOT_FOUND", "No custom pronunciation for that word.")
+
+
+# ---------------------------------------------------------------- phrase rhymes (EXPERIMENTAL)
+TAIL_QUALITIES = ("perfect", "near", "assonance")
+
+
+@router.get("/phrase-rhymes")
+def phrase_rhymes(
+    phrase: str = Query(..., min_length=1, max_length=120),
+    syllables: int = Query(2, ge=1, le=4),
+    qualities: str = "perfect,near",
+    familiarity: str = Query("familiar", pattern="^(any|familiar|common)$"),
+    limit: int = Query(60, ge=1, le=300),
+    conn=Depends(get_conn),
+):
+    """Words and phrase-bank entries that sound like the END of a phrase. Experimental: not yet validated."""
+    d = engine.get_dictionary()
+    custom = load_custom(conn)
+    resolver = Resolver(d, custom)
+    if "\n" in phrase:
+        raise ApiError(422, "BAD_PHRASE", "Give one line of text.")
+    want = {q for q in qualities.split(",") if q}
+    if want - set(TAIL_QUALITIES) or not want:
+        raise ApiError(422, "BAD_QUALITY", "Rhyme types here are perfect, near and assonance.")
+    phones, unknown = phrase_bank.phrase_phones(phrase, resolver)
+    if unknown:
+        raise ApiError(
+            422, "UNKNOWN_WORDS",
+            "I don’t know how these sound yet: " + ", ".join(unknown) + ". Teach them in the Rhymes tab first.",
+            words=unknown,
+        )  # fmt: skip
+    have = engine.syllable_count(phones)
+    if have < syllables:
+        raise ApiError(
+            422, "TOO_SHORT", f"That phrase has only {have} syllable(s); choose {have} or fewer."
+        )
+    t = engine.tail(phones, syllables)
+    assert t is not None
+    min_zipf = {"any": None, "familiar": 3.0, "common": 4.0}[familiarity]
+    notes = [
+        "Experimental: this compares the last sounds of your phrase with single words and your phrase bank. It can miss good rhymes and include loose ones.",
+        "Where a word has several ways to say it, only the first dictionary pronunciation of each word in YOUR phrase is used.",
+    ]
+    if min_zipf is not None and not d.has_frequency:
+        notes.append(
+            "Word-familiarity data is not installed, so results are not filtered by how common a word is."
+        )
+        min_zipf = None
+    in_phrase = {tok.norm for tok in tokenize(phrase)}
+    vowel_seq = tuple(p for p in t if p in engine.VOWELS)
+    results: dict[str, dict] = {}
+    for w, ph in d.vowel_index(syllables).get(vowel_seq, ()):
+        if w in in_phrase or w in custom:
+            continue
+        q = engine.classify_tail(t, engine.tail(ph, syllables) or ())
+        if q is None or q not in want:
+            continue
+        z = d.zipf(w)
+        if min_zipf is not None and d.has_frequency and (z is None or z < min_zipf):
+            continue
+        old = results.get(w)
+        if old is None or engine.RANK.get(q, 9) < engine.RANK.get(old["quality"], 9):
+            results[w] = {
+                "text": w,
+                "kind": "word",
+                "quality": q,
+                "ipa": readable_ipa(ph),
+                "syllables": engine.syllable_count(ph),
+                "zipf": z,
+            }
+    # your own words and phrases first: they are your vocabulary
+    own = [(cw, cp) for cw, cp in custom.items() if cw not in in_phrase]
+    for item in phrase_bank.list_phrases(conn, resolver, limit=500)["items"]:
+        ph2, unk = phrase_bank.phrase_phones(item["sounds_like"] or item["phrase"], resolver)
+        if not unk and ph2:
+            own.append((item["phrase"], ph2))
+    mine: dict[str, dict] = {}
+    for text, ph in own:
+        tt = engine.tail(ph, syllables)
+        q = engine.classify_tail(t, tt) if tt else None
+        if q and q in want and text.lower() not in in_phrase:
+            mine[text] = {
+                "text": text,
+                "kind": "mine",
+                "quality": q,
+                "ipa": readable_ipa(ph),
+                "syllables": engine.syllable_count(ph),
+                "zipf": None,
+            }
+    order = lambda r: (  # noqa: E731
+        {"perfect": 0, "near": 1, "assonance": 2}[r["quality"]],
+        0 if r["kind"] == "mine" else 1,
+        -(r["zipf"] or 0),
+        r["text"],
+    )
+    ranked = sorted([*mine.values(), *results.values()], key=order)
+    return {
+        "phrase": phrase,
+        "syllables": syllables,
+        "tail_ipa": readable_ipa(tuple(t)),
+        "experimental": True,
+        "notes": notes,
+        "total": len(ranked),
+        "results": [{k: v for k, v in r.items() if k != "zipf"} for r in ranked[:limit]],
+    }

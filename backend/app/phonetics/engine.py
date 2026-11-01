@@ -132,6 +132,30 @@ def classify(src: Phones, cand: Phones) -> str | None:
     return None
 
 
+# ---------------------------------------------------------------- multisyllable tails (experimental)
+
+
+def tail(phones: Phones, syllables: int) -> Phones | None:
+    """Sounds from the vowel `syllables` places from the end to the end, stress numbers removed."""
+    vowels = [i for i, p in enumerate(phones) if is_vowel(p)]
+    if syllables < 1 or len(vowels) < syllables:
+        return None
+    return tuple(base(p) for p in phones[vowels[-syllables] :])
+
+
+def classify_tail(a: Phones, b: Phones) -> str | None:
+    """perfect: same sounds. near: same vowels with consonants that sound alike. assonance: vowels only."""
+    if a == b:
+        return "perfect"
+    if len(a) == len(b) and tuple(_CLASS.get(p, p) for p in a) == tuple(
+        _CLASS.get(p, p) for p in b
+    ):
+        return "near"
+    if tuple(p for p in a if p in VOWELS) == tuple(p for p in b if p in VOWELS):
+        return "assonance"
+    return None
+
+
 # ---------------------------------------------------------------- dictionary
 
 
@@ -178,6 +202,7 @@ class Dictionary:
     def __init__(self, prons: dict[str, list[Phones]], freq: dict[str, float]):
         self.prons = prons
         self.freq = freq
+        self._tails: dict[int, dict[Phones, list[tuple[str, Phones]]]] = {}
         self.by_key: dict[Phones, list[tuple[str, Phones]]] = {}
         self.by_vowel: dict[tuple[str, int], list[tuple[str, Phones]]] = {}
         self.by_coda: dict[Phones, list[tuple[str, Phones]]] = {}
@@ -190,6 +215,27 @@ class Dictionary:
                 self.by_key.setdefault(key, []).append((w, ph))
                 self.by_vowel.setdefault((key[0], trailing), []).append((w, ph))
                 self.by_coda.setdefault(key[1:], []).append((w, ph))
+
+    def tail_index(self, syllables: int) -> dict[Phones, list[tuple[str, Phones]]]:
+        """Words grouped by their last N syllables' sounds. Built the first time it is asked for."""
+        if syllables not in self._tails:
+            idx: dict[Phones, list[tuple[str, Phones]]] = {}
+            for w, plist in self.prons.items():
+                for ph in plist:
+                    t = tail(ph, syllables)
+                    if t is not None:
+                        idx.setdefault(t, []).append((w, ph))
+            self._tails[syllables] = idx
+        return self._tails[syllables]
+
+    def vowel_index(self, syllables: int) -> dict[Phones, list[tuple[str, Phones]]]:
+        key = -syllables
+        if key not in self._tails:
+            idx: dict[Phones, list[tuple[str, Phones]]] = {}
+            for t, items in self.tail_index(syllables).items():
+                idx.setdefault(tuple(p for p in t if p in VOWELS), []).extend(items)
+            self._tails[key] = idx
+        return self._tails[key]
 
     @property
     def has_frequency(self) -> bool:

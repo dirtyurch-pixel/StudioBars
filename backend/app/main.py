@@ -8,19 +8,21 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from .lexicon.wordnet import get_wordnet
+from .lexicon_routes import router as lexicon_router
 from .phonetics.engine import get_dictionary
 from .phonetics_routes import router as phonetics_router
 from .routes import router
 from .service import ApiError
 
-APP_VERSION = "0.3.0-phase2"
+APP_VERSION = "0.4.0-phase3"
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    threading.Thread(
-        target=get_dictionary, daemon=True
-    ).start()  # load the dictionary without blocking startup
+    # load the language data in the background so start-up is instant
+    for loader in (get_dictionary, get_wordnet):
+        threading.Thread(target=loader, daemon=True).start()
     yield
 
 
@@ -57,3 +59,4 @@ def health() -> dict[str, str]:
 
 app.include_router(router)
 app.include_router(phonetics_router)
+app.include_router(lexicon_router)

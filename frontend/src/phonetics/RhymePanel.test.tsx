@@ -11,13 +11,15 @@ const api = vi.hoisted(() => ({
   listCustomPron: vi.fn(),
   saveCustomPron: vi.fn(),
   deleteCustomPron: vi.fn(),
+  getOnlineStatus: vi.fn(),
+  phraseRhymes: vi.fn(),
 }))
 vi.mock('../api', async (orig) => ({ ...(await orig<typeof import('../api')>()), ...api }))
 
 const status = (over: Partial<PhoneticsStatus> = {}): PhoneticsStatus => ({
   dictionary_words: 126052,
   frequency_available: true,
-  pos_available: false,
+  pos_available: true,
   custom_count: 0,
   quality_help: {
     homophone: 'Sounds exactly the same.',
@@ -79,6 +81,23 @@ beforeEach(() => {
   api.getPhoneticsStatus.mockResolvedValue(status())
   api.searchRhymes.mockResolvedValue(response())
   api.listCustomPron.mockResolvedValue([])
+  api.getOnlineStatus.mockResolvedValue({
+    enabled: false,
+    service: 'Datamuse',
+    host: 'api.datamuse.com',
+    cached_answers: 0,
+    sends: 'x',
+    key_notice: 'y',
+  })
+  api.phraseRhymes.mockResolvedValue({
+    phrase: 'p',
+    syllables: 2,
+    tail_ipa: 'x',
+    experimental: true,
+    notes: [],
+    total: 0,
+    results: [],
+  })
 })
 
 describe('RhymePanel', () => {
@@ -153,13 +172,71 @@ describe('RhymePanel', () => {
   })
 
   it('explains the filters whose data is missing instead of hiding them', async () => {
-    api.getPhoneticsStatus.mockResolvedValue(status({ frequency_available: false }))
+    api.getPhoneticsStatus.mockResolvedValue(
+      status({ frequency_available: false, pos_available: false }),
+    )
     show()
     await screen.findByText('shade')
     expect(screen.getByLabelText('Part of speech')).toBeDisabled()
     expect(screen.getByLabelText('Word familiarity')).toBeDisabled()
     expect(screen.getByText(/familiarity data is not installed/i)).toBeInTheDocument()
-    expect(screen.getAllByText(/Part-of-speech filtering/).length).toBeGreaterThan(0)
+    expect(screen.getByText(/Part-of-speech data is not available/)).toBeInTheDocument()
+  })
+
+  it('filters rhymes by part of speech using WordNet', async () => {
+    show()
+    await screen.findByText('shade')
+    expect(screen.getByLabelText('Part of speech')).toBeEnabled()
+    fireEvent.change(screen.getByLabelText('Part of speech'), { target: { value: 'noun' } })
+    await waitFor(() =>
+      expect(api.searchRhymes).toHaveBeenLastCalledWith(
+        expect.objectContaining({ pos: 'noun' }),
+        expect.anything(),
+      ),
+    )
+    fireEvent.change(screen.getByLabelText('Part of speech'), { target: { value: '' } })
+    await waitFor(() =>
+      expect(api.searchRhymes).toHaveBeenLastCalledWith(
+        expect.objectContaining({ pos: undefined }),
+        expect.anything(),
+      ),
+    )
+  })
+
+  it('keeps online rhymes optional and off the main path', async () => {
+    show()
+    await screen.findByText('shade')
+    fireEvent.click(screen.getByText(/Online rhymes \(optional\)/))
+    const box = await screen.findByRole('checkbox', { name: /Use the online word helper/ })
+    expect(box).not.toBeChecked()
+  })
+
+  it('switches to the experimental phrase mode, and a phrase from the bank opens it', async () => {
+    const { rerender } = render(
+      <ToastProvider>
+        <RhymePanel suggested={null} onCustomChanged={vi.fn()} />
+      </ToastProvider>,
+    )
+    expect(screen.getByRole('tab', { name: 'One word' })).toHaveAttribute('aria-selected', 'true')
+    rerender(
+      <ToastProvider>
+        <RhymePanel
+          suggested={null}
+          phraseRequest={{ phrase: 'pay attention', nonce: 1 }}
+          onCustomChanged={vi.fn()}
+        />
+      </ToastProvider>,
+    )
+    expect(await screen.findByRole('note')).toHaveTextContent(/Experimental/)
+    expect(screen.getByRole('tab', { name: /Phrase/ })).toHaveAttribute('aria-selected', 'true')
+    await waitFor(() =>
+      expect(api.phraseRhymes).toHaveBeenCalledWith(
+        'pay attention',
+        2,
+        ['perfect', 'near'],
+        expect.anything(),
+      ),
+    )
   })
 
   it('lets the user settle an ambiguous word with one tap', async () => {
@@ -292,5 +369,23 @@ describe('RhymePanel', () => {
     expect(screen.getByLabelText('Word to look up')).toBeInTheDocument()
     await waitFor(() => expect(api.listCustomPron).toHaveBeenCalled())
     await screen.findByText(/CMU Pronouncing Dictionary/)
+  })
+
+  it('uses a phrase request once, then lets the user go back to single words', async () => {
+    const handled = vi.fn()
+    render(
+      <ToastProvider>
+        <RhymePanel
+          suggested={{ word: 'fade', nonce: 1 }}
+          phraseRequest={{ phrase: 'pay attention', nonce: 1 }}
+          onPhraseHandled={handled}
+          onCustomChanged={vi.fn()}
+        />
+      </ToastProvider>,
+    )
+    await waitFor(() => expect(handled).toHaveBeenCalledTimes(1))
+    fireEvent.click(screen.getByRole('tab', { name: 'One word' }))
+    expect(await screen.findByLabelText('Word to look up')).toBeInTheDocument()
+    expect(handled).toHaveBeenCalledTimes(1) // not replayed
   })
 })

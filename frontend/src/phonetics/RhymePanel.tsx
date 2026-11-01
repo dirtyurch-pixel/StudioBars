@@ -3,9 +3,15 @@ import * as api from '../api'
 import { ApiFail } from '../api'
 import { useToast } from '../components/toastContext'
 import type { CustomPron, PhoneticsStatus, RhymeResponse, RhymeResult, WordInfo } from '../types'
+import { OnlineResults } from '../words/OnlineHelper'
+import { PhraseRhymePane } from './PhraseRhymePane'
 
 type Props = {
   suggested: { word: string; nonce: number } | null
+  /** A phrase to look up in the experimental phrase mode (set from the phrase bank). */
+  phraseRequest?: { phrase: string; nonce: number } | null
+  /** Called once the phrase request has been taken, so it is not replayed when the tab is reopened. */
+  onPhraseHandled?: () => void
   /** Tell the editor that a pronunciation changed so syllables and colours refresh. */
   onCustomChanged: () => void
 }
@@ -19,7 +25,7 @@ const QUALITY_LABEL: Record<string, string> = {
 const dots = (stress: string) => stress.replace(/1/g, '●').replace(/2/g, '◐').replace(/0/g, '○')
 const plural = (n: number) => `${n} syllable${n === 1 ? '' : 's'}`
 
-export function RhymePanel({ suggested, onCustomChanged }: Props) {
+function WordRhymes({ suggested, onCustomChanged }: Props) {
   const toast = useToast()
   const [status, setStatus] = useState<PhoneticsStatus | null>(null)
   const [typed, setTyped] = useState('')
@@ -35,6 +41,7 @@ export function RhymePanel({ suggested, onCustomChanged }: Props) {
   const [maxSyl, setMaxSyl] = useState('')
   const [ending, setEnding] = useState('')
   const [fam, setFam] = useState<'any' | 'familiar' | 'common'>('familiar')
+  const [pos, setPos] = useState('')
   const [limit, setLimit] = useState(60)
   const [data, setData] = useState<RhymeResponse | null>(null)
   const [loading, setLoading] = useState(false)
@@ -86,6 +93,7 @@ export function RhymePanel({ suggested, onCustomChanged }: Props) {
           maxSyllables: maxSyl ? Number(maxSyl) : undefined,
           endings: ending ? [ending] : [],
           familiarity: fam,
+          pos: pos || undefined,
           limit,
         },
         ctl.signal,
@@ -100,7 +108,7 @@ export function RhymePanel({ suggested, onCustomChanged }: Props) {
         setLoading(false)
       })
     return () => ctl.abort()
-  }, [word, quals, identical, minSyl, maxSyl, ending, fam, limit, reload])
+  }, [word, quals, identical, minSyl, maxSyl, ending, fam, pos, limit, reload])
 
   function submit(e: FormEvent) {
     e.preventDefault()
@@ -387,9 +395,22 @@ export function RhymePanel({ suggested, onCustomChanged }: Props) {
                 </select>
               </label>
               <label>
-                Part of speech
-                <select className="input input-sm" aria-label="Part of speech" disabled>
-                  <option>not available yet</option>
+                Usually a…
+                <select
+                  className="input input-sm"
+                  aria-label="Part of speech"
+                  value={pos}
+                  disabled={status !== null && !status.pos_available}
+                  onChange={(e) => {
+                    setPos(e.target.value)
+                    setLimit(60)
+                  }}
+                >
+                  <option value="">any word</option>
+                  <option value="noun">noun</option>
+                  <option value="verb">verb</option>
+                  <option value="adjective">adjective</option>
+                  <option value="adverb">adverb</option>
                 </select>
               </label>
             </div>
@@ -399,9 +420,11 @@ export function RhymePanel({ suggested, onCustomChanged }: Props) {
                 how common a word is.
               </small>
             )}
-            <small className="hint">
-              Part-of-speech filtering needs the word-meaning data planned for a later phase.
-            </small>
+            {status && !status.pos_available && (
+              <small className="hint">
+                Part-of-speech data is not available, so that filter is switched off.
+              </small>
+            )}
           </fieldset>
 
           {loading && (
@@ -457,6 +480,10 @@ export function RhymePanel({ suggested, onCustomChanged }: Props) {
               {n}
             </small>
           ))}
+          <details className="customs">
+            <summary>Online rhymes (optional)</summary>
+            <OnlineResults word={word} kinds={['rhymes', 'near-rhymes']} />
+          </details>
         </>
       )}
 
@@ -492,6 +519,43 @@ export function RhymePanel({ suggested, onCustomChanged }: Props) {
       <small className="hint">
         {status?.attribution ?? 'Pronunciations: CMU Pronouncing Dictionary.'}
       </small>
+    </div>
+  )
+}
+
+/** The Rhymes tab: one word at a time (works offline), or a whole phrase (experimental). */
+export function RhymePanel(props: Props) {
+  const [mode, setMode] = useState<'word' | 'phrase'>('word')
+  const [phrase, setPhrase] = useState<{ phrase: string; nonce: number } | null>(null)
+  const { phraseRequest, onPhraseHandled } = props
+  useEffect(() => {
+    if (phraseRequest?.phrase) {
+      setMode('phrase')
+      setPhrase(phraseRequest)
+      onPhraseHandled?.()
+    }
+  }, [phraseRequest, onPhraseHandled])
+  return (
+    <div className="panel-body">
+      <div className="seg" role="tablist" aria-label="Rhyme mode">
+        <button
+          role="tab"
+          aria-selected={mode === 'word'}
+          className={mode === 'word' ? 'on' : ''}
+          onClick={() => setMode('word')}
+        >
+          One word
+        </button>
+        <button
+          role="tab"
+          aria-selected={mode === 'phrase'}
+          className={mode === 'phrase' ? 'on' : ''}
+          onClick={() => setMode('phrase')}
+        >
+          Phrase (experimental)
+        </button>
+      </div>
+      {mode === 'word' ? <WordRhymes {...props} /> : <PhraseRhymePane request={phrase} />}
     </div>
   )
 }

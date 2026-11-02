@@ -1,0 +1,16 @@
+# One-click cloud host (Render). You will be asked to choose a PIN (6+ characters) when you create it.
+services:
+  - type: web
+    name: studio-bars
+    runtime: docker
+    plan: free   # free plan: the app sleeps when idle and SONGS ARE ERASED on restart. See README.
+    healthCheckPath: /health
+    envVars:
+      - key: STUDIO_BARS_ACCESS_PIN
+        sync: false
+    # To KEEP your songs between restarts you need a paid plan plus a disk. Change `plan: free` to `plan: starter`
+    # and add:
+    #   disk:
+    #     name: data
+    #     mountPath: /data
+    #     sizeGB: 1

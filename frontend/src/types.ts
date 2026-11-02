@@ -514,6 +514,8 @@ export type VocalTake = {
   media_type: string
   created_at: string
   available: boolean
+  /** phone version: the recording is played straight from the device */
+  url?: string
 }
 
 export type MelodySketch = {

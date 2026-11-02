@@ -154,7 +154,7 @@ export function RecordTab({ songId }: CraftProps) {
             <audio
               controls
               preload="none"
-              src={api.vocalUrl(t.id)}
+              src={t.url ?? api.vocalUrl(t.id)}
               aria-label={`Playback of take ${i + 1}`}
             />
           ) : (

@@ -1,6 +1,6 @@
-# 0011: Independent phone app (steps 1 and 2 of 4)
+# 0011: Independent phone app (steps 1 to 3 of 4)
 
-Status: steps 1 and 2 built; awaiting owner review.
+Status: steps 1, 2 and 3 built; awaiting owner review.
 
 The owner wants a phone app that works on its own and syncs with the PC later. Earlier work made the phone a window onto
 a server; that was the wrong default and is corrected here.
@@ -41,7 +41,21 @@ import (txt/md/json), export, backup/restore, works offline, installable to the 
   Datamuse: 100,000 free requests a day today; an API key is announced from 1 February 2027.
 - The database moved to version 3 (adds your pronunciations, phrases, settings and saved online answers); songs from step 1 are kept (tested).
 
+## Step 3 includes (AI, Craft and Melody on the device)
+- The AI co-writer runs on the phone and calls Claude directly with the official SDK (`@anthropic-ai/sdk` 0.134.0,
+  browser mode, loaded only when the AI is used). Same rules as the PC: preview before sending, the exact prompt text,
+  monthly limit checked before every request, locked lines read-only, answers checked and numbers worked out on the phone.
+  The AI wording (rules, tasks, helper styles, models, prices) is copied from the PC version into `src/local/ai/promptData.json`;
+  a backend test fails if the copy drifts.
+- **Where the key lives:** in this browser's database on this device (never in Git, never shown back except its last
+  4 characters, only ever sent to Anthropic). IMPORTANT: every GitHub Pages site under `dirtyurch-pixel.github.io`
+  shares one browser storage area, so any other Pages site published from this account could read it. Use a key with a
+  spending limit set at console.anthropic.com, and remove it in the AI tab if you publish other Pages sites.
+- Craft (flow grid, takes, vault, plan and ideas, scans and rhyme chains, My style), Melody (notes, chords, humming, lyric fit)
+  and scratch vocal recording run on the phone; recordings are stored in the browser's database on the device.
+- `parity.test.ts` now also checks the scans, rhyme chains, syllable stress, the AI prompt and the AI-answer checks against
+  the PC version (14 comparisons, all identical).
+
 ## Not yet (later steps)
-3. AI helper (direct from the phone with the owner's key), Craft and Melody tabs.
 4. Syncing with the PC version (today: move songs with export/backup files).
 Music player, vocal recording and the PC-only server features are not in the phone version.

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import * as api from '../api'
-import { ApiFail } from '../api'
+import { ApiFail, LOCAL } from '../api'
 import type { AiStatus } from '../types'
 
 type Props = { status: AiStatus; onStatus: (s: AiStatus) => void; onClose?: () => void }
@@ -34,11 +34,14 @@ export function AiSetup({ status, onStatus, onClose }: Props) {
   }
 
   const saveKey = () =>
-    run(async () => {
-      const s = await api.putAiKey(status.provider, key)
-      setKey('') // the key is never kept in the page after it is saved
-      return s
-    }, 'Key saved on this computer.')
+    run(
+      async () => {
+        const s = await api.putAiKey(status.provider, key)
+        setKey('') // the key is never kept in the page after it is saved
+        return s
+      },
+      LOCAL ? 'Key saved on this device.' : 'Key saved on this computer.',
+    )
 
   const saveSettings = (extra: Parameters<typeof api.putAiSettings>[0] = {}) =>
     run(() => {
@@ -105,7 +108,9 @@ export function AiSetup({ status, onStatus, onClose }: Props) {
                 A key is saved{' '}
                 {status.key.source === 'env'
                   ? '(from the computer’s settings)'
-                  : 'on this computer'}
+                  : LOCAL
+                    ? 'on this device'
+                    : 'on this computer'}
                 : <code>{status.key.hint}</code>.{' '}
                 {status.key.source === 'file' && (
                   <button
@@ -119,8 +124,9 @@ export function AiSetup({ status, onStatus, onClose }: Props) {
               </p>
             ) : (
               <p className="muted">
-                No key yet. Paste it below once. It is kept only on the computer running Studio
-                Bars, never in your browser or in Git.
+                {LOCAL
+                  ? 'No key yet. Paste it below once. It is kept only in this browser on this device and is only ever sent to Anthropic. Anyone who can use this browser could use it, so set a monthly spending limit on the key at console.anthropic.com too.'
+                  : 'No key yet. Paste it below once. It is kept only on the computer running Studio Bars, never in your browser or in Git.'}
               </p>
             )}
             {status.key.source !== 'env' && (

@@ -39,7 +39,7 @@ let CURRENT = null
   await page.getByText('Saved', { exact: true }).first().waitFor()
   check('no confusing "server cannot be reached" message on the phone', (await page.getByText(/server cannot be reached/).count()) === 0)
   const tabs = await page.getByRole('tablist').last().getByRole('tab').allInnerTexts()
-  check('only the tools that work on the phone are shown', JSON.stringify(tabs) === JSON.stringify(['Notes', 'Rhymes', 'Words', 'History', 'Export']), JSON.stringify(tabs))
+  check('only the tools that work on the phone are shown', JSON.stringify(tabs) === JSON.stringify(['Notes', 'Rhymes', 'Words', 'AI', 'Craft', 'History', 'Export']), JSON.stringify(tabs))
 
   // lock
   await line(page, 1).click()

@@ -2,8 +2,29 @@
  * Where the phone version keeps everything: the browser's own database (IndexedDB) on this device.
  * Nothing is sent anywhere. A small in-memory version of the same interface is used by the tests.
  */
-export type Kind = 'songs' | 'revisions' | 'custom' | 'phrases' | 'settings' | 'online'
-export const KINDS: Kind[] = ['songs', 'revisions', 'custom', 'phrases', 'settings', 'online']
+export type Kind =
+  | 'songs'
+  | 'revisions'
+  | 'custom'
+  | 'phrases'
+  | 'settings'
+  | 'online'
+  | 'ai_usage'
+  | 'ai_suggestions'
+  | 'craft'
+  | 'vocals'
+export const KINDS: Kind[] = [
+  'songs',
+  'revisions',
+  'custom',
+  'phrases',
+  'settings',
+  'online',
+  'ai_usage',
+  'ai_suggestions',
+  'craft',
+  'vocals',
+]
 
 export interface Store {
   get<T>(kind: Kind, id: string): Promise<T | undefined>
@@ -20,6 +41,10 @@ export class MemoryStore implements Store {
     phrases: new Map(),
     settings: new Map(),
     online: new Map(),
+    ai_usage: new Map(),
+    ai_suggestions: new Map(),
+    craft: new Map(),
+    vocals: new Map(),
   }
   async get<T>(kind: Kind, id: string) {
     const v = this.data[kind].get(id)
@@ -47,7 +72,7 @@ export class IdbStore implements Store {
   private db: Promise<IDBDatabase>
   constructor(name = DB_NAME) {
     this.db = new Promise((res, rej) => {
-      const open = indexedDB.open(name, 3) // v2: your pronunciations and phrases; v3: settings and saved online answers
+      const open = indexedDB.open(name, 4) // v2: pronunciations, phrases; v3: settings, online answers; v4: AI, craft, vocals
       open.onupgradeneeded = () => {
         for (const k of KINDS)
           if (!open.result.objectStoreNames.contains(k)) open.result.createObjectStore(k)

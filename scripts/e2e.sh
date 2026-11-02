@@ -64,3 +64,4 @@ run phase8.cjs
 run phase7.cjs
 run phone_local.cjs
 run phone_words.cjs
+run phone_ai_craft.cjs

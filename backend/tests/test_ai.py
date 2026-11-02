@@ -478,3 +478,16 @@ def test_metaphor_and_wordplay_need_an_unlocked_target_line(client, fake, setup,
     )
     r, _ = go(client, req(song, sid, task, target_line_id=ids[0]))
     assert r.status_code == 200 and r.json()["target_line_id"] == ids[0]
+
+
+def test_phone_version_uses_the_same_ai_wording():
+    """The phone app keeps a copy of the AI rules and prices; it must match (regenerate with scripts/make_phone_ai_data.py)."""
+    import importlib.util
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[2]
+    spec = importlib.util.spec_from_file_location("mk", root / "scripts" / "make_phone_ai_data.py")
+    mk = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mk)
+    assert json.loads(mk.DEST.read_text()) == json.loads(json.dumps(mk.data()))

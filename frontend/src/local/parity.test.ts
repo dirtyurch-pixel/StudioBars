@@ -159,3 +159,73 @@ describe('phone version matches the PC version on real data', () => {
     })
   })
 })
+
+// ---------------------------------------------------------------- step 3: Craft scans and the AI prompt
+import { lineSyllables, rhymeChains, scanStructure, scanText, singability } from './craft/scan'
+import { build } from './ai/prompts'
+import { parseLines, parseNotes } from './ai/validate'
+import type { Song } from '../types'
+
+const C = (fixture as unknown as { craft: Record<string, unknown> }).craft as {
+  songs: Song[]
+  scan_text: unknown[]
+  scan_structure: unknown[]
+  singability: unknown[]
+  chains: Record<string, unknown>
+  line_syllables: unknown[]
+}
+const A = (fixture as unknown as { ai: Record<string, unknown> }).ai as {
+  reqs: Record<string, unknown>[]
+  built: Record<string, unknown>[]
+  answers: string[]
+  lines: unknown[]
+  notes: unknown[]
+}
+const CHAIN_LINES = [
+  'The night light shines so bright',
+  'I walk the road under the cold',
+  'rain rain rain',
+  'Fire and desire, higher and higher',
+]
+const plain = (x: unknown) => JSON.parse(JSON.stringify(x))
+
+describe('phone Craft tools match the PC version', () => {
+  it('clichés, repeats, reused phrases and fillers', () => {
+    C.songs.forEach((s, i) => expect(plain(scanText(s))).toEqual(C.scan_text[i]))
+  })
+  it('structure scan', () => {
+    C.songs.forEach((s, i) => expect(plain(scanStructure(s, r))).toEqual(C.scan_structure[i]))
+  })
+  it('singability and breath', () => {
+    C.songs.forEach((s, i) => expect(plain(singability(s, r))).toEqual(C.singability[i]))
+  })
+  it('rhyme chains at every strictness', () => {
+    for (const k of ['strict', 'normal', 'loose'])
+      expect(plain(rhymeChains(CHAIN_LINES, r, k))).toEqual(C.chains[k])
+  })
+  it('syllable stress for the flow grid', () => {
+    ;['Tonight I wonder zzqx', 'Every little thing', '808 drums'].forEach((t, i) =>
+      expect(plain(lineSyllables(t, r))).toEqual(C.line_syllables[i]),
+    )
+  })
+})
+
+describe('phone AI sends exactly what the PC version sends', () => {
+  it('builds the same prompt (and refuses the same things)', () => {
+    A.reqs.forEach((q, i) => {
+      let got: unknown
+      try {
+        got = plain(build(C.songs[0], q as never))
+      } catch (e) {
+        got = { error: (e as { code?: string }).code }
+      }
+      expect(got).toEqual(A.built[i])
+    })
+  })
+  it('checks AI answers the same way', () => {
+    A.answers.forEach((a, i) => {
+      expect(parseLines(a, new Set(['Walk with me tonight']), 5)).toEqual(A.lines[i])
+      expect(parseNotes(a)).toEqual(A.notes[i])
+    })
+  })
+})

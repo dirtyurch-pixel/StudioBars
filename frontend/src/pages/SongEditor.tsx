@@ -905,7 +905,7 @@ export default function SongEditor({ id }: { id: string }) {
           <div className="side-tabs" role="tablist">
             {(
               (LOCAL
-                ? ['notes', 'rhymes', 'words', 'history', 'files']
+                ? ['notes', 'rhymes', 'words', 'ai', 'craft', 'history', 'files']
                 : [
                     'notes',
                     'rhymes',

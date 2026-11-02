@@ -48,6 +48,8 @@ import { ApiFail } from './apiFail'
 import * as local from './local/localApi'
 import * as localWords from './local/localWords'
 import * as localOnline from './local/localOnline'
+import * as localAi from './local/ai/service'
+import * as localCraft from './local/craft/store'
 export { ApiFail }
 
 /** Phone version: everything is kept on this device and there is no server. */
@@ -56,7 +58,7 @@ export const LOCAL = import.meta.env.VITE_LOCAL === '1'
 /** Phone version: turn any unexpected problem into a plain message that says what happened. */
 function loc<T>(p: Promise<T>): Promise<T> {
   return p.catch((e: unknown) => {
-    if (e instanceof ApiFail) throw e
+    if (e instanceof ApiFail || (e instanceof DOMException && e.name === 'AbortError')) throw e
     const why = e instanceof Error ? e.message : String(e)
     throw new ApiFail(`Something went wrong on this device: ${why}`, { code: 'DEVICE_ERROR' })
   })
@@ -378,21 +380,33 @@ export const phraseRhymes = (
 // ---------------------------------------------------------------- AI co-writer (Phase 4)
 // The key is sent to the local server once and is never returned.
 export const getAiStatus = (signal?: AbortSignal) =>
-  json<AiStatus>('/api/ai/status', undefined, signal)
+  LOCAL ? loc(localAi.status()) : json<AiStatus>('/api/ai/status', undefined, signal)
 export const putAiSettings = (data: AiSettingsIn) =>
-  json<AiStatus>('/api/ai/settings', body('PUT', data))
+  LOCAL
+    ? loc(localAi.updateSettings(data as never))
+    : json<AiStatus>('/api/ai/settings', body('PUT', data))
 export const putAiKey = (provider: string, key: string) =>
-  json<AiStatus>('/api/ai/key', body('PUT', { provider, key }))
+  LOCAL
+    ? loc(localAi.setKey(provider, key))
+    : json<AiStatus>('/api/ai/key', body('PUT', { provider, key }))
 export const deleteAiKey = (provider: string) =>
-  json<AiStatus>(`/api/ai/key?provider=${encodeURIComponent(provider)}`, body('DELETE'))
+  LOCAL
+    ? loc(localAi.deleteKey(provider))
+    : json<AiStatus>(`/api/ai/key?provider=${encodeURIComponent(provider)}`, body('DELETE'))
 export const aiPrepare = (req: AiRequest, signal?: AbortSignal) =>
-  json<AiPrepared>('/api/ai/prepare', body('POST', req), signal)
+  LOCAL ? loc(localAi.prepare(req)) : json<AiPrepared>('/api/ai/prepare', body('POST', req), signal)
 export const aiSuggest = (req: AiRequest, ackHash: string, signal?: AbortSignal) =>
-  json<AiResult>('/api/ai/suggest', body('POST', { ...req, ack_hash: ackHash }), signal)
+  LOCAL
+    ? loc(localAi.suggest(req, ackHash, signal))
+    : json<AiResult>('/api/ai/suggest', body('POST', { ...req, ack_hash: ackHash }), signal)
 export const aiAccept = (id: string) =>
-  json<{ ok: boolean }>(`/api/ai/suggestions/${id}/accept`, body('POST'))
+  LOCAL
+    ? loc(localAi.accept(id))
+    : json<{ ok: boolean }>(`/api/ai/suggestions/${id}/accept`, body('POST'))
 export const aiTest = () =>
-  json<{ ok: boolean; month: AiStatus['usage'] }>('/api/ai/test', body('POST'))
+  LOCAL
+    ? loc(localAi.testConnection())
+    : json<{ ok: boolean; month: AiStatus['usage'] }>('/api/ai/test', body('POST'))
 
 // ---------------------------------------------------------------- PIN lock (phone / tablet access)
 export const authStatus = () => json<{ required: boolean; ok: boolean }>('/api/auth/status')
@@ -402,6 +416,7 @@ export const authLogout = () => json<{ ok: boolean }>('/api/auth/logout', body('
 
 // ---------------------------------------------------------------- craft tools (Phase 5)
 export const listCraft = (songId: string | null, kind?: string, q = '', tag = '') => {
+  if (LOCAL) return loc(localCraft.listItems(songId, kind, q, tag))
   const p = new URLSearchParams()
   if (songId) p.set('song_id', songId)
   if (kind) p.set('kind', kind)
@@ -414,76 +429,118 @@ export const addCraft = (data: {
   kind: string
   text: string
   tags: string[]
-}) => json<CraftItem>('/api/craft/items', body('POST', data))
+}) =>
+  LOCAL ? loc(localCraft.createItem(data)) : json<CraftItem>('/api/craft/items', body('POST', data))
 export const deleteCraft = async (id: string) => {
+  if (LOCAL) return loc(localCraft.deleteItem(id))
   await request(`/api/craft/items/${id}`, body('DELETE'))
 }
 export const listTakes = (songId: string, lineId: string) =>
-  json<Take[]>(`/api/craft/songs/${songId}/takes?line_id=${encodeURIComponent(lineId)}`)
+  LOCAL
+    ? loc(localCraft.listTakes(songId, lineId))
+    : json<Take[]>(`/api/craft/songs/${songId}/takes?line_id=${encodeURIComponent(lineId)}`)
 export const addTake = (songId: string, lineId: string, text: string, note = '') =>
-  json<Take>(`/api/craft/songs/${songId}/takes`, body('POST', { line_id: lineId, text, note }))
+  LOCAL
+    ? loc(localCraft.addTake(songId, lineId, text, note))
+    : json<Take>(`/api/craft/songs/${songId}/takes`, body('POST', { line_id: lineId, text, note }))
 export const setTakeFavourite = (id: string, favourite: boolean) =>
-  json<Take>(`/api/craft/takes/${id}/favourite`, body('PUT', { favourite }))
+  LOCAL
+    ? loc(localCraft.setFavourite(id, favourite))
+    : json<Take>(`/api/craft/takes/${id}/favourite`, body('PUT', { favourite }))
 export const deleteTake = async (id: string) => {
+  if (LOCAL) return loc(localCraft.deleteTake(id))
   await request(`/api/craft/takes/${id}`, body('DELETE'))
 }
-export const getPlan = (songId: string) => json<Plan>(`/api/craft/songs/${songId}/plan`)
+export const getPlan = (songId: string) =>
+  LOCAL ? loc(localCraft.getPlan(songId)) : json<Plan>(`/api/craft/songs/${songId}/plan`)
 export const putPlan = (songId: string, plan: Plan) =>
-  json<Plan>(`/api/craft/songs/${songId}/plan`, body('PUT', plan))
+  LOCAL
+    ? loc(localCraft.putPlan(songId, plan))
+    : json<Plan>(`/api/craft/songs/${songId}/plan`, body('PUT', plan))
 export const getGrids = (songId: string) =>
-  json<Record<string, FlowGrid>>(`/api/craft/songs/${songId}/grids`)
+  LOCAL
+    ? (loc(localCraft.getGrids(songId)) as Promise<Record<string, FlowGrid>>)
+    : json<Record<string, FlowGrid>>(`/api/craft/songs/${songId}/grids`)
 export const putGrid = (songId: string, lineId: string, grid: FlowGrid) =>
-  json<FlowGrid>(`/api/craft/songs/${songId}/grids/${lineId}`, body('PUT', grid))
+  LOCAL
+    ? (loc(localCraft.putGrid(songId, lineId, grid)) as Promise<FlowGrid>)
+    : json<FlowGrid>(`/api/craft/songs/${songId}/grids/${lineId}`, body('PUT', grid))
 export const deleteGrid = async (songId: string, lineId: string) => {
+  if (LOCAL) return loc(localCraft.deleteGrid(songId, lineId))
   await request(`/api/craft/songs/${songId}/grids/${lineId}`, body('DELETE'))
 }
 export const getSyllables = (text: string, signal?: AbortSignal) =>
-  json<{ syllables: SyllableInfo[] }>(
-    `/api/craft/syllables?text=${encodeURIComponent(text)}`,
-    undefined,
-    signal,
-  )
-export const scanSong = (songId: string) => json<ScanResult>(`/api/craft/songs/${songId}/scan`)
+  LOCAL
+    ? loc(localCraft.syllables(text))
+    : json<{ syllables: SyllableInfo[] }>(
+        `/api/craft/syllables?text=${encodeURIComponent(text)}`,
+        undefined,
+        signal,
+      )
+export const scanSong = (songId: string) =>
+  LOCAL
+    ? (loc(localCraft.scanSong(songId)) as Promise<ScanResult>)
+    : json<ScanResult>(`/api/craft/songs/${songId}/scan`)
 export const getChains = (lines: string[], strictness: string) =>
-  json<Chains>('/api/craft/chains', body('POST', { lines, strictness }))
-export const getDna = () => json<Dna>('/api/craft/dna')
-export const getDnaApproved = () => json<string[]>('/api/craft/dna/approved')
+  LOCAL
+    ? loc(localCraft.chains(lines, strictness))
+    : json<Chains>('/api/craft/chains', body('POST', { lines, strictness }))
+export const getDna = () =>
+  LOCAL ? (loc(localCraft.dnaProfile()) as Promise<Dna>) : json<Dna>('/api/craft/dna')
+export const getDnaApproved = () =>
+  LOCAL ? loc(localCraft.dnaApproved()) : json<string[]>('/api/craft/dna/approved')
 export const approveDna = async (songId: string) => {
+  if (LOCAL) return loc(localCraft.dnaApprove(songId))
   await request(`/api/craft/dna/songs/${songId}`, body('PUT'))
 }
 export const removeDna = async (songId: string) => {
+  if (LOCAL) return loc(localCraft.dnaRemove(songId))
   await request(`/api/craft/dna/songs/${songId}`, body('DELETE'))
 }
 export const clearDna = async () => {
+  if (LOCAL) return loc(localCraft.dnaClear())
   await request('/api/craft/dna', body('DELETE'))
 }
 
 // scratch vocal takes (Phase 6)
-export const listVocals = (songId: string) => json<VocalTake[]>(`/api/craft/songs/${songId}/vocals`)
+export const listVocals = (songId: string) =>
+  LOCAL
+    ? loc(localCraft.listVocals(songId))
+    : json<VocalTake[]>(`/api/craft/songs/${songId}/vocals`)
 export const uploadVocal = (songId: string, blob: Blob, durationMs: number, offsetMs: number) =>
-  json<VocalTake>(`/api/craft/songs/${songId}/vocals`, {
-    method: 'POST',
-    body: blob,
-    headers: {
-      'Content-Type': blob.type || 'audio/webm',
-      'X-Duration-Ms': String(Math.round(durationMs)),
-      'X-Offset-Ms': String(Math.round(offsetMs)),
-    },
-  })
+  LOCAL
+    ? loc(localCraft.addVocal(songId, blob, durationMs, offsetMs))
+    : json<VocalTake>(`/api/craft/songs/${songId}/vocals`, {
+        method: 'POST',
+        body: blob,
+        headers: {
+          'Content-Type': blob.type || 'audio/webm',
+          'X-Duration-Ms': String(Math.round(durationMs)),
+          'X-Offset-Ms': String(Math.round(offsetMs)),
+        },
+      })
 export const patchVocal = (id: string, data: { note?: string; offset_ms?: number }) =>
-  json<VocalTake>(`/api/craft/vocals/${id}`, body('PATCH', data))
+  LOCAL
+    ? loc(localCraft.patchVocal(id, data))
+    : json<VocalTake>(`/api/craft/vocals/${id}`, body('PATCH', data))
 export const deleteVocal = async (id: string) => {
+  if (LOCAL) return loc(localCraft.deleteVocal(id))
   await request(`/api/craft/vocals/${id}`, body('DELETE'))
 }
 export const vocalUrl = (id: string) => `${BASE}/api/craft/vocals/${id}/audio`
 
 // melody sketch and chords (Phase 8)
-export const getMelody = (songId: string) => json<MelodySketch>(`/api/craft/songs/${songId}/melody`)
+export const getMelody = (songId: string) =>
+  LOCAL
+    ? loc(localCraft.getMelody(songId))
+    : json<MelodySketch>(`/api/craft/songs/${songId}/melody`)
 export const putMelody = (songId: string, sketch: Omit<MelodySketch, never>) =>
-  json<MelodySketch>(
-    `/api/craft/songs/${songId}/melody`,
-    body('PUT', {
-      notes: sketch.notes.map(({ start16, len16, midi }) => ({ start16, len16, midi })),
-      chords: sketch.chords,
-    }),
-  )
+  LOCAL
+    ? loc(localCraft.putMelody(songId, sketch.notes, sketch.chords))
+    : json<MelodySketch>(
+        `/api/craft/songs/${songId}/melody`,
+        body('PUT', {
+          notes: sketch.notes.map(({ start16, len16, midi }) => ({ start16, len16, midi })),
+          chords: sketch.chords,
+        }),
+      )

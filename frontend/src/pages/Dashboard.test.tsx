@@ -50,7 +50,9 @@ describe('Dashboard states', () => {
   it('lists songs with genre, lines and locked count', async () => {
     api.listSongs.mockResolvedValue([song])
     wrap()
-    expect(await screen.findByText(/R&B · 82 BPM · 12 lines · 🔒 2/)).toBeInTheDocument()
+    expect(await screen.findByText('R&B')).toBeInTheDocument()
+    expect(screen.getByText('82 BPM')).toBeInTheDocument()
+    expect(screen.getByText(/12 lines · 🔒 2/)).toBeInTheDocument()
   })
 
   it('asks before deleting', async () => {

@@ -36,7 +36,7 @@ const check = (name, ok, extra = '') => {
   check('the waveform setting is remembered', (await page.getByLabel('Show the waveform and beat markers in the player').isChecked()) === !before)
 
   await page.getByRole('button', { name: '← My songs' }).click()
-  await page.getByText('My songs').first().waitFor()
+  await page.getByText('What are we writing today?').waitFor()
   check('back to my songs', !page.url().includes('settings'))
   check('no page errors', errors.length === 0, errors.join(' | '))
   await browser.close()

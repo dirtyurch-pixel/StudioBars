@@ -2556,3 +2556,122 @@ input.file-hidden:focus-visible + .file-pick {
     justify-content: center;
   }
 }
+
+/* ------------------------------------------------------------------ tablet and PC (Design A, stage 7) */
+.ed-songs,
+.ed-songs-show {
+  display: none;
+}
+@media (min-width: 861px) {
+  .ed-grid {
+    grid-template-columns: minmax(0, 1fr) var(--c-tools, 340px);
+  }
+  .ed-grid.tools-closed {
+    --c-tools: 76px;
+  }
+  /* tools collapsed: a slim rail of the four groups */
+  .ed-grid.tools-closed .side-sheet {
+    display: none;
+  }
+  .ed-grid.tools-closed .tool-nav {
+    grid-template-columns: 1fr;
+    border-bottom: 0;
+  }
+  .ed-grid.tools-closed .tool-nav .tab {
+    font-size: 12px;
+    min-height: 52px;
+    box-shadow: none;
+    color: var(--text-muted);
+  }
+  .sheet-close {
+    display: inline-grid;
+  }
+  .ed-side .side-body {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+  }
+}
+@media (min-width: 1200px) {
+  .ed-grid {
+    max-width: 1560px;
+    grid-template-columns: var(--c-songs, 44px) minmax(0, 1fr) var(--c-tools, 340px);
+  }
+  .ed-grid.with-songs {
+    --c-songs: 230px;
+  }
+  .ed-songs {
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 76px;
+    max-height: calc(100vh - 92px - var(--player-h, 0px));
+    border-right: 1px solid var(--line);
+    padding-right: 8px;
+    min-width: 0;
+  }
+  .ed-songs-show {
+    display: inline-grid;
+    position: sticky;
+    top: 76px;
+    border-color: transparent;
+    font-size: 22px;
+  }
+}
+.ed-songs-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.ed-songs-head .icon-btn {
+  border-color: transparent;
+  font-size: 22px;
+}
+.ed-songs ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+}
+.ed-songs li button {
+  width: 100%;
+  display: grid;
+  gap: 2px;
+  text-align: left;
+  padding: 10px 10px;
+  min-height: 44px;
+  border: 0;
+  border-left: 3px solid transparent;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text);
+}
+.ed-songs li button:hover {
+  background: var(--surface);
+}
+.ed-songs li button.on {
+  background: var(--surface);
+  border-left-color: var(--accent);
+}
+.ed-songs .t {
+  font: 700 15px/1.15 var(--font-condensed);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ed-songs small {
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+.editor.focus .ed-songs,
+.editor.focus .ed-songs-show {
+  display: none !important;
+}
+.editor.focus .ed-grid {
+  grid-template-columns: minmax(0, 760px) !important;
+}

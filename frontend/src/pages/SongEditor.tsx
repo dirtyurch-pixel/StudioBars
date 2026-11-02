@@ -3,6 +3,7 @@ import * as api from '../api'
 import { ApiFail, LOCAL } from '../api'
 import { GenrePicker } from '../components/GenrePicker'
 import { Menu } from '../components/Menu'
+import { SongsSidebar } from '../components/SongsSidebar'
 import { Modal } from '../components/Modal'
 import { Pad, type FocusRequest } from '../components/Pad'
 import { FilesPanel, HistoryPanel, NotesPanel } from '../components/SidePanels'
@@ -122,7 +123,25 @@ export default function SongEditor({ id }: { id: string }) {
   const lastInGroup = useRef<Partial<Record<ToolGroup['id'], Tool>>>({})
   lastInGroup.current[groupOf(tool)] = tool
   const currentGroup = TOOL_GROUPS.find((g) => g.id === groupOf(tool))!
-  const [toolsOpen, setToolsOpen] = useState(false)
+  // tools: open by default on wide screens (a side panel), closed on phones (a sheet)
+  const [toolsOpen, setToolsOpen] = useState(
+    () => window.matchMedia?.('(min-width: 861px)').matches ?? false,
+  )
+  const [songsOpen, setSongsOpen] = useState(() => {
+    try {
+      return localStorage.getItem('sb-songs-panel') !== '0'
+    } catch {
+      return true
+    }
+  })
+  const showSongs = (v: boolean) => {
+    setSongsOpen(v)
+    try {
+      localStorage.setItem('sb-songs-panel', v ? '1' : '0')
+    } catch {
+      /* not remembered */
+    }
+  }
   const [focusMode, setFocusMode] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
   const [revisions, setRevisions] = useState<Revision[] | null>(null)
@@ -706,7 +725,28 @@ export default function SongEditor({ id }: { id: string }) {
       )}
 
       <SessionStrip songLink={songLink} />
-      <div className="ed-grid">
+      <div
+        className={`ed-grid${songsOpen ? ' with-songs' : ''}${toolsOpen ? '' : ' tools-closed'}`}
+      >
+        {songsOpen ? (
+          <SongsSidebar
+            currentId={id}
+            onHide={() => showSongs(false)}
+            onOpen={async (other) => {
+              await saveNow()
+              goSong(other)
+            }}
+          />
+        ) : (
+          <button
+            className="icon-btn ed-songs-show hide-focus"
+            onClick={() => showSongs(true)}
+            aria-label="Show song list"
+            title="Show songs"
+          >
+            ›
+          </button>
+        )}
         <section className="ed-main" aria-label="Lyrics">
           <div className="opts hide-focus">
             {optsOpen && (

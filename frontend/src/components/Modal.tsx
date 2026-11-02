@@ -12,9 +12,12 @@ export function Modal({
   wide?: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null)
+  // remember what had focus BEFORE the dialog opened (read while rendering, before any autoFocus moves it)
+  const prevRef = useRef<HTMLElement | null>(document.activeElement as HTMLElement | null)
   useEffect(() => {
-    const prev = document.activeElement as HTMLElement | null
-    ref.current?.focus()
+    const prev = prevRef.current
+    // keep a field's autoFocus (e.g. the title box); otherwise focus the dialog itself
+    if (!ref.current?.contains(document.activeElement)) ref.current?.focus()
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.stopPropagation()

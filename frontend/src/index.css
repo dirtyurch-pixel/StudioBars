@@ -19,7 +19,7 @@
   --paper: #f2eadc;
   --paper-ink: #24201c;
   --paper-rule: #cec3b5;
-  --paper-muted: #7a7066;
+  --paper-muted: #675e55;
   --paper-margin: #d97a5a;
   --success: #63b995;
   --error: #f08a80;
@@ -2674,4 +2674,9 @@ input.file-hidden:focus-visible + .file-pick {
 }
 .editor.focus .ed-grid {
   grid-template-columns: minmax(0, 760px) !important;
+}
+
+/* stage 8: comfortable tap size for the song title */
+.ed-titlebox .title-input {
+  min-height: 36px;
 }

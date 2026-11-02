@@ -73,5 +73,6 @@ APP_URL=http://127.0.0.1:4174/StudioBars/ PHONE=1 run settings.cjs
 APP_URL=http://127.0.0.1:4174/StudioBars/ PHONE=1 run wave_beats.cjs
 run phone_words.cjs
 run phone_ai_craft.cjs
+run design_checks.cjs
 # last: it briefly changes the served sw.js to simulate an app update (and puts it back)
 PHONE_DIST="$TMP/phone-local" run offline_update.cjs

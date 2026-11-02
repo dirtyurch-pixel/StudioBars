@@ -49,8 +49,9 @@ for i in $(seq 1 40); do curl -sf localhost:8100/health >/dev/null && break; sle
 # the independent phone version: plain files, NO server; songs live in the browser
 cd "$ROOT/frontend"
 VITE_LOCAL=1 VITE_BASE=/StudioBars/ node node_modules/vite/bin/vite.js build --outDir "$TMP/phone-local" --emptyOutDir >"$TMP/build-local.log" 2>&1
-node node_modules/vite/bin/vite.js preview --outDir "$TMP/phone-local" --base /StudioBars/ --port 4174 --strictPort >"$TMP/preview.log" 2>&1 & PREVIEW=$!
+node node_modules/vite/bin/vite.js preview --outDir "$TMP/phone-local" --base /StudioBars/ --host 127.0.0.1 --port 4174 --strictPort >"$TMP/preview.log" 2>&1 & PREVIEW=$!
 for i in $(seq 1 40); do curl -sf http://127.0.0.1:4174/StudioBars/ >/dev/null && break; sleep 0.5; done
+curl -sf http://127.0.0.1:4174/StudioBars/ >/dev/null || { echo "phone-version test server did not start:"; cat "$TMP/build-local.log" "$TMP/preview.log"; exit 1; }
 cd "$ROOT/e2e"
 run() { if [ -d node_modules ]; then node "$1"; else NODE_PATH="${NODE_PATH:-$(npm root -g)}" node "$1"; fi; }
 run phase1.cjs

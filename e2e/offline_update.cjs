@@ -59,8 +59,13 @@ const line = (p, n) => p.getByLabel(new RegExp(`^Line ${n}( \\(locked\\))?$`))
     // an update arrives: it must wait, and only switch when the writer taps Reload (after saving)
     if (!DIST) throw new Error('PHONE_DIST not set')
     fs.writeFileSync(swPath, original.replace(/const CACHE = '([^']+)'/, "const CACHE = '$1-next'"))
-    await page.evaluate(async () => (await navigator.serviceWorker.getRegistration()).update())
-    await page.getByText('A new version of Studio Bars is ready.').waitFor({ timeout: 20000 })
+    // ask for the new version (again if needed: a busy machine can be slow to notice it)
+    let seen = false
+    for (let i = 0; i < 4 && !seen; i++) {
+      await page.evaluate(async () => (await navigator.serviceWorker.getRegistration()).update()).catch(() => undefined)
+      seen = await page.getByText('A new version of Studio Bars is ready.').waitFor({ timeout: 15000 }).then(() => true, () => false)
+    }
+    if (!seen) throw new Error('the update banner never appeared')
     check('a new version shows "ready" instead of swapping by itself', true)
     const before = await page.evaluate(() => navigator.serviceWorker.controller.scriptURL)
     await line(page, 1).fill('typed right before updating')

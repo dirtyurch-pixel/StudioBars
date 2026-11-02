@@ -141,12 +141,13 @@ export function Waveform() {
     g.setTransform(dpr, 0, 0, dpr, 0, 0)
     g.clearRect(0, 0, width, HEIGHT)
     const x = (s: number) => (dur > 0 ? (s / dur) * width : 0)
-    const accent = css('--accent', '#ffba24')
-    const muted = css('--muted', '#b7c5e1')
+    const accent = css('--accent', '#ff6a36')
+    const muted = css('--text-muted', '#b9b4ad')
+    const text = css('--text', '#f5f0e7')
     const playedX = x(Math.min(p.time, dur))
 
     if (loopActive(p.loop)) {
-      g.fillStyle = 'rgba(255, 186, 36, 0.18)'
+      g.fillStyle = 'rgba(255, 106, 54, 0.18)'
       g.fillRect(x(p.loop.a as number), 0, x(p.loop.b as number) - x(p.loop.a as number), HEIGHT)
     }
     const peaks = wave.key === key ? wave.peaks : null
@@ -172,11 +173,11 @@ export function Waveform() {
       const tight = all.length > 1 && x(all[1].t) - x(all[0].t) < 4 // too dense: bars only
       for (const b of all) {
         if (tight && !b.bar) continue
-        g.fillStyle = b.bar ? '#f8faff' : 'rgba(248, 250, 255, 0.35)'
+        g.fillStyle = b.bar ? text : muted
         g.fillRect(Math.round(x(b.t)), b.bar ? 0 : HEIGHT - 10, b.bar ? 2 : 1, b.bar ? HEIGHT : 10)
       }
     }
-    g.fillStyle = '#ffffff'
+    g.fillStyle = text
     g.fillRect(Math.round(playedX) - 1, 0, 2, HEIGHT)
   }, [width, wave, key, p.time, p.loop, beats, dur])
 

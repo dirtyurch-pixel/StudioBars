@@ -5,6 +5,7 @@ import { AiSetup } from '../ai/AiSetup'
 import { OfflineStatus } from '../local/OfflineStatus'
 import { PhoneBackup } from '../local/PhoneBackup'
 import { goHome } from '../route'
+import { getLyricSize, getTheme, setAppearance, type LyricSize, type Theme } from '../appearance'
 import type { AiStatus } from '../types'
 import { OnlineSwitch } from '../words/OnlineHelper'
 
@@ -27,6 +28,8 @@ export default function Settings() {
   const [ai, setAi] = useState<AiStatus | null>(null)
   const [aiError, setAiError] = useState('')
   const [wave, setWave] = useState(readWave)
+  const [theme, setTheme] = useState<Theme>(getTheme)
+  const [lyric, setLyric] = useState<LyricSize>(getLyricSize)
   const [storage, setStorage] = useState<{ used: number; quota: number } | null>(null)
 
   useEffect(() => {
@@ -67,6 +70,60 @@ export default function Settings() {
           ← My songs
         </button>
       </header>
+
+      <section className="card set-sec" aria-labelledby="set-look">
+        <h2 id="set-look">Appearance</h2>
+        <div className="set-row">
+          <span>Theme</span>
+          <div className="seg" role="group" aria-label="Theme">
+            {(
+              [
+                ['dark', 'Dark'],
+                ['light', 'Light'],
+                ['system', 'Match phone'],
+              ] as [Theme, string][]
+            ).map(([v, label]) => (
+              <button
+                key={v}
+                className={theme === v ? 'on' : ''}
+                aria-pressed={theme === v}
+                onClick={() => {
+                  setTheme(v)
+                  setAppearance({ theme: v })
+                }}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="set-row">
+          <span>Lyric text size</span>
+          <div className="seg" role="group" aria-label="Lyric text size">
+            {(
+              [
+                ['small', 'S'],
+                ['medium', 'M'],
+                ['large', 'L'],
+                ['xlarge', 'XL'],
+              ] as [LyricSize, string][]
+            ).map(([v, label]) => (
+              <button
+                key={v}
+                className={lyric === v ? 'on' : ''}
+                aria-pressed={lyric === v}
+                aria-label={`Lyric text size ${label}`}
+                onClick={() => {
+                  setLyric(v)
+                  setAppearance({ lyric: v })
+                }}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="card set-sec" aria-labelledby="set-ai">
         <h2 id="set-ai">AI co-writer</h2>

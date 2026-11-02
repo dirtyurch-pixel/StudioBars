@@ -1,5 +1,6 @@
 /* Phase 3 acceptance test: meanings, thesaurus, part-of-speech rhymes, phrase bank, phrase rhymes, online helper. */
 const { chromium } = require('playwright')
+const { openTool } = require('./tools.cjs')
 const fs = require('fs')
 
 const APP = process.env.APP_URL || 'http://localhost:5173'
@@ -50,7 +51,7 @@ const dump = async () => {
   await line(page, 1).waitFor()
   await line(page, 1).fill('He put the money in the bank')
   await line(page, 2).fill('I watch the lights fade fast')
-  await page.getByRole('tab', { name: 'Words' }).click()
+  await openTool(page, 'Words')
 
   const typeWord = async (w) => {
     await page.getByLabel('Word to look up').fill(w)
@@ -149,7 +150,7 @@ const dump = async () => {
   await page.getByRole('tab', { name: 'One word' }).click()
 
   // ---------------------------------------------------------------- phrase bank
-  await page.getByRole('tab', { name: 'Words' }).click()
+  await openTool(page, 'Words')
   await page.getByRole('tab', { name: 'My phrases' }).click()
   await page.getByText(/Nothing here yet/).waitFor()
   check('the phrase bank starts empty with a friendly message', true)
@@ -182,7 +183,7 @@ const dump = async () => {
   await page.getByRole('button', { name: 'All', exact: true }).click()
   await page.reload()
   await line(page, 1).waitFor()
-  await page.getByRole('tab', { name: 'Words' }).click()
+  await openTool(page, 'Words')
   await page.getByRole('tab', { name: 'My phrases' }).click()
   await page.getByText('on the come up').waitFor({ timeout: 6000 })
   check('phrases are still there after reloading the page', (await page.locator('.phrase-list > li').count()) === 2)
@@ -197,7 +198,7 @@ const dump = async () => {
   await page.locator('.phrase-list > li', { hasText: 'on the come up' }).getByRole('button', { name: 'Rhymes' }).click()
   await page.getByRole('note').filter({ hasText: /Experimental/ }).waitFor({ timeout: 8000 })
   check('"Rhymes" on a phrase opens the experimental phrase search for it', (await page.getByLabel('Phrase', { exact: true }).inputValue()) === 'on the come up')
-  await page.getByRole('tab', { name: 'Words' }).click()
+  await openTool(page, 'Words')
   await page.getByRole('tab', { name: 'My phrases' }).click()
   await page.locator('.phrase-list > li', { hasText: 'on the come up' }).getByLabel('Delete on the come up').click()
   await page.getByRole('button', { name: 'Yes', exact: true }).click()
@@ -234,7 +235,7 @@ const dump = async () => {
   check('the saved answer is labelled as a saved copy', /Saved copy/.test(await page.getByLabel('Online results').innerText()))
 
   // online rhymes from the Rhymes tab
-  await page.getByRole('tab', { name: 'Rhymes' }).click()
+  await openTool(page, 'Rhymes')
   await page.getByLabel('Word to look up').fill('fade')
   await page.getByRole('button', { name: 'Look up' }).click()
   await page.getByRole('region', { name: /syllable/ }).first().waitFor({ timeout: 8000 })
@@ -244,7 +245,7 @@ const dump = async () => {
 
   // the service goes away
   await fake('/__mode?m=down')
-  await page.getByRole('tab', { name: 'Words' }).click()
+  await openTool(page, 'Words')
   await page.getByRole('tab', { name: 'Online ideas' }).click()
   await page.getByLabel('Word to look up').fill('thunder')
   await page.getByRole('button', { name: 'Look up' }).click()
@@ -263,7 +264,7 @@ const dump = async () => {
   await page.getByRole('alert').filter({ hasText: /may now need an API key/ }).waitFor({ timeout: 10000 })
   check('if the service starts refusing (API key needed) the user is told why', true)
   await fake('/__mode?m=ok')
-  await page.getByRole('tab', { name: 'Words' }).click()
+  await openTool(page, 'Words')
   await page.getByRole('tab', { name: 'Online ideas' }).click()
   await page.getByRole('checkbox', { name: /Use the online word helper/ }).click()
   await page.waitForFunction(() => !document.querySelector('.online-switch input[type=checkbox]').checked, null, { timeout: 5000 })
@@ -274,7 +275,7 @@ const dump = async () => {
   check('switching it off stops everything: no more requests', (await fakeLog()).length === before)
   await page.reload()
   await line(page, 1).waitFor()
-  await page.getByRole('tab', { name: 'Words' }).click()
+  await openTool(page, 'Words')
   await page.getByRole('tab', { name: 'Online ideas' }).click()
   check('the on/off choice is remembered after reload', !(await page.getByRole('checkbox', { name: /Use the online word helper/ }).isChecked()))
 
@@ -296,7 +297,7 @@ const dump = async () => {
   const m = await phone.newPage()
   await m.goto(page.url())
   await line(m, 1).waitFor()
-  await m.getByRole('tab', { name: 'Words' }).click()
+  await openTool(m, 'Words')
   await m.getByLabel('Word to look up').fill('rain')
   await m.getByRole('button', { name: 'Look up' }).click()
   await m.getByRole('article').first().waitFor({ timeout: 8000 })

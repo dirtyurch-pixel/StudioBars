@@ -1,5 +1,6 @@
 /* Phone version, step 2: syllables, rhyme colours, rhymes, word meanings and the phrase bank, all on the device. */
 const { chromium, devices } = require('playwright')
+const { openTool } = require('./tools.cjs')
 
 const URL_ = process.env.PHONE_LOCAL_URL || 'http://127.0.0.1:4174/StudioBars/'
 const results = []
@@ -85,8 +86,9 @@ let CURRENT = null
   check('no "server cannot be reached" message', (await page.getByText(/server cannot be reached/).count()) === 0)
 
   // rhymes
-  await page.getByRole('tab', { name: 'Rhymes' }).click()
+  // on a phone: tap the line, then Rhymes in its toolbar (looks up the line's last word)
   await line(page, 2).click()
+  await page.getByRole('button', { name: 'Rhymes', exact: true }).click()
   await page.getByRole('region', { name: /syllable/ }).first().waitFor({ timeout: 20000 })
   const words = await page.locator('.chip-word').allInnerTexts()
   check('rhymes for "shade" include made, grade and fade', ['made', 'grade', 'fade'].every((w) => words.some((x) => x.startsWith(w))), JSON.stringify(words.slice(0, 15)))
@@ -113,7 +115,7 @@ let CURRENT = null
   check('phrase rhymes work ("pay attention" → tension, mention)', pr.some((t) => t.startsWith('tension')) && pr.some((t) => t.startsWith('mention')), JSON.stringify(pr.slice(0, 8)))
 
   // meanings
-  await page.getByRole('tab', { name: 'Words' }).click()
+  await openTool(page, 'Words')
   await page.getByLabel('Word to look up').fill('bank')
   await page.getByRole('button', { name: 'Look up' }).click()
   await page.getByLabel('About bank').waitFor({ timeout: 60000 })

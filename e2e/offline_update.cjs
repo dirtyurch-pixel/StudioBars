@@ -1,5 +1,6 @@
 /* Phone version: offline readiness, word meanings downloaded for offline, and updates that wait for the writer. */
 const { chromium } = require('playwright')
+const { openTool } = require('./tools.cjs')
 const fs = require('fs')
 const path = require('path')
 
@@ -49,7 +50,7 @@ const line = (p, n) => p.getByLabel(new RegExp(`^Line ${n}( \\(locked\\))?$`))
     await ctx.setOffline(true)
     await page.reload()
     await line(page, 1).waitFor({ timeout: 20000 })
-    await page.getByRole('tab', { name: 'Words' }).click()
+    await openTool(page, 'Words')
     await page.getByLabel('Word to look up').fill('river')
     await page.getByRole('button', { name: 'Look up' }).click()
     const got = await page.getByLabel('About river').waitFor({ timeout: 60000 }).then(() => true, () => false)

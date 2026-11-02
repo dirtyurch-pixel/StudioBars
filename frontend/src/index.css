@@ -2273,3 +2273,167 @@ input.file-hidden:focus-visible + .file-pick {
 .row-menu-list button {
   white-space: nowrap;
 }
+
+/* ------------------------------------------------------------------ phone writing mode (Design A, stage 4) */
+/* While a lyric line has the keyboard on a phone: only the title, the section and the notebook stay,
+   and the line toolbar sits on top of the keyboard. Music keeps playing; its bar steps aside. */
+.line-actions .w-only {
+  display: none;
+}
+:root[data-writing] .player {
+  display: none;
+}
+.editor.writing .ed-top .icon-btn:not(.ed-back),
+.editor.writing .ed-top .row-menu,
+.editor.writing .ed-sub > span:not(.save),
+.editor.writing .opts,
+.editor.writing .ed-side,
+.editor.writing .tool-nav,
+.editor.writing .session,
+.editor.writing .ed-main > .hint {
+  display: none !important;
+}
+.editor.writing .ed-grid {
+  padding-bottom: 76px;
+}
+.editor.writing .line-actions {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: var(--kb, 0px);
+  z-index: 45;
+  margin: 0;
+  padding: 6px max(8px, env(safe-area-inset-left, 0px));
+  background: var(--surface);
+  border-top: 1px solid var(--line-strong);
+  box-shadow: 0 -4px 14px #0000004d;
+}
+.editor.writing .line-actions .w-only {
+  display: inline-flex;
+  align-items: center;
+}
+.editor.writing .line-actions .w-only.btn-primary {
+  margin-left: auto;
+}
+.editor.writing .line-actions {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+.editor.writing .line-actions .w-only.btn-primary {
+  position: sticky;
+  right: 0;
+}
+:root[data-writing] .toasts {
+  bottom: calc(var(--kb, 0px) + 72px);
+}
+.editor.writing .line-actions .w-only.btn-primary {
+  box-shadow: -12px 0 10px var(--surface);
+}
+
+/* ------------------------------------------------------------------ tool groups (Design A, stage 5) */
+.tool-nav {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  padding: 6px;
+  border-bottom: 1px solid var(--line);
+}
+.tool-nav .tab {
+  font: 700 14px/1 var(--font-condensed);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  min-height: 44px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-muted);
+  padding: 0 4px;
+}
+.tool-nav .tab.on {
+  background: none;
+  color: var(--accent);
+  box-shadow: inset 0 -3px 0 var(--accent);
+}
+.side-sheet {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.sheet-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px 0;
+}
+.sub-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+.sub-tabs .chip {
+  min-height: 36px;
+  font-size: 14px;
+}
+.sheet-title {
+  flex: 1;
+  font: 700 15px/1 var(--font-condensed);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+.sheet-close {
+  display: none;
+  border-color: transparent;
+}
+
+/* phones and small tablets: tool groups live in a bar at the bottom; a tool opens as a sheet */
+@media (max-width: 860px) {
+  .editor .ed-grid {
+    padding-bottom: calc(64px + var(--player-h, 0px));
+  }
+  .ed-side {
+    position: static;
+    border: 0;
+    background: none;
+  }
+  .tool-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: var(--player-h, 0px);
+    z-index: 32;
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    border-bottom: 0;
+    padding: 4px max(6px, env(safe-area-inset-left, 0px));
+  }
+  .ed-side:not(.open) .tool-nav .tab.on {
+    color: var(--text-muted);
+    box-shadow: none;
+  }
+  .ed-side .side-sheet {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: calc(var(--player-h, 0px) + 53px);
+    z-index: 31;
+    max-height: min(58vh, calc(100dvh - var(--player-h, 0px) - 160px));
+    background: var(--surface);
+    border-top: 1px solid var(--line-strong);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    box-shadow: var(--shadow-dialog);
+  }
+  .ed-side:not(.open) .side-sheet {
+    display: none;
+  }
+  .ed-side .side-body {
+    display: block !important;
+    overflow: auto;
+    flex: 1;
+    min-height: 0;
+  }
+  .sheet-close {
+    display: inline-grid;
+  }
+}

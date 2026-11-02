@@ -1,5 +1,6 @@
 /* Phase 5 acceptance test: flow grid, takes, vault, plan, scans. Lyric text must stay unchanged by planning tools. */
 const { chromium } = require('playwright')
+const { openTool } = require('./tools.cjs')
 
 const APP = process.env.APP_URL || 'http://localhost:5173'
 const results = []
@@ -35,7 +36,7 @@ const watch = (p) => {
   const lyrics = async () => JSON.stringify(await page.locator('[data-line-input]').evaluateAll((els) => els.map((e) => e.value)))
   const snap = await lyrics()
   await line(page, 2).click()
-  await page.getByRole('tab', { name: 'Craft' }).click()
+  await openTool(page, 'Craft')
 
   // ---- flow
   await page.getByRole('button', { name: /^Syllable 1 /, exact: false }).first().waitFor({ timeout: 10000 })
@@ -55,7 +56,7 @@ const watch = (p) => {
   await page.reload()
   await line(page, 2).waitFor()
   await line(page, 2).click()
-  await page.getByRole('tab', { name: 'Craft' }).click()
+  await openTool(page, 'Craft')
   await page.getByRole('button', { name: /^Syllable 1 /, exact: false }).first().waitFor({ timeout: 10000 })
   check('flow: the saved grid (2 bars) is still there after reload', (await page.locator('.flow-cell').count()) === 32)
 
@@ -110,7 +111,7 @@ const watch = (p) => {
   await page.getByRole('button', { name: 'Add', exact: true }).click()
   await page.getByText('A stranger on the platform').waitFor()
   await page.reload()
-  await page.getByRole('tab', { name: 'Craft' }).click()
+  await openTool(page, 'Craft')
   await page.getByRole('button', { name: 'Plan', exact: true }).click()
   await page.getByText('A stranger on the platform').waitFor()
   check('plan: story plan and ideas persist', (await page.getByLabel(/^Scene/).inputValue()) === 'A late train home')
@@ -140,7 +141,7 @@ const watch = (p) => {
   watch(phone)
   await phone.goto(APP)
   await phone.getByText('Craft Test').first().click()
-  await phone.getByRole('tab', { name: 'Craft' }).click()
+  await openTool(phone, 'Craft')
   await phone.getByRole('button', { name: 'Flow', exact: true }).waitFor()
   const sw = await phone.evaluate(() => [document.documentElement.scrollWidth, window.innerWidth])
   check('phone: the Craft tab fits the screen', sw[0] <= sw[1], JSON.stringify(sw))

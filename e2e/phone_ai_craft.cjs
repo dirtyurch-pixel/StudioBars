@@ -1,5 +1,6 @@
 /* Phone version, step 3: AI helper (Claude called from the phone; a local stand-in answers here), Craft and Melody. */
 const { chromium, devices } = require('playwright')
+const { openTool, tapLine } = require('./tools.cjs')
 
 const URL_ = process.env.PHONE_LOCAL_URL || 'http://127.0.0.1:4174/StudioBars/'
 const KEY = 'sk-ant-phone-TESTKEY-123456789'
@@ -52,11 +53,12 @@ let CURRENT = null
   await line(page, 2).fill('Counting every shadow in the rain')
   await line(page, 3).fill('Nobody calls me anymore tonight')
   await page.getByText('Saved', { exact: true }).first().waitFor()
-  const tabs = await page.getByRole('tablist').last().getByRole('tab').allInnerTexts()
-  check('the phone shows the AI and Craft tabs', tabs.includes('AI') && tabs.includes('Craft'), JSON.stringify(tabs))
+  await openTool(page, 'Craft')
+  const tabs = await page.getByRole('tablist', { name: 'Tools', exact: true }).getByRole('tab').evaluateAll((es) => es.map((e) => e.textContent))
+  check('the phone shows the AI and Craft tools', tabs.includes('AI') && tabs.includes('Craft tools'), JSON.stringify(tabs))
 
   // ---- AI setup: the key stays on the device
-  await page.getByRole('tab', { name: 'AI' }).click()
+  await openTool(page, 'AI')
   await page.getByText('AI co-writer setup').waitFor()
   await page.getByLabel('Your Claude API key').fill(KEY)
   await page.getByRole('button', { name: 'Save key' }).click()
@@ -71,7 +73,8 @@ let CURRENT = null
   check('nothing was sent to the AI during setup', ai.length === 0)
 
   // ---- rewrite with preview first
-  await line(page, 2).click()
+  await tapLine(page, 2)
+  await openTool(page, 'AI') // on a phone: the line is chosen, now open the AI sheet
   await page.getByRole('button', { name: 'Rewrite this line' }).click()
   await page.getByRole('button', { name: 'Show what will be sent' }).click()
   const region = page.getByRole('region', { name: 'What will be sent' })
@@ -86,7 +89,8 @@ let CURRENT = null
   await page.getByRole('button', { name: 'Insert below' }).nth(1).click()
   await line(page, 4).waitFor()
   check('Insert adds a new line below', (await line(page, 3).inputValue()) === 'Midnight keeps the secrets that I toss')
-  await line(page, 2).click()
+  await tapLine(page, 2)
+  await openTool(page, 'AI') // on a phone: the line is chosen, now open the AI sheet
   await page.getByRole('button', { name: 'Replace line…' }).first().click()
   check('Replace asks first', (await line(page, 2).inputValue()) === 'Counting every shadow in the rain')
   await page.getByRole('button', { name: 'Yes, replace it' }).click()
@@ -94,16 +98,18 @@ let CURRENT = null
   check('Replace swaps the line after confirming', (await line(page, 2).inputValue()) === 'Streetlights hum a lullaby for the lost')
 
   // ---- locked lines are protected
-  await line(page, 1).click()
+  await tapLine(page, 1)
   await page.getByRole('button', { name: 'Lock line', exact: true }).click()
   await page.getByLabel('Line 1 (locked)').waitFor()
-  await page.getByLabel('Line 1 (locked)').click()
+  await tapLine(page, 1)
+  await openTool(page, 'AI') // on a phone: the line is chosen, now open the AI sheet
   await page.getByRole('button', { name: 'Rewrite this line' }).click()
   check('a locked line cannot be sent for rewriting', await page.getByRole('button', { name: 'Show what will be sent' }).isDisabled())
 
   // ---- plain errors
   aiMode = '401'
-  await line(page, 3).click()
+  await tapLine(page, 3)
+  await openTool(page, 'AI') // on a phone: the line is chosen, now open the AI sheet
   await page.getByRole('button', { name: 'Next line' }).click()
   await page.getByRole('button', { name: 'Show what will be sent' }).click()
   await region.getByRole('button', { name: 'Send to AI' }).click()
@@ -123,8 +129,9 @@ let CURRENT = null
   check('over the monthly limit, Send is blocked and nothing is sent', (await region.getByRole('button', { name: 'Send to AI' }).isDisabled()) && ai.length === before)
 
   // ---- Craft: flow grid
-  await page.getByRole('tab', { name: 'Craft' }).click()
-  await line(page, 2).click()
+  await openTool(page, 'Craft')
+  await tapLine(page, 2)
+  await openTool(page, 'Craft')
   await page.getByRole('button', { name: /^Syllable 1 /, exact: false }).first().waitFor({ timeout: 20000 })
   await page.getByRole('button', { name: /^Syllable 1 /, exact: false }).first().click()
   await page.getByRole('button', { name: /^Bar 1 slot 4 /, exact: false }).click()
@@ -181,7 +188,7 @@ let CURRENT = null
   // everything survives reopening
   await page.reload()
   await line(page, 1).waitFor()
-  await page.getByRole('tab', { name: 'Craft' }).click()
+  await openTool(page, 'Craft')
   await page.getByRole('button', { name: 'Melody', exact: true }).click()
   await page.getByRole('group', { name: 'Melody grid' }).waitFor()
   await sleep(500)
@@ -189,7 +196,7 @@ let CURRENT = null
   await page.getByRole('button', { name: 'Record', exact: true }).click()
   await page.getByLabel('Playback of take 1').waitFor({ timeout: 10000 })
   check('the vocal take is still there after reopening', true)
-  await page.getByRole('tab', { name: 'AI' }).click()
+  await openTool(page, 'AI')
   await page.getByRole('button', { name: 'Settings' }).click()
   check('the AI key is still saved after reopening (shown only as its last 4 letters)', (await page.getByText('…6789').count()) === 1)
 

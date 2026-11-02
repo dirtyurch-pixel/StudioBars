@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import * as api from '../api'
 import { ApiFail, LOCAL } from '../api'
 import { GenrePicker } from '../components/GenrePicker'
@@ -29,6 +29,7 @@ import {
   type Edit,
 } from '../editor/content'
 import { useHistory } from '../editor/useHistory'
+import { useWritingMode } from '../editor/writingMode'
 import { SessionStrip, SongMusicPanel } from '../music/SongMusicPanel'
 import { lastWord } from '../phonetics/highlight'
 import { usePadSettings } from '../phonetics/padSettings'
@@ -38,6 +39,7 @@ import { AiPanel } from '../ai/AiPanel'
 import { CraftPanel } from '../craft/CraftPanel'
 import { useLineAnalysis } from '../phonetics/useLineAnalysis'
 import { useSongLink } from '../music/useSongLink'
+import { PlayerContext } from '../music/playerContext'
 import { goHome, goSong } from '../route'
 import {
   SECTION_TYPES,
@@ -55,6 +57,42 @@ type Phase = 'loading' | 'ready' | 'error' | 'missing'
 export type SaveStatus = 'saved' | 'unsaved' | 'saving' | 'offline' | 'error' | 'conflict'
 type Meta = { title: string; genres: Genre[]; bpm: number | null; time_signature: string | null }
 type Tool = 'notes' | 'rhymes' | 'words' | 'ai' | 'craft' | 'music' | 'history' | 'files'
+type ToolGroup = {
+  id: 'write' | 'words' | 'craft' | 'more'
+  label: string
+  tools: { id: Tool; label: string }[]
+}
+/** Four groups instead of eight tabs (Design A): what you need while writing comes first. */
+const TOOL_GROUPS: ToolGroup[] = [
+  { id: 'write', label: 'Write', tools: [{ id: 'notes', label: 'Notes' }] },
+  {
+    id: 'words',
+    label: 'Words',
+    tools: [
+      { id: 'rhymes', label: 'Rhymes' },
+      { id: 'words', label: 'Dictionary' },
+    ],
+  },
+  {
+    id: 'craft',
+    label: 'Craft',
+    tools: [
+      { id: 'craft', label: 'Craft tools' },
+      { id: 'ai', label: 'AI' },
+    ],
+  },
+  {
+    id: 'more',
+    label: 'More',
+    tools: [
+      { id: 'music', label: 'Music' },
+      { id: 'history', label: 'History' },
+      { id: 'files', label: 'Export' },
+    ],
+  },
+]
+const groupOf = (t: Tool): ToolGroup['id'] =>
+  TOOL_GROUPS.find((g) => g.tools.some((x) => x.id === t))!.id
 
 const STATUS_TEXT: Record<SaveStatus, string> = {
   saved: 'Saved',
@@ -72,6 +110,8 @@ export default function SongEditor({ id }: { id: string }) {
   const [loadError, setLoadError] = useState('')
   const [meta, setMeta] = useState<Meta | null>(null)
   const [copying, setCopying] = useState(false)
+  const writing = useWritingMode()
+  const player = useContext(PlayerContext) // the music bar steps aside while writing; play/pause stays here
   const [copyId, setCopyId] = useState<string | null>(null)
   const hist = useHistory([])
   const [status, setStatus] = useState<SaveStatus>('saved')
@@ -79,6 +119,9 @@ export default function SongEditor({ id }: { id: string }) {
   const [activeLineId, setActiveLineId] = useState<string | null>(null)
   const [focusReq, setFocusReq] = useState<FocusRequest>(null)
   const [tool, setTool] = useState<Tool>('notes')
+  const lastInGroup = useRef<Partial<Record<ToolGroup['id'], Tool>>>({})
+  lastInGroup.current[groupOf(tool)] = tool
+  const currentGroup = TOOL_GROUPS.find((g) => g.id === groupOf(tool))!
   const [toolsOpen, setToolsOpen] = useState(false)
   const [focusMode, setFocusMode] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
@@ -562,7 +605,7 @@ export default function SongEditor({ id }: { id: string }) {
   }
 
   return (
-    <div className={`editor${focusMode ? ' focus' : ''}`}>
+    <div className={`editor${focusMode ? ' focus' : ''}${writing ? ' writing' : ''}`}>
       <header className="ed-top">
         <button
           className="icon-btn ed-back"
@@ -901,7 +944,15 @@ export default function SongEditor({ id }: { id: string }) {
               setToolsOpen(true)
             }}
           />
-          <div className="line-actions hide-focus" role="toolbar" aria-label="This line">
+          <div
+            className="line-actions hide-focus"
+            role="toolbar"
+            aria-label="This line"
+            // keep the keyboard open: tapping these never takes the cursor out of the line
+            onPointerDown={(e) => {
+              if ((e.target as HTMLElement).closest('button')) e.preventDefault()
+            }}
+          >
             <button
               className="btn btn-sm"
               disabled={!activeLine}
@@ -915,6 +966,7 @@ export default function SongEditor({ id }: { id: string }) {
               disabled={!activeLine}
               onClick={() => {
                 if (!activeLine) return
+                ;(document.activeElement as HTMLElement | null)?.blur?.()
                 setTool('notes')
                 setToolsOpen(true)
               }}
@@ -928,6 +980,7 @@ export default function SongEditor({ id }: { id: string }) {
               onClick={() => {
                 const w = activeLine ? lastWord(activeLine.line.text) : ''
                 if (w) setLookup({ word: w, nonce: Date.now() })
+                ;(document.activeElement as HTMLElement | null)?.blur?.()
                 setTool('rhymes')
                 setToolsOpen(true)
               }}
@@ -953,6 +1006,29 @@ export default function SongEditor({ id }: { id: string }) {
               }}
             >
               Delete line
+            </button>
+            {writing && player?.track && (
+              <button
+                className="btn btn-sm w-only"
+                onClick={player.toggle}
+                aria-label={player.playing ? 'Pause music' : 'Play music'}
+              >
+                {player.playing ? '⏸' : '▶'}
+              </button>
+            )}
+            <button
+              className="btn btn-sm btn-ghost w-only"
+              onClick={undo}
+              disabled={!hist.canUndo}
+              aria-label="Undo last change"
+            >
+              ↶
+            </button>
+            <button
+              className="btn btn-sm btn-primary w-only"
+              onClick={() => (document.activeElement as HTMLElement | null)?.blur?.()}
+            >
+              Done
             </button>
           </div>
           <p className="hint hide-focus">
@@ -984,141 +1060,135 @@ export default function SongEditor({ id }: { id: string }) {
         </section>
 
         <aside className={`ed-side hide-focus${toolsOpen ? ' open' : ''}`} aria-label="Tools">
-          <div className="side-tabs" role="tablist">
-            {(
-              (LOCAL
-                ? ['notes', 'rhymes', 'words', 'ai', 'craft', 'music', 'history', 'files']
-                : [
-                    'notes',
-                    'rhymes',
-                    'words',
-                    'ai',
-                    'craft',
-                    'music',
-                    'history',
-                    'files',
-                  ]) as Tool[]
-            ).map((t) => (
+          <div className="tool-nav" role="tablist" aria-label="Tool groups">
+            {TOOL_GROUPS.map((g) => (
               <button
-                key={t}
+                key={g.id}
                 role="tab"
-                aria-selected={tool === t}
-                className={`tab${tool === t ? ' on' : ''}`}
+                aria-selected={groupOf(tool) === g.id}
+                className={`tab${groupOf(tool) === g.id ? ' on' : ''}`}
                 onClick={() => {
-                  setTool(t)
+                  setTool(lastInGroup.current[g.id] ?? g.tools[0].id)
                   setToolsOpen(true)
                 }}
               >
-                {t === 'notes'
-                  ? 'Notes'
-                  : t === 'rhymes'
-                    ? 'Rhymes'
-                    : t === 'words'
-                      ? 'Words'
-                      : t === 'ai'
-                        ? 'AI'
-                        : t === 'craft'
-                          ? 'Craft'
-                          : t === 'music'
-                            ? 'Music'
-                            : t === 'history'
-                              ? 'History'
-                              : 'Export'}
+                {g.label}
               </button>
             ))}
-            <button
-              className="btn btn-ghost side-toggle"
-              onClick={() => setToolsOpen((v) => !v)}
-              aria-expanded={toolsOpen}
-            >
-              {toolsOpen ? 'Hide' : 'Show'}
-            </button>
           </div>
-          <div className="side-body">
-            {tool === 'notes' && (
-              <NotesPanel
-                line={activeLine?.line ?? null}
-                lineNumber={(activeLine?.i ?? 0) + 1}
-                onSong={(s) => hist.patch((c) => mergeServerMeta(c, s.sections))}
-              />
-            )}
-            {tool === 'rhymes' && (
-              <RhymePanel
-                suggested={lookup}
-                phraseRequest={phraseReq}
-                onPhraseHandled={clearPhraseReq}
-                onCustomChanged={() => setAnalysisNonce((n) => n + 1)}
-              />
-            )}
-            {tool === 'words' && (
-              <WordsPanel
-                suggested={lookup}
-                context={lineContext}
-                around={aroundContext}
-                contextKey={activeLineId ?? ''}
-                onLookup={(w) => setLookup({ word: w, nonce: Date.now() })}
-                onOpenRhymes={(w) => {
-                  setLookup({ word: w, nonce: Date.now() })
-                  setTool('rhymes')
-                }}
-                onPhraseRhymes={(ph) => {
-                  setPhraseReq({ phrase: ph, nonce: Date.now() })
-                  setTool('rhymes')
-                }}
-              />
-            )}
-            {tool === 'ai' && (
-              <AiPanel
-                songId={id}
-                sectionId={section?.id ?? null}
-                sectionLabel={section?.label ?? ''}
-                activeLine={
-                  activeLine && section?.lines.some((l) => l.id === activeLine.line.id)
-                    ? {
-                        id: activeLine.line.id,
-                        text: activeLine.line.text,
-                        locked: activeLine.line.is_locked,
-                        number: activeLine.i + 1,
-                      }
-                    : null
-                }
-                lastLineId={section?.lines[section.lines.length - 1]?.id ?? null}
-                saveNow={saveNow}
-                lineText={(lid) => findLine(contentRef.current, lid)?.line.text ?? null}
-                onInsert={(text, after) =>
-                  !!section &&
-                  applyEdit(insertLineWithText(contentRef.current, section.id, after, text))
-                }
-                onReplace={(lid, text) => apply(setLineText(contentRef.current, lid, text))}
-              />
-            )}
-            {tool === 'craft' && (
-              <CraftPanel
-                songId={id}
-                sectionLines={section?.lines ?? NO_LINES}
-                activeLine={
-                  activeLine && section?.lines.some((l) => l.id === activeLine.line.id)
-                    ? {
-                        id: activeLine.line.id,
-                        text: activeLine.line.text,
-                        locked: activeLine.line.is_locked,
-                        number: activeLine.i + 1,
-                      }
-                    : null
-                }
-                bpm={meta?.bpm ?? null}
-                onInsert={(text, after) =>
-                  !!section &&
-                  applyEdit(insertLineWithText(contentRef.current, section.id, after, text))
-                }
-                onReplace={(lid, text) => apply(setLineText(contentRef.current, lid, text))}
-              />
-            )}
-            {tool === 'music' && <SongMusicPanel songLink={songLink} />}
-            {tool === 'history' && (
-              <HistoryPanel revisions={revisions} onSnapshot={onSnapshot} onRestore={onRestore} />
-            )}
-            {tool === 'files' && <FilesPanel songId={id} />}
+          <div className="side-sheet">
+            <div className="sheet-head">
+              {currentGroup.tools.length > 1 ? (
+                <div className="sub-tabs" role="tablist" aria-label="Tools">
+                  {currentGroup.tools.map((t) => (
+                    <button
+                      key={t.id}
+                      role="tab"
+                      aria-selected={tool === t.id}
+                      className={`chip${tool === t.id ? ' on' : ''}`}
+                      onClick={() => setTool(t.id)}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <b className="sheet-title">{currentGroup.tools[0].label}</b>
+              )}
+              <button
+                className="icon-btn sheet-close"
+                onClick={() => setToolsOpen(false)}
+                aria-label="Close tools"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="side-body">
+              {tool === 'notes' && (
+                <NotesPanel
+                  line={activeLine?.line ?? null}
+                  lineNumber={(activeLine?.i ?? 0) + 1}
+                  onSong={(s) => hist.patch((c) => mergeServerMeta(c, s.sections))}
+                />
+              )}
+              {tool === 'rhymes' && (
+                <RhymePanel
+                  suggested={lookup}
+                  phraseRequest={phraseReq}
+                  onPhraseHandled={clearPhraseReq}
+                  onCustomChanged={() => setAnalysisNonce((n) => n + 1)}
+                />
+              )}
+              {tool === 'words' && (
+                <WordsPanel
+                  suggested={lookup}
+                  context={lineContext}
+                  around={aroundContext}
+                  contextKey={activeLineId ?? ''}
+                  onLookup={(w) => setLookup({ word: w, nonce: Date.now() })}
+                  onOpenRhymes={(w) => {
+                    setLookup({ word: w, nonce: Date.now() })
+                    setTool('rhymes')
+                  }}
+                  onPhraseRhymes={(ph) => {
+                    setPhraseReq({ phrase: ph, nonce: Date.now() })
+                    setTool('rhymes')
+                  }}
+                />
+              )}
+              {tool === 'ai' && (
+                <AiPanel
+                  songId={id}
+                  sectionId={section?.id ?? null}
+                  sectionLabel={section?.label ?? ''}
+                  activeLine={
+                    activeLine && section?.lines.some((l) => l.id === activeLine.line.id)
+                      ? {
+                          id: activeLine.line.id,
+                          text: activeLine.line.text,
+                          locked: activeLine.line.is_locked,
+                          number: activeLine.i + 1,
+                        }
+                      : null
+                  }
+                  lastLineId={section?.lines[section.lines.length - 1]?.id ?? null}
+                  saveNow={saveNow}
+                  lineText={(lid) => findLine(contentRef.current, lid)?.line.text ?? null}
+                  onInsert={(text, after) =>
+                    !!section &&
+                    applyEdit(insertLineWithText(contentRef.current, section.id, after, text))
+                  }
+                  onReplace={(lid, text) => apply(setLineText(contentRef.current, lid, text))}
+                />
+              )}
+              {tool === 'craft' && (
+                <CraftPanel
+                  songId={id}
+                  sectionLines={section?.lines ?? NO_LINES}
+                  activeLine={
+                    activeLine && section?.lines.some((l) => l.id === activeLine.line.id)
+                      ? {
+                          id: activeLine.line.id,
+                          text: activeLine.line.text,
+                          locked: activeLine.line.is_locked,
+                          number: activeLine.i + 1,
+                        }
+                      : null
+                  }
+                  bpm={meta?.bpm ?? null}
+                  onInsert={(text, after) =>
+                    !!section &&
+                    applyEdit(insertLineWithText(contentRef.current, section.id, after, text))
+                  }
+                  onReplace={(lid, text) => apply(setLineText(contentRef.current, lid, text))}
+                />
+              )}
+              {tool === 'music' && <SongMusicPanel songLink={songLink} />}
+              {tool === 'history' && (
+                <HistoryPanel revisions={revisions} onSnapshot={onSnapshot} onRestore={onRestore} />
+              )}
+              {tool === 'files' && <FilesPanel songId={id} />}
+            </div>
           </div>
         </aside>
       </div>

@@ -1,5 +1,6 @@
 /* Phase 8 acceptance test: melody sketch, chords, lyric-fit and humming (fake microphone). */
 const { chromium } = require('playwright')
+const { openTool } = require('./tools.cjs')
 
 const APP = process.env.APP_URL || 'http://localhost:5173'
 const results = []
@@ -30,7 +31,7 @@ let CURRENT = null
   const lyrics = async () => JSON.stringify(await page.locator('[data-line-input]').evaluateAll((els) => els.map((e) => e.value)))
   const snap = await lyrics()
 
-  await page.getByRole('tab', { name: 'Craft' }).click()
+  await openTool(page, 'Craft')
   await page.getByRole('button', { name: 'Melody', exact: true }).click()
   await page.getByRole('group', { name: 'Melody grid' }).waitFor()
   check('melody: a grid with pitch rows and 16th steps is shown', (await page.locator('.mel-cell').count()) >= 25 * 32)
@@ -59,7 +60,7 @@ let CURRENT = null
   await page.getByText('Saved', { exact: true }).first().waitFor()
   await page.reload()
   await line(page, 1).waitFor()
-  await page.getByRole('tab', { name: 'Craft' }).click()
+  await openTool(page, 'Craft')
   await page.getByRole('button', { name: 'Melody', exact: true }).click()
   await page.getByRole('group', { name: 'Melody grid' }).waitFor()
   await sleep(500)
@@ -84,7 +85,7 @@ let CURRENT = null
   await phone.setViewportSize({ width: 390, height: 780 })
   await phone.goto(APP)
   await phone.getByText('Melody Test').first().click()
-  await phone.getByRole('tab', { name: 'Craft' }).click()
+  await openTool(phone, 'Craft')
   await phone.getByRole('button', { name: 'Melody', exact: true }).click()
   await phone.getByRole('group', { name: 'Melody grid' }).waitFor()
   const sw = await phone.evaluate(() => [document.documentElement.scrollWidth, window.innerWidth])

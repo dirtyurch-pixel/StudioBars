@@ -1,5 +1,6 @@
 /* Phase 1 acceptance test, driven through a real browser against the real servers. */
 const { chromium } = require('playwright')
+const { openTool } = require('./tools.cjs')
 const fs = require('fs')
 
 const APP = process.env.APP_URL || 'http://localhost:5173'
@@ -137,7 +138,7 @@ const dump = async () => {
   await page.getByRole('tab', { name: 'Chorus' }).click()
   await line(page, 3).fill('Hold on to me')
   await saved(page)
-  await page.getByRole('tab', { name: 'History' }).click()
+  await openTool(page, 'History')
   await page.getByLabel('Save a snapshot of this song now').fill('before-change')
   await page.getByRole('button', { name: 'Save snapshot' }).click()
   await page.getByText('before-change').waitFor()
@@ -151,7 +152,7 @@ const dump = async () => {
   check('restore kept locked lines', (await line(page, 1).inputValue()) === verse[0] && (await page.getByLabel(/^Unlock line/).count()) === 2)
 
   // 9. export and import without loss
-  await page.getByRole('tab', { name: 'Export' }).click()
+  await openTool(page, 'Export')
   const [dl] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: /Full backup/ }).click()])
   const jsonPath = await dl.path()
   const exported = fs.readFileSync(jsonPath, 'utf8')

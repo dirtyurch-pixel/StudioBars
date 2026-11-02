@@ -1,5 +1,6 @@
 /* Phase 4 acceptance test: AI co-writer against a LOCAL stand-in for Claude (no internet, no money). */
 const { chromium } = require('playwright')
+const { openTool } = require('./tools.cjs')
 
 const APP = process.env.APP_URL || 'http://localhost:5173'
 const FAKE = process.env.FAKE_AI || 'http://127.0.0.1:8766'
@@ -50,7 +51,7 @@ const dump = async () => {
   await line(page, 3).fill('Nobody calls me anymore tonight')
 
   // ---- setup
-  await page.getByRole('tab', { name: 'AI' }).click()
+  await openTool(page, 'AI')
   await page.getByText('AI co-writer setup').waitFor()
   check('AI is off until the writer sets it up', await page.getByRole('button', { name: 'Show what will be sent' }).count() === 0)
   await page.getByLabel('Your Claude API key').fill(KEY)
@@ -157,7 +158,7 @@ const dump = async () => {
   watch(phone)
   await phone.goto(APP)
   await phone.getByText('AI Test').first().click()
-  await phone.getByRole('tab', { name: 'AI' }).click()
+  await openTool(phone, 'AI')
   await phone.getByRole('button', { name: 'Settings' }).waitFor()
   const sw = await phone.evaluate(() => [document.documentElement.scrollWidth, window.innerWidth])
   check('phone: the AI tab fits the screen', sw[0] <= sw[1], JSON.stringify(sw))

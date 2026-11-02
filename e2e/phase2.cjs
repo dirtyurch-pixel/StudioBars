@@ -1,5 +1,6 @@
 /* Phase 2 acceptance test: syllable counts, rhyme colours, rhyme search, custom pronunciations. */
 const { chromium } = require('playwright')
+const { openTool } = require('./tools.cjs')
 
 const APP = process.env.APP_URL || 'http://localhost:5173'
 const results = []
@@ -91,7 +92,7 @@ const dump = async () => {
   await waitMargin(1, /^4$/)
 
   // ---------------------------------------------------------------- rhyme panel
-  await page.getByRole('tab', { name: 'Rhymes' }).click()
+  await openTool(page, 'Rhymes')
   await line(page, 2).click()
   await page.getByRole('region', { name: /syllable/ }).first().waitFor({ timeout: 8000 })
   check('tapping a line looks up its last word', (await page.getByLabel('Word to look up').inputValue()) === 'shade')
@@ -159,7 +160,7 @@ const dump = async () => {
   await line(page, 1).waitFor()
   await waitMargin(4, /^4$/, 8000)
   check('your pronunciations survive a reload', (await margin(4)) === '4')
-  await page.getByRole('tab', { name: 'Rhymes' }).click()
+  await openTool(page, 'Rhymes')
   await page.getByText(/Your pronunciations \(2\)/).click()
   await page.getByLabel('Remove my pronunciation of zorblax').click()
   await waitMargin(4, /^~/, 8000)
@@ -213,7 +214,7 @@ const dump = async () => {
   const numBox = await m2.locator('.pad-num').first().boundingBox()
   const inBox = await line(m2, 1).boundingBox()
   check('phone: the margin number does not squeeze the text box to nothing', inBox.width > 120 && numBox.width < 70, JSON.stringify({ inBox, numBox }))
-  await m2.getByRole('tab', { name: 'Rhymes' }).click()
+  await openTool(m2, 'Rhymes')
   await m2.getByLabel('Word to look up').waitFor()
   await m2.getByLabel('Word to look up').fill('fade')
   await m2.getByRole('button', { name: 'Look up' }).click()

@@ -1,5 +1,6 @@
 /* The independent phone version: built as plain files, NO server. Songs live on the device (IndexedDB). */
 const { chromium, devices } = require('playwright')
+const { openTool } = require('./tools.cjs')
 const fs = require('fs')
 
 const URL_ = process.env.PHONE_LOCAL_URL || 'http://127.0.0.1:4174/StudioBars/'
@@ -38,8 +39,11 @@ let CURRENT = null
   await line(page, 2).fill('No computer needed')
   await page.getByText('Saved', { exact: true }).first().waitFor()
   check('no confusing "server cannot be reached" message on the phone', (await page.getByText(/server cannot be reached/).count()) === 0)
-  const tabs = await page.getByRole('tablist').last().getByRole('tab').allInnerTexts()
-  check('only the tools that work on the phone are shown', JSON.stringify(tabs) === JSON.stringify(['Notes', 'Rhymes', 'Words', 'AI', 'Craft', 'Music', 'History', 'Export']), JSON.stringify(tabs))
+  await openTool(page, 'Music')
+  const groups = await page.getByRole('tablist', { name: 'Tool groups' }).getByRole('tab').evaluateAll((es) => es.map((e) => e.textContent))
+  const more = await page.getByRole('tablist', { name: 'Tools', exact: true }).getByRole('tab').evaluateAll((es) => es.map((e) => e.textContent))
+  check('tools are grouped (Write, Words, Craft, More) and Music, History and Export are under More', JSON.stringify(groups) === JSON.stringify(['Write', 'Words', 'Craft', 'More']) && JSON.stringify(more) === JSON.stringify(['Music', 'History', 'Export']), JSON.stringify([groups, more]))
+  await page.getByRole('button', { name: 'Close tools' }).click().catch(() => {})
 
   // lock
   await line(page, 1).click()
@@ -53,7 +57,7 @@ let CURRENT = null
   // note
   await line(page, 2).click()
   await page.getByRole('button', { name: 'Notes', exact: true }).click()
-  await page.getByRole('tab', { name: 'Notes' }).click()
+  await openTool(page, 'Notes')
   const box = page.locator('textarea:not([data-line-input])').first()
   await box.fill('say this softer')
   await page.getByRole('button', { name: /^Add note/ }).click()
@@ -79,7 +83,7 @@ let CURRENT = null
     (await page.getByRole('button', { name: /^Notes for line 2 \(1\)/ }).count()) === 1)
 
   // history
-  await page.getByRole('tab', { name: 'History' }).click()
+  await openTool(page, 'History')
   await page.getByText(/Automatic snapshot/).first().waitFor()
   check('history keeps snapshots on the device', true)
 
@@ -96,7 +100,7 @@ let CURRENT = null
   await ctx.setOffline(false)
 
   // export a song
-  await page.getByRole('tab', { name: 'Export' }).click()
+  await openTool(page, 'Export')
   const [dl] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: /Full backup/ }).click()])
   const json = JSON.parse(fs.readFileSync(await dl.path(), 'utf8'))
   check('a song can be exported as a file (same format as the PC version)', json.format === 'studio-bars-song' && json.sections[0].lines[0].is_locked === true)

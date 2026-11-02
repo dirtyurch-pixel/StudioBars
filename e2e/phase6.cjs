@@ -1,5 +1,6 @@
 /* Phase 6 acceptance test: helper styles + metaphor/wordplay (local fake Claude), writing style profile, singability, scratch vocal recording. */
 const { chromium } = require('playwright')
+const { openTool } = require('./tools.cjs')
 
 const APP = process.env.APP_URL || 'http://localhost:5173'
 const FAKE = process.env.FAKE_AI || 'http://127.0.0.1:8766'
@@ -38,7 +39,7 @@ const watch = (p) => {
   await page.getByText('Saved', { exact: true }).first().waitFor()
 
   // ---- AI personas and metaphor (the earlier phase left AI set up; raise the limit again)
-  await page.getByRole('tab', { name: 'AI' }).click()
+  await openTool(page, 'AI')
   await page.getByRole('button', { name: 'Settings' }).click()
   const cap = page.getByLabel(/Monthly spending limit/)
   await cap.fill('5')
@@ -60,7 +61,7 @@ const watch = (p) => {
   check('lyrics unchanged by the AI answer', (await line(page, 3).inputValue()) === 'Rain on the glass again')
 
   // ---- singability
-  await page.getByRole('tab', { name: 'Craft' }).click()
+  await openTool(page, 'Craft')
   await page.getByRole('button', { name: 'Scan', exact: true }).click()
   await page.getByRole('button', { name: 'Scan the whole song' }).click()
   const scan = page.getByLabel('Scan results')
@@ -109,7 +110,7 @@ const watch = (p) => {
   await page.getByText('Saved.').last().waitFor()
   await page.reload()
   await line(page, 1).waitFor()
-  await page.getByRole('tab', { name: 'Craft' }).click()
+  await openTool(page, 'Craft')
   await page.getByRole('button', { name: 'Record', exact: true }).click()
   await page.getByLabel('Playback of take 1').waitFor()
   check('record: note and timing nudge persist after reload', (await page.getByLabel('Note', { exact: true }).inputValue()) === 'first rough pass' && (await page.getByLabel(/Starts at/).inputValue()) === '-120')

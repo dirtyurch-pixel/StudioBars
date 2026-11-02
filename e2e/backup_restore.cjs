@@ -1,5 +1,6 @@
 /* Phone version: a COMPLETE backup moves everything to a brand-new device, exactly, and checks itself. */
 const { chromium } = require('playwright')
+const { openTool } = require('./tools.cjs')
 const fs = require('fs')
 
 const URL_ = process.env.PHONE_LOCAL_URL || 'http://127.0.0.1:4174/StudioBars/'
@@ -46,12 +47,12 @@ function wav(seconds, rate = 8000) {
   await line(page, 1).click()
   await page.getByRole('button', { name: 'Lock line', exact: true }).click()
   await page.getByLabel('Line 1 (locked)').waitFor()
-  await page.getByRole('tab', { name: 'History' }).click()
+  await openTool(page, 'History')
   await page.getByLabel('Save a snapshot of this song now').fill('my-checkpoint')
   await page.getByRole('button', { name: 'Save snapshot' }).click()
   await page.getByText('my-checkpoint').waitFor()
   // a recording
-  await page.getByRole('tab', { name: 'Craft' }).click()
+  await openTool(page, 'Craft')
   await page.getByRole('button', { name: 'Record', exact: true }).click()
   await page.getByRole('button', { name: '● Record' }).click()
   await page.getByRole('button', { name: /^■ Stop and save/ }).waitFor()
@@ -59,7 +60,7 @@ function wav(seconds, rate = 8000) {
   await page.getByRole('button', { name: /^■ Stop and save/ }).click()
   await page.getByLabel('Playback of take 1').waitFor({ timeout: 15000 })
   // an AI key (must NOT travel in a backup)
-  await page.getByRole('tab', { name: 'AI' }).click()
+  await openTool(page, 'AI')
   await page.getByLabel('Your Claude API key').fill(KEY)
   await page.getByRole('button', { name: 'Save key' }).click()
   await page.getByText('Key saved on this device.').waitFor()
@@ -114,17 +115,17 @@ function wav(seconds, rate = 8000) {
   await page.getByText('Backup Me').click()
   await page.getByLabel('Line 1 (locked)').waitFor()
   check('the song comes back with its lock', (await page.getByLabel('Line 1 (locked)').inputValue()) === 'Keep this bar forever')
-  await page.getByRole('tab', { name: 'History' }).click()
+  await openTool(page, 'History')
   const snap = await page.getByText('my-checkpoint').first().waitFor({ timeout: 10000 }).then(() => true, () => false)
   check('history snapshots come back', snap)
-  await page.getByRole('tab', { name: 'Craft' }).click()
+  await openTool(page, 'Craft')
   await page.getByRole('button', { name: 'Record', exact: true }).click()
   await page.getByLabel('Playback of take 1').waitFor({ timeout: 10000 })
   const playable = await page.getByLabel('Playback of take 1').evaluate(
     (a) => new Promise((res) => { if (a.readyState >= 1) res(true); a.onloadedmetadata = () => res(true); a.onerror = () => res(false); a.load(); setTimeout(() => res(a.readyState >= 1), 5000) }),
   )
   check('the recording comes back and can be played', playable)
-  await page.getByRole('tab', { name: 'AI' }).click()
+  await openTool(page, 'AI')
   await page.getByText('AI co-writer setup').waitFor()
   check('the AI key did NOT travel to the new phone', (await page.getByText('…6789').count()) === 0 && (await page.getByText(/No key yet/).count()) === 1)
   await page.getByLabel('Back to my songs').click()

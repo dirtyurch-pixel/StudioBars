@@ -4,7 +4,7 @@ import { ImportDialog } from '../components/ImportDialog'
 import { NewSongDialog } from '../components/NewSongDialog'
 import { PhoneBackup } from '../local/PhoneBackup'
 import { useToast } from '../components/toastContext'
-import { goSong } from '../route'
+import { goSettings, goSong } from '../route'
 import { ago } from '../time'
 import { GENRES, type SongSummary } from '../types'
 
@@ -65,6 +65,9 @@ export default function Dashboard() {
           <p className="hint">My songs</p>
         </div>
         <div className="actions">
+          <button className="btn btn-ghost" onClick={goSettings} aria-label="Settings">
+            ⚙ Settings
+          </button>
           <button className="btn" onClick={() => setDialog('import')}>
             Import
           </button>

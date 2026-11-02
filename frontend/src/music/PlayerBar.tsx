@@ -23,6 +23,11 @@ export function PlayerBar() {
   const ref = useRef<HTMLElement>(null)
   const [typing, setTyping] = useState(false)
   const [showWave, setShowWave] = useState(initialWave)
+  useEffect(() => {
+    const on = (e: Event) => setShowWave(Boolean((e as CustomEvent<boolean>).detail))
+    window.addEventListener('sb-wave', on)
+    return () => window.removeEventListener('sb-wave', on)
+  }, [])
   const toggleWave = () =>
     setShowWave((v) => {
       try {

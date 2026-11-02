@@ -6,6 +6,7 @@ import { MusicDrawer } from './music/MusicDrawer'
 import { PlayerBar } from './music/PlayerBar'
 import { PlayerProvider } from './music/PlayerProvider'
 import Dashboard from './pages/Dashboard'
+import Settings from './pages/Settings'
 import SongEditor from './pages/SongEditor'
 import { useRoute } from './route'
 
@@ -36,7 +37,13 @@ export default function App() {
           </div>
         )}
         <PlayerProvider>
-          {route.name === 'song' ? <SongEditor key={route.id} id={route.id} /> : <Dashboard />}
+          {route.name === 'song' ? (
+            <SongEditor key={route.id} id={route.id} />
+          ) : route.name === 'settings' ? (
+            <Settings />
+          ) : (
+            <Dashboard />
+          )}
           <MusicDrawer />
           <PlayerBar />
         </PlayerProvider>

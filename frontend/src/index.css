@@ -1690,3 +1690,14 @@ label.chip-btn:focus-within {
 input.file-hidden:focus-visible + .file-pick {
   outline: 3px solid var(--accent);
 }
+
+/* settings page */
+.settings .set-sec {
+  margin: 0 0 16px;
+  padding: 16px;
+}
+.settings .set-sec h2 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: var(--accent);
+}

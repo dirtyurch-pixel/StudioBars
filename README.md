@@ -36,3 +36,6 @@ Never commit `.env`, lyrics, databases or audio. See `.gitignore` and `docs/plan
 
 ## Using it on a phone or tablet (same Wi-Fi)
 On the computer that holds your songs: `STUDIO_BARS_ACCESS_PIN=123456 ./scripts/serve.sh` (Windows: `$env:STUDIO_BARS_ACCESS_PIN="123456"; .\scripts\serve.ps1`). Open the address it prints on your phone, enter the PIN, then use the browser's "Add to home screen". The computer must stay on. See `docs/decisions/0002-phone-access.md`.
+
+## Try it from a phone with no computer (GitHub Codespaces)
+Open https://codespaces.new/dirtyurch-pixel/StudioBars/tree/claude/new-session-q0jfb4 , sign in to GitHub and press "Create codespace". When it has built (a few minutes the first time), open the **Ports** tab and tap the link for port 8000. The link is private to your GitHub account (https, so the microphone works). Never set the port to Public. Your songs live inside that codespace; GitHub stops it after a while and deletes it after inactivity, so export anything you want to keep (Export tab). Free accounts have a monthly allowance of codespace hours.

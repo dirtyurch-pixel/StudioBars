@@ -46,6 +46,7 @@ const BASE =
 
 import { ApiFail } from './apiFail'
 import * as local from './local/localApi'
+import * as localWords from './local/localWords'
 export { ApiFail }
 
 /** Phone version: everything is kept on this device and there is no server. */
@@ -242,11 +243,16 @@ export const saveSongLink = (songId: string, link: Partial<SongAudioLink>) =>
   json<SongAudioLink | null>(`/api/songs/${songId}/audio-link`, body('PUT', link))
 
 // ---------------------------------------------------------------- phonetics (all local, no internet)
-export const getPhoneticsStatus = () => json<PhoneticsStatus>('/api/phonetics/status')
+export const getPhoneticsStatus = () =>
+  LOCAL ? localWords.phoneticsStatus() : json<PhoneticsStatus>('/api/phonetics/status')
 export const analyzeLines = (lines: string[], signal?: AbortSignal) =>
-  json<Analysis>('/api/phonetics/analyze', body('POST', { lines }), signal)
+  LOCAL
+    ? localWords.analyzeLines(lines)
+    : json<Analysis>('/api/phonetics/analyze', body('POST', { lines }), signal)
 export const lookupWord = (word: string, signal?: AbortSignal) =>
-  json<WordInfo>(`/api/phonetics/word?word=${encodeURIComponent(word)}`, undefined, signal)
+  LOCAL
+    ? localWords.lookupWord(word)
+    : json<WordInfo>(`/api/phonetics/word?word=${encodeURIComponent(word)}`, undefined, signal)
 export type RhymeQuery = {
   word: string
   qualities: string[]
@@ -259,6 +265,7 @@ export type RhymeQuery = {
   limit: number
 }
 export const searchRhymes = (q: RhymeQuery, signal?: AbortSignal) => {
+  if (LOCAL) return localWords.searchRhymes(q)
   const p = new URLSearchParams({
     word: q.word,
     qualities: q.qualities.join(','),
@@ -272,17 +279,23 @@ export const searchRhymes = (q: RhymeQuery, signal?: AbortSignal) => {
   if (q.pos) p.set('pos', q.pos)
   return json<RhymeResponse>(`/api/phonetics/rhymes?${p}`, undefined, signal)
 }
-export const listCustomPron = () => json<CustomPron[]>('/api/phonetics/custom')
+export const listCustomPron = () =>
+  LOCAL ? localWords.listCustomPron() : json<CustomPron[]>('/api/phonetics/custom')
 export const saveCustomPron = (
   word: string,
   data: { sounds_like?: string; phones?: string; note?: string },
-) => json<CustomPron>(`/api/phonetics/custom/${encodeURIComponent(word)}`, body('PUT', data))
+) =>
+  LOCAL
+    ? localWords.saveCustomPron(word, data)
+    : json<CustomPron>(`/api/phonetics/custom/${encodeURIComponent(word)}`, body('PUT', data))
 export const deleteCustomPron = async (word: string) => {
+  if (LOCAL) return localWords.deleteCustomPron(word)
   await request(`/api/phonetics/custom/${encodeURIComponent(word)}`, body('DELETE'))
 }
 
 // ---------------------------------------------------------------- meanings (WordNet, local)
 export const getMeanings = (word: string, context: string, around = '', signal?: AbortSignal) => {
+  if (LOCAL) return localWords.getMeanings(word, context, around)
   const p = new URLSearchParams({ word })
   if (context.trim()) p.set('context', context.slice(0, 600))
   if (around.trim()) p.set('around', around.slice(0, 600))
@@ -302,21 +315,27 @@ export const getOnlineWords = (word: string, kind: OnlineKind, signal?: AbortSig
 
 // ---------------------------------------------------------------- phrase bank
 export const listPhrases = (q = '', tag = '', signal?: AbortSignal) => {
+  if (LOCAL) return localWords.listPhrases(q, tag)
   const p = new URLSearchParams({ limit: '200' })
   if (q.trim()) p.set('q', q.trim())
   if (tag) p.set('tag', tag)
   return json<{ total: number; items: PhraseItem[] }>(`/api/phrases?${p}`, undefined, signal)
 }
-export const listPhraseTags = () => json<{ tag: string; count: number }[]>('/api/phrases/tags')
+export const listPhraseTags = () =>
+  LOCAL ? localWords.listPhraseTags() : json<{ tag: string; count: number }[]>('/api/phrases/tags')
 export type PhraseInput = { phrase: string; meaning: string; sounds_like: string; tags: string[] }
 export const createPhrase = (data: PhraseInput) =>
-  json<PhraseItem>('/api/phrases', body('POST', data))
+  LOCAL ? localWords.createPhrase(data) : json<PhraseItem>('/api/phrases', body('POST', data))
 export const updatePhrase = (id: string, data: Partial<PhraseInput>) =>
-  json<PhraseItem>(`/api/phrases/${id}`, body('PATCH', data))
+  LOCAL
+    ? localWords.updatePhrase(id, data)
+    : json<PhraseItem>(`/api/phrases/${id}`, body('PATCH', data))
 export const deletePhrase = async (id: string) => {
+  if (LOCAL) return localWords.deletePhrase(id)
   await request(`/api/phrases/${id}`, body('DELETE'))
 }
 export const exportPhrases = async () => {
+  if (LOCAL) return localWords.exportPhrases()
   const res = await request('/api/phrases/export')
   return res.blob()
 }
@@ -326,11 +345,13 @@ export const phraseRhymes = (
   qualities: string[],
   signal?: AbortSignal,
 ) =>
-  json<PhraseRhymes>(
-    `/api/phonetics/phrase-rhymes?${new URLSearchParams({ phrase, syllables: String(syllables), qualities: qualities.join(','), limit: '80' })}`,
-    undefined,
-    signal,
-  )
+  LOCAL
+    ? localWords.phraseRhymes(phrase, syllables, qualities)
+    : json<PhraseRhymes>(
+        `/api/phonetics/phrase-rhymes?${new URLSearchParams({ phrase, syllables: String(syllables), qualities: qualities.join(','), limit: '80' })}`,
+        undefined,
+        signal,
+      )
 
 // ---------------------------------------------------------------- AI co-writer (Phase 4)
 // The key is sent to the local server once and is never returned.

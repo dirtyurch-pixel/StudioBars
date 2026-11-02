@@ -39,7 +39,7 @@ let CURRENT = null
   await page.getByText('Saved', { exact: true }).first().waitFor()
   check('no confusing "server cannot be reached" message on the phone', (await page.getByText(/server cannot be reached/).count()) === 0)
   const tabs = await page.getByRole('tablist').last().getByRole('tab').allInnerTexts()
-  check('only the tools that work on the phone are shown', JSON.stringify(tabs) === JSON.stringify(['Notes', 'History', 'Export']), JSON.stringify(tabs))
+  check('only the tools that work on the phone are shown', JSON.stringify(tabs) === JSON.stringify(['Notes', 'Rhymes', 'Words', 'History', 'Export']), JSON.stringify(tabs))
 
   // lock
   await line(page, 1).click()
@@ -74,17 +74,17 @@ let CURRENT = null
   await page.getByText(/Automatic snapshot/).first().waitFor()
   check('history keeps snapshots on the device', true)
 
-  // offline: keeps working
+  // offline: keeps working, and the app opens with no connection at all
+  await page.evaluate(() => navigator.serviceWorker.ready)
   await ctx.setOffline(true)
   await line(page, 3).fill('Still writing with no signal')
   await page.getByText('Saved', { exact: true }).first().waitFor()
   await sleep(300)
-  await page.reload().catch(() => {})
-  await ctx.setOffline(false)
   await page.goto(URL_ + '#/')
   await page.getByText('Phone Only').first().click()
   await line(page, 3).waitFor()
-  check('typing with no internet still saves', (await line(page, 3).inputValue()) === 'Still writing with no signal')
+  check('with no internet the app still opens, and what was typed offline is saved', (await line(page, 3).inputValue()) === 'Still writing with no signal')
+  await ctx.setOffline(false)
 
   // export a song
   await page.getByRole('tab', { name: 'Export' }).click()

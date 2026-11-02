@@ -110,10 +110,9 @@ export default function SongEditor({ id }: { id: string }) {
   const [lookup, setLookup] = useState<{ word: string; nonce: number } | null>(null)
   const [phraseReq, setPhraseReq] = useState<{ phrase: string; nonce: number } | null>(null)
   const clearPhraseReq = useCallback(() => setPhraseReq(null), [])
-  // the phone version has no rhyme engine yet (step 2), so it does not ask for analysis
-  const analysis = useLineAnalysis(LOCAL ? NO_LINES : (section?.lines ?? NO_LINES), analysisNonce)
-  const syllableDisplay = LOCAL ? 'numbers' : pad.syllableDisplay
-  const highlight = LOCAL ? 'off' : pad.highlight
+  const analysis = useLineAnalysis(section?.lines ?? NO_LINES, analysisNonce)
+  const syllableDisplay = pad.syllableDisplay
+  const highlight = pad.highlight
   // the line being written, and (separately) the lines beside it
   const { lineContext, aroundContext } = useMemo(() => {
     const ls = section?.lines ?? NO_LINES
@@ -770,7 +769,7 @@ export default function SongEditor({ id }: { id: string }) {
               )}
             </div>
           )}
-          {optsOpen && !LOCAL && (
+          {optsOpen && (
             <div className="pad-tools hide-focus" role="group" aria-label="Pad display">
               <span className="seg" role="group" aria-label="Margin numbers">
                 <button
@@ -906,7 +905,7 @@ export default function SongEditor({ id }: { id: string }) {
           <div className="side-tabs" role="tablist">
             {(
               (LOCAL
-                ? ['notes', 'history', 'files']
+                ? ['notes', 'rhymes', 'words', 'history', 'files']
                 : [
                     'notes',
                     'rhymes',

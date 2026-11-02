@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import * as api from '../api'
+import { LOCAL } from '../api'
 import { ApiFail } from '../api'
 import type { Chip, Meanings, Sense, Synonym, WordInfo } from '../types'
 import { OnlineResults } from './OnlineHelper'
@@ -218,17 +219,19 @@ export function WordsPanel({
             ['phrases', 'My phrases'],
             ['online', 'Online ideas'],
           ] as const
-        ).map(([k, label]) => (
-          <button
-            key={k}
-            role="tab"
-            aria-selected={view === k}
-            className={view === k ? 'on' : ''}
-            onClick={() => setView(k)}
-          >
-            {label}
-          </button>
-        ))}
+        )
+          .filter(([k]) => !(LOCAL && k === 'online')) // the phone version works offline only
+          .map(([k, label]) => (
+            <button
+              key={k}
+              role="tab"
+              aria-selected={view === k}
+              className={view === k ? 'on' : ''}
+              onClick={() => setView(k)}
+            >
+              {label}
+            </button>
+          ))}
       </div>
 
       {view !== 'phrases' && (

@@ -59,7 +59,7 @@ let store: Store | null = null
 export function useStore(s: Store) {
   store = s
 }
-function db(): Store {
+export function db(): Store {
   if (!store) store = typeof indexedDB !== 'undefined' ? new IdbStore() : new MemoryStore()
   return store
 }
@@ -69,6 +69,7 @@ export function setClock(fn: () => Date) {
   clock = fn
 }
 const now = () => clock().toISOString()
+export const nowIso = now
 
 const fail = (
   status: number,

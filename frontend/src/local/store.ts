@@ -2,7 +2,8 @@
  * Where the phone version keeps everything: the browser's own database (IndexedDB) on this device.
  * Nothing is sent anywhere. A small in-memory version of the same interface is used by the tests.
  */
-export type Kind = 'songs' | 'revisions'
+export type Kind = 'songs' | 'revisions' | 'custom' | 'phrases'
+export const KINDS: Kind[] = ['songs', 'revisions', 'custom', 'phrases']
 
 export interface Store {
   get<T>(kind: Kind, id: string): Promise<T | undefined>
@@ -12,7 +13,12 @@ export interface Store {
 }
 
 export class MemoryStore implements Store {
-  private data: Record<Kind, Map<string, string>> = { songs: new Map(), revisions: new Map() }
+  private data: Record<Kind, Map<string, string>> = {
+    songs: new Map(),
+    revisions: new Map(),
+    custom: new Map(),
+    phrases: new Map(),
+  }
   async get<T>(kind: Kind, id: string) {
     const v = this.data[kind].get(id)
     return v === undefined ? undefined : (JSON.parse(v) as T)
@@ -39,9 +45,9 @@ export class IdbStore implements Store {
   private db: Promise<IDBDatabase>
   constructor(name = DB_NAME) {
     this.db = new Promise((res, rej) => {
-      const open = indexedDB.open(name, 1)
+      const open = indexedDB.open(name, 2) // version 2 added your own pronunciations and the phrase bank
       open.onupgradeneeded = () => {
-        for (const k of ['songs', 'revisions'])
+        for (const k of KINDS)
           if (!open.result.objectStoreNames.contains(k)) open.result.createObjectStore(k)
       }
       open.onsuccess = () => res(open.result)

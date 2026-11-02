@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import * as api from '../api'
+import { LOCAL } from '../api'
 import { ApiFail } from '../api'
 import { useToast } from '../components/toastContext'
 import type { CustomPron, PhoneticsStatus, RhymeResponse, RhymeResult, WordInfo } from '../types'
@@ -480,10 +481,12 @@ function WordRhymes({ suggested, onCustomChanged }: Props) {
               {n}
             </small>
           ))}
-          <details className="customs">
-            <summary>Online rhymes (optional)</summary>
-            <OnlineResults word={word} kinds={['rhymes', 'near-rhymes']} />
-          </details>
+          {!LOCAL && (
+            <details className="customs">
+              <summary>Online rhymes (optional)</summary>
+              <OnlineResults word={word} kinds={['rhymes', 'near-rhymes']} />
+            </details>
+          )}
         </>
       )}
 

@@ -1,0 +1,6249 @@
+{
+  "analyze": [
+    {
+      "families": [],
+      "lines": [
+        {
+          "syllables": { "exact": true, "guessed": false, "max": 10, "min": 10 },
+          "words": [
+            {
+              "end": 1,
+              "family": null,
+              "is_end": false,
+              "start": 0,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "I"
+            },
+            {
+              "end": 6,
+              "family": null,
+              "is_end": false,
+              "start": 2,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "walk"
+            },
+            {
+              "end": 12,
+              "family": null,
+              "is_end": false,
+              "start": 7,
+              "status": "known",
+              "syllables_max": 2,
+              "syllables_min": 2,
+              "text": "alone"
+            },
+            {
+              "end": 20,
+              "family": null,
+              "is_end": false,
+              "start": 13,
+              "status": "known",
+              "syllables_max": 2,
+              "syllables_min": 2,
+              "text": "beneath"
+            },
+            {
+              "end": 24,
+              "family": null,
+              "is_end": false,
+              "start": 21,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "the"
+            },
+            {
+              "end": 29,
+              "family": null,
+              "is_end": false,
+              "start": 25,
+              "status": "known",
+              "syllables_max": 2,
+              "syllables_min": 2,
+              "text": "city"
+            },
+            {
+              "end": 36,
+              "family": null,
+              "is_end": true,
+              "start": 30,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "lights"
+            }
+          ]
+        },
+        {
+          "syllables": { "exact": false, "guessed": false, "max": 10, "min": 9 },
+          "words": [
+            {
+              "end": 8,
+              "family": null,
+              "is_end": false,
+              "start": 0,
+              "status": "known",
+              "syllables_max": 2,
+              "syllables_min": 2,
+              "text": "Counting"
+            },
+            {
+              "end": 14,
+              "family": null,
+              "is_end": false,
+              "start": 9,
+              "status": "known",
+              "syllables_max": 3,
+              "syllables_min": 2,
+              "text": "every"
+            },
+            {
+              "end": 21,
+              "family": null,
+              "is_end": false,
+              "start": 15,
+              "status": "known",
+              "syllables_max": 2,
+              "syllables_min": 2,
+              "text": "shadow"
+            },
+            {
+              "end": 24,
+              "family": null,
+              "is_end": false,
+              "start": 22,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "in"
+            },
+            {
+              "end": 28,
+              "family": null,
+              "is_end": false,
+              "start": 25,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "the"
+            },
+            {
+              "end": 33,
+              "family": null,
+              "is_end": true,
+              "start": 29,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "rain"
+            }
+          ]
+        },
+        {
+          "syllables": { "exact": true, "guessed": false, "max": 10, "min": 10 },
+          "words": [
+            {
+              "end": 6,
+              "family": null,
+              "is_end": false,
+              "start": 0,
+              "status": "known",
+              "syllables_max": 3,
+              "syllables_min": 3,
+              "text": "Nobody"
+            },
+            {
+              "end": 12,
+              "family": null,
+              "is_end": false,
+              "start": 7,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "calls"
+            },
+            {
+              "end": 15,
+              "family": null,
+              "is_end": false,
+              "start": 13,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "me"
+            },
+            {
+              "end": 23,
+              "family": null,
+              "is_end": false,
+              "start": 16,
+              "status": "known",
+              "syllables_max": 3,
+              "syllables_min": 3,
+              "text": "anymore"
+            },
+            {
+              "end": 31,
+              "family": null,
+              "is_end": true,
+              "start": 24,
+              "status": "known",
+              "syllables_max": 2,
+              "syllables_min": 2,
+              "text": "tonight"
+            }
+          ]
+        },
+        {
+          "syllables": { "exact": true, "guessed": false, "max": 10, "min": 10 },
+          "words": [
+            {
+              "end": 2,
+              "family": null,
+              "is_end": false,
+              "start": 0,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "My"
+            },
+            {
+              "end": 8,
+              "family": null,
+              "is_end": false,
+              "start": 3,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "heart"
+            },
+            {
+              "end": 11,
+              "family": null,
+              "is_end": false,
+              "start": 9,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "of"
+            },
+            {
+              "end": 16,
+              "family": null,
+              "is_end": false,
+              "start": 12,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "gold"
+            },
+            {
+              "end": 19,
+              "family": null,
+              "is_end": false,
+              "start": 17,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "is"
+            },
+            {
+              "end": 28,
+              "family": null,
+              "is_end": false,
+              "start": 20,
+              "status": "known",
+              "syllables_max": 2,
+              "syllables_min": 2,
+              "text": "breaking"
+            },
+            {
+              "end": 33,
+              "family": null,
+              "is_end": false,
+              "start": 29,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "down"
+            },
+            {
+              "end": 39,
+              "family": null,
+              "is_end": true,
+              "start": 34,
+              "status": "known",
+              "syllables_max": 2,
+              "syllables_min": 2,
+              "text": "again"
+            }
+          ]
+        }
+      ],
+      "unknown_words": []
+    },
+    {
+      "families": [
+        { "end_count": 1, "id": 0, "size": 2, "sound": "aɪt" },
+        { "end_count": 0, "id": 1, "size": 2, "sound": "eɪ" }
+      ],
+      "lines": [
+        {
+          "syllables": { "exact": true, "guessed": false, "max": 9, "min": 9 },
+          "words": [
+            {
+              "end": 7,
+              "family": null,
+              "is_end": false,
+              "start": 0,
+              "status": "known",
+              "syllables_max": 2,
+              "syllables_min": 2,
+              "text": "Runnin'"
+            },
+            {
+              "end": 15,
+              "family": null,
+              "is_end": false,
+              "start": 8,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "through"
+            },
+            {
+              "end": 19,
+              "family": null,
+              "is_end": false,
+              "start": 16,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "the"
+            },
+            {
+              "end": 25,
+              "family": 0,
+              "is_end": false,
+              "start": 20,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "night"
+            },
+            {
+              "end": 34,
+              "family": null,
+              "is_end": false,
+              "start": 27,
+              "status": "known",
+              "syllables_max": 2,
+              "syllables_min": 2,
+              "text": "nothin'"
+            },
+            {
+              "end": 40,
+              "family": null,
+              "is_end": false,
+              "start": 35,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "feels"
+            },
+            {
+              "end": 46,
+              "family": 0,
+              "is_end": true,
+              "start": 41,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "right"
+            }
+          ]
+        },
+        {
+          "syllables": { "exact": true, "guessed": false, "max": 9, "min": 9 },
+          "words": [
+            {
+              "end": 5,
+              "family": null,
+              "is_end": false,
+              "start": 0,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "Jay's"
+            },
+            {
+              "end": 8,
+              "family": null,
+              "is_end": false,
+              "start": 6,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "on"
+            },
+            {
+              "end": 12,
+              "family": null,
+              "is_end": false,
+              "start": 9,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "the"
+            },
+            {
+              "end": 16,
+              "family": null,
+              "is_end": false,
+              "start": 13,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "mic"
+            },
+            {
+              "end": 29,
+              "family": null,
+              "is_end": false,
+              "start": 18,
+              "status": "known",
+              "syllables_max": 3,
+              "syllables_min": 3,
+              "text": "twenty-four"
+            },
+            {
+              "end": 35,
+              "family": null,
+              "is_end": true,
+              "start": 30,
+              "status": "known",
+              "syllables_max": 2,
+              "syllables_min": 2,
+              "text": "seven"
+            }
+          ]
+        },
+        {
+          "syllables": { "exact": true, "guessed": true, "max": 9, "min": 9 },
+          "words": [
+            {
+              "end": 3,
+              "family": null,
+              "is_end": false,
+              "start": 0,
+              "status": "guess",
+              "syllables_max": 4,
+              "syllables_min": 4,
+              "text": "808"
+            },
+            {
+              "end": 9,
+              "family": null,
+              "is_end": false,
+              "start": 4,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "drums"
+            },
+            {
+              "end": 13,
+              "family": null,
+              "is_end": false,
+              "start": 10,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "and"
+            },
+            {
+              "end": 15,
+              "family": null,
+              "is_end": false,
+              "start": 14,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "a"
+            },
+            {
+              "end": 22,
+              "family": null,
+              "is_end": true,
+              "start": 16,
+              "status": "derived",
+              "syllables_max": 2,
+              "syllables_min": 2,
+              "text": "hi-hat"
+            }
+          ]
+        },
+        {
+          "syllables": { "exact": true, "guessed": true, "max": 6, "min": 6 },
+          "words": [
+            {
+              "end": 4,
+              "family": 1,
+              "is_end": false,
+              "start": 0,
+              "status": "known",
+              "syllables_max": 2,
+              "syllables_min": 2,
+              "text": "Café"
+            },
+            {
+              "end": 7,
+              "family": null,
+              "is_end": false,
+              "start": 5,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "au"
+            },
+            {
+              "end": 12,
+              "family": 1,
+              "is_end": false,
+              "start": 8,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "lait"
+            },
+            {
+              "end": 18,
+              "family": null,
+              "is_end": false,
+              "start": 14,
+              "status": "guess",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "zzqx"
+            },
+            {
+              "end": 24,
+              "family": null,
+              "is_end": true,
+              "start": 19,
+              "status": "guess",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "blorp"
+            }
+          ]
+        }
+      ],
+      "unknown_words": ["808", "blorp", "zzqx"]
+    },
+    {
+      "families": [],
+      "lines": [
+        { "syllables": { "exact": true, "guessed": false, "max": 0, "min": 0 }, "words": [] },
+        {
+          "syllables": { "exact": false, "guessed": false, "max": 4, "min": 2 },
+          "words": [
+            {
+              "end": 4,
+              "family": null,
+              "is_end": false,
+              "start": 0,
+              "status": "known",
+              "syllables_max": 2,
+              "syllables_min": 1,
+              "text": "Fire"
+            },
+            {
+              "end": 9,
+              "family": null,
+              "is_end": true,
+              "start": 5,
+              "status": "known",
+              "syllables_max": 2,
+              "syllables_min": 1,
+              "text": "fire"
+            }
+          ]
+        },
+        {
+          "syllables": { "exact": true, "guessed": false, "max": 3, "min": 3 },
+          "words": [
+            {
+              "end": 3,
+              "family": null,
+              "is_end": false,
+              "start": 0,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "the"
+            },
+            {
+              "end": 5,
+              "family": null,
+              "is_end": false,
+              "start": 4,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "a"
+            },
+            {
+              "end": 8,
+              "family": null,
+              "is_end": true,
+              "start": 6,
+              "status": "known",
+              "syllables_max": 1,
+              "syllables_min": 1,
+              "text": "an"
+            }
+          ]
+        }
+      ],
+      "unknown_words": []
+    }
+  ],
+  "describe": [
+    {
+      "context_used": false,
+      "forms": ["bank"],
+      "found": true,
+      "notes": [],
+      "pos_counts": { "noun": 10, "verb": 8 },
+      "reordered": false,
+      "senses": [
+        {
+          "antonyms": [],
+          "broader": [{ "word": "slope" }],
+          "definition": "sloping land (especially the slope beside a body of water)",
+          "examples": [
+            "they pulled the canoe up on the bank",
+            "he sat on the bank of the river and watched the currents"
+          ],
+          "fit": null,
+          "id": "n09213565",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [{ "word": "riverbank" }, { "word": "waterside" }],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 1,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "financial institution" }],
+          "definition": "a financial institution that accepts deposits and channels the money into lending activities",
+          "examples": ["he cashed a check at the bank", "that bank holds the mortgage on my home"],
+          "fit": null,
+          "id": "n08420278",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [
+            { "word": "credit union" },
+            { "word": "Federal Reserve Bank" },
+            { "word": "agent bank" },
+            { "word": "commercial bank" },
+            { "word": "state bank" },
+            { "word": "lead bank" },
+            { "word": "member bank" },
+            { "word": "merchant bank" },
+            { "word": "acquirer" },
+            { "word": "thrift institution" },
+            { "word": "Home Loan Bank" }
+          ],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 2,
+          "similar": [],
+          "synonyms": [
+            { "word": "depository financial institution" },
+            { "word": "banking concern" },
+            { "word": "banking company" }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "ridge" }],
+          "definition": "a long ridge or pile",
+          "examples": ["a huge bank of earth"],
+          "fit": null,
+          "id": "n09213434",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [{ "word": "bluff" }, { "word": "sandbank" }],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 3,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "array" }],
+          "definition": "an arrangement of similar objects in a row or in tiers",
+          "examples": ["he operated a bank of switches"],
+          "fit": null,
+          "id": "n08462066",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 4,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "reserve" }],
+          "definition": "a supply or stock held in reserve for future use (especially in emergencies)",
+          "examples": [],
+          "fit": null,
+          "id": "n13368318",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [
+            { "word": "blood bank" },
+            { "word": "eye bank" },
+            { "word": "food bank" },
+            { "word": "soil bank" }
+          ],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 5,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "funds" }],
+          "definition": "the funds held by a gambling house or the dealer in some gambling games",
+          "examples": ["he tried to break the bank at Monte Carlo"],
+          "fit": null,
+          "id": "n13356402",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 6,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "slope" }],
+          "definition": "a slope in the turn of a road or track; the outside is higher than the inside in order to reduce the effects of centrifugal force",
+          "examples": [],
+          "fit": null,
+          "id": "n09213828",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 7,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 5,
+                "rank": 2,
+                "usually_means": "stock phrases that have become nonsense through endless repetition"
+              },
+              "word": "cant"
+            },
+            {
+              "shift": {
+                "of": 3,
+                "rank": 2,
+                "usually_means": "a slight convexity (as of the surface of a road)"
+              },
+              "word": "camber"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "container" }],
+          "definition": "a container (usually with a slot in the top) for keeping money at home",
+          "examples": ["the coin bank was empty"],
+          "fit": null,
+          "id": "n04139859",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [{ "word": "piggy bank" }],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 8,
+          "similar": [],
+          "synonyms": [
+            { "word": "coin bank" },
+            { "word": "money box" },
+            {
+              "shift": {
+                "of": 2,
+                "rank": 2,
+                "usually_means": "a thrift institution in the northeastern United States; since deregulation in the 1980s they offer services co"
+              },
+              "word": "savings bank"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "depository" }],
+          "definition": "a building in which the business of banking transacted",
+          "examples": ["the bank is on the corner of Nassau and Witherspoon"],
+          "fit": null,
+          "id": "n02787772",
+          "imagery": [{ "word": "vault" }],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 9,
+          "similar": [],
+          "synonyms": [{ "word": "bank building" }]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "flight maneuver" }],
+          "definition": "a flight maneuver; aircraft tips laterally about its longitudinal axis (especially in turning)",
+          "examples": ["the plane went into a steep bank"],
+          "fit": null,
+          "id": "n00169305",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [{ "word": "vertical bank" }],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 10,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "tip" }],
+          "definition": "tip laterally",
+          "examples": ["the pilot had to bank the aircraft"],
+          "fit": null,
+          "id": "v02039413",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 1,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "enclose" }],
+          "definition": "enclose with a bank",
+          "examples": ["bank roads"],
+          "fit": null,
+          "id": "v01587705",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 2,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "transact" }],
+          "definition": "do business with a bank or keep an account at a bank",
+          "examples": ["Where do you bank in this town?"],
+          "fit": null,
+          "id": "v02343374",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 3,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "act" }],
+          "definition": "act as the banker in a game or in gambling",
+          "examples": [],
+          "fit": null,
+          "id": "v02343252",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 4,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "work" }],
+          "definition": "be in the banking business",
+          "examples": [],
+          "fit": null,
+          "id": "v02343056",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 5,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "give" }],
+          "definition": "put into a bank account",
+          "examples": ["She deposits her paycheck every month"],
+          "fit": null,
+          "id": "v02310855",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [{ "word": "redeposit" }],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 6,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": { "of": 3, "rank": 2, "usually_means": "put, fix, force, or implant" },
+              "word": "deposit"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "cover" }],
+          "definition": "cover with ashes so to control the rate of burning",
+          "examples": ["bank a fire"],
+          "fit": null,
+          "id": "v01234793",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 7,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "believe" }],
+          "definition": "have confidence or faith in",
+          "examples": [
+            "We can trust in God",
+            "Rely on your friends",
+            "bank on your good education"
+          ],
+          "fit": null,
+          "id": "v00688377",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [{ "word": "credit" }, { "word": "count" }, { "word": "lean" }],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 8,
+          "similar": [],
+          "synonyms": [
+            { "word": "trust" },
+            { "word": "rely" },
+            {
+              "shift": { "of": 5, "rank": 5, "usually_means": "utter obscenities or profanities" },
+              "word": "swear"
+            }
+          ]
+        }
+      ],
+      "source": "WordNet 3.0, Princeton University",
+      "total_senses": 18,
+      "word": "bank"
+    },
+    {
+      "context_used": true,
+      "forms": ["bank"],
+      "found": true,
+      "notes": [],
+      "pos_counts": { "noun": 10, "verb": 8 },
+      "reordered": true,
+      "senses": [
+        {
+          "antonyms": [],
+          "broader": [{ "word": "financial institution" }],
+          "definition": "a financial institution that accepts deposits and channels the money into lending activities",
+          "examples": ["he cashed a check at the bank", "that bank holds the mortgage on my home"],
+          "fit": { "best": false, "matched": ["money"], "score": 2 },
+          "id": "n08420278",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [
+            { "word": "credit union" },
+            { "word": "Federal Reserve Bank" },
+            { "word": "agent bank" },
+            { "word": "commercial bank" },
+            { "word": "state bank" },
+            { "word": "lead bank" },
+            { "word": "member bank" },
+            { "word": "merchant bank" },
+            { "word": "acquirer" },
+            { "word": "thrift institution" },
+            { "word": "Home Loan Bank" }
+          ],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 2,
+          "similar": [],
+          "synonyms": [
+            { "word": "depository financial institution" },
+            { "word": "banking concern" },
+            { "word": "banking company" }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "container" }],
+          "definition": "a container (usually with a slot in the top) for keeping money at home",
+          "examples": ["the coin bank was empty"],
+          "fit": { "best": false, "matched": ["money"], "score": 2 },
+          "id": "n04139859",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [{ "word": "piggy bank" }],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 8,
+          "similar": [],
+          "synonyms": [
+            { "word": "coin bank" },
+            { "word": "money box" },
+            {
+              "shift": {
+                "of": 2,
+                "rank": 2,
+                "usually_means": "a thrift institution in the northeastern United States; since deregulation in the 1980s they offer services co"
+              },
+              "word": "savings bank"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "transact" }],
+          "definition": "do business with a bank or keep an account at a bank",
+          "examples": ["Where do you bank in this town?"],
+          "fit": { "best": false, "matched": ["account"], "score": 2 },
+          "id": "v02343374",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 3,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "give" }],
+          "definition": "put into a bank account",
+          "examples": ["She deposits her paycheck every month"],
+          "fit": { "best": false, "matched": ["account"], "score": 2 },
+          "id": "v02310855",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [{ "word": "redeposit" }],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 6,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": { "of": 3, "rank": 2, "usually_means": "put, fix, force, or implant" },
+              "word": "deposit"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "slope" }],
+          "definition": "sloping land (especially the slope beside a body of water)",
+          "examples": [
+            "they pulled the canoe up on the bank",
+            "he sat on the bank of the river and watched the currents"
+          ],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "n09213565",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [{ "word": "riverbank" }, { "word": "waterside" }],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 1,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "ridge" }],
+          "definition": "a long ridge or pile",
+          "examples": ["a huge bank of earth"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "n09213434",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [{ "word": "bluff" }, { "word": "sandbank" }],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 3,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "array" }],
+          "definition": "an arrangement of similar objects in a row or in tiers",
+          "examples": ["he operated a bank of switches"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "n08462066",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 4,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "reserve" }],
+          "definition": "a supply or stock held in reserve for future use (especially in emergencies)",
+          "examples": [],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "n13368318",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [
+            { "word": "blood bank" },
+            { "word": "eye bank" },
+            { "word": "food bank" },
+            { "word": "soil bank" }
+          ],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 5,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "funds" }],
+          "definition": "the funds held by a gambling house or the dealer in some gambling games",
+          "examples": ["he tried to break the bank at Monte Carlo"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "n13356402",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 6,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "slope" }],
+          "definition": "a slope in the turn of a road or track; the outside is higher than the inside in order to reduce the effects of centrifugal force",
+          "examples": [],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "n09213828",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 7,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 5,
+                "rank": 2,
+                "usually_means": "stock phrases that have become nonsense through endless repetition"
+              },
+              "word": "cant"
+            },
+            {
+              "shift": {
+                "of": 3,
+                "rank": 2,
+                "usually_means": "a slight convexity (as of the surface of a road)"
+              },
+              "word": "camber"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "depository" }],
+          "definition": "a building in which the business of banking transacted",
+          "examples": ["the bank is on the corner of Nassau and Witherspoon"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "n02787772",
+          "imagery": [{ "word": "vault" }],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 9,
+          "similar": [],
+          "synonyms": [{ "word": "bank building" }]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "flight maneuver" }],
+          "definition": "a flight maneuver; aircraft tips laterally about its longitudinal axis (especially in turning)",
+          "examples": ["the plane went into a steep bank"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "n00169305",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [{ "word": "vertical bank" }],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 10,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "tip" }],
+          "definition": "tip laterally",
+          "examples": ["the pilot had to bank the aircraft"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "v02039413",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 1,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "enclose" }],
+          "definition": "enclose with a bank",
+          "examples": ["bank roads"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "v01587705",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 2,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "act" }],
+          "definition": "act as the banker in a game or in gambling",
+          "examples": [],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "v02343252",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 4,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "work" }],
+          "definition": "be in the banking business",
+          "examples": [],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "v02343056",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 5,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "cover" }],
+          "definition": "cover with ashes so to control the rate of burning",
+          "examples": ["bank a fire"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "v01234793",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 7,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "believe" }],
+          "definition": "have confidence or faith in",
+          "examples": [
+            "We can trust in God",
+            "Rely on your friends",
+            "bank on your good education"
+          ],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "v00688377",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [{ "word": "credit" }, { "word": "count" }, { "word": "lean" }],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 8,
+          "similar": [],
+          "synonyms": [
+            { "word": "trust" },
+            { "word": "rely" },
+            {
+              "shift": { "of": 5, "rank": 5, "usually_means": "utter obscenities or profanities" },
+              "word": "swear"
+            }
+          ]
+        }
+      ],
+      "source": "WordNet 3.0, Princeton University",
+      "total_senses": 18,
+      "word": "bank"
+    },
+    {
+      "context_used": true,
+      "forms": ["bank"],
+      "found": true,
+      "notes": [],
+      "pos_counts": { "noun": 10, "verb": 8 },
+      "reordered": false,
+      "senses": [
+        {
+          "antonyms": [],
+          "broader": [{ "word": "slope" }],
+          "definition": "sloping land (especially the slope beside a body of water)",
+          "examples": [
+            "they pulled the canoe up on the bank",
+            "he sat on the bank of the river and watched the currents"
+          ],
+          "fit": { "best": true, "matched": ["river", "water"], "score": 2 },
+          "id": "n09213565",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [{ "word": "riverbank" }, { "word": "waterside" }],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 1,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "financial institution" }],
+          "definition": "a financial institution that accepts deposits and channels the money into lending activities",
+          "examples": ["he cashed a check at the bank", "that bank holds the mortgage on my home"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "n08420278",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [
+            { "word": "credit union" },
+            { "word": "Federal Reserve Bank" },
+            { "word": "agent bank" },
+            { "word": "commercial bank" },
+            { "word": "state bank" },
+            { "word": "lead bank" },
+            { "word": "member bank" },
+            { "word": "merchant bank" },
+            { "word": "acquirer" },
+            { "word": "thrift institution" },
+            { "word": "Home Loan Bank" }
+          ],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 2,
+          "similar": [],
+          "synonyms": [
+            { "word": "depository financial institution" },
+            { "word": "banking concern" },
+            { "word": "banking company" }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "ridge" }],
+          "definition": "a long ridge or pile",
+          "examples": ["a huge bank of earth"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "n09213434",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [{ "word": "bluff" }, { "word": "sandbank" }],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 3,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "array" }],
+          "definition": "an arrangement of similar objects in a row or in tiers",
+          "examples": ["he operated a bank of switches"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "n08462066",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 4,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "reserve" }],
+          "definition": "a supply or stock held in reserve for future use (especially in emergencies)",
+          "examples": [],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "n13368318",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [
+            { "word": "blood bank" },
+            { "word": "eye bank" },
+            { "word": "food bank" },
+            { "word": "soil bank" }
+          ],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 5,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "funds" }],
+          "definition": "the funds held by a gambling house or the dealer in some gambling games",
+          "examples": ["he tried to break the bank at Monte Carlo"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "n13356402",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 6,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "slope" }],
+          "definition": "a slope in the turn of a road or track; the outside is higher than the inside in order to reduce the effects of centrifugal force",
+          "examples": [],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "n09213828",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 7,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 5,
+                "rank": 2,
+                "usually_means": "stock phrases that have become nonsense through endless repetition"
+              },
+              "word": "cant"
+            },
+            {
+              "shift": {
+                "of": 3,
+                "rank": 2,
+                "usually_means": "a slight convexity (as of the surface of a road)"
+              },
+              "word": "camber"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "container" }],
+          "definition": "a container (usually with a slot in the top) for keeping money at home",
+          "examples": ["the coin bank was empty"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "n04139859",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [{ "word": "piggy bank" }],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 8,
+          "similar": [],
+          "synonyms": [
+            { "word": "coin bank" },
+            { "word": "money box" },
+            {
+              "shift": {
+                "of": 2,
+                "rank": 2,
+                "usually_means": "a thrift institution in the northeastern United States; since deregulation in the 1980s they offer services co"
+              },
+              "word": "savings bank"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "depository" }],
+          "definition": "a building in which the business of banking transacted",
+          "examples": ["the bank is on the corner of Nassau and Witherspoon"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "n02787772",
+          "imagery": [{ "word": "vault" }],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 9,
+          "similar": [],
+          "synonyms": [{ "word": "bank building" }]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "flight maneuver" }],
+          "definition": "a flight maneuver; aircraft tips laterally about its longitudinal axis (especially in turning)",
+          "examples": ["the plane went into a steep bank"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "n00169305",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [{ "word": "vertical bank" }],
+          "of": 10,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 10,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "tip" }],
+          "definition": "tip laterally",
+          "examples": ["the pilot had to bank the aircraft"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "v02039413",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 1,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "enclose" }],
+          "definition": "enclose with a bank",
+          "examples": ["bank roads"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "v01587705",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 2,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "transact" }],
+          "definition": "do business with a bank or keep an account at a bank",
+          "examples": ["Where do you bank in this town?"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "v02343374",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 3,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "act" }],
+          "definition": "act as the banker in a game or in gambling",
+          "examples": [],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "v02343252",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 4,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "work" }],
+          "definition": "be in the banking business",
+          "examples": [],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "v02343056",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 5,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "give" }],
+          "definition": "put into a bank account",
+          "examples": ["She deposits her paycheck every month"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "v02310855",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [{ "word": "redeposit" }],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 6,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": { "of": 3, "rank": 2, "usually_means": "put, fix, force, or implant" },
+              "word": "deposit"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "cover" }],
+          "definition": "cover with ashes so to control the rate of burning",
+          "examples": ["bank a fire"],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "v01234793",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 7,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "believe" }],
+          "definition": "have confidence or faith in",
+          "examples": [
+            "We can trust in God",
+            "Rely on your friends",
+            "bank on your good education"
+          ],
+          "fit": { "best": false, "matched": [], "score": 0 },
+          "id": "v00688377",
+          "imagery": [],
+          "lemma": "bank",
+          "narrower": [{ "word": "credit" }, { "word": "count" }, { "word": "lean" }],
+          "of": 8,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 8,
+          "similar": [],
+          "synonyms": [
+            { "word": "trust" },
+            { "word": "rely" },
+            {
+              "shift": { "of": 5, "rank": 5, "usually_means": "utter obscenities or profanities" },
+              "word": "swear"
+            }
+          ]
+        }
+      ],
+      "source": "WordNet 3.0, Princeton University",
+      "total_senses": 18,
+      "word": "bank"
+    },
+    {
+      "context_used": false,
+      "forms": ["lead"],
+      "found": true,
+      "notes": [
+        "This word is said differently depending on its meaning. Each meaning shows how it is said."
+      ],
+      "pos_counts": { "noun": 17, "verb": 14 },
+      "reordered": false,
+      "senses": [
+        {
+          "antonyms": [],
+          "broader": [],
+          "definition": "take somebody somewhere",
+          "examples": [
+            "We lead him to our chief",
+            "can you take me to the main entrance?",
+            "He conducted us to the palace"
+          ],
+          "fit": null,
+          "id": "v01999798",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [
+            { "word": "hand" },
+            { "word": "beacon" },
+            { "word": "usher" },
+            { "word": "mislead" }
+          ],
+          "of": 14,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 1,
+          "similar": [],
+          "synonyms": [
+            { "shift": { "of": 42, "rank": 3, "usually_means": "carry out" }, "word": "take" },
+            {
+              "shift": { "of": 13, "rank": 5, "usually_means": "command with authority" },
+              "word": "direct"
+            },
+            {
+              "shift": {
+                "of": 5,
+                "rank": 2,
+                "usually_means": "direct the course; determine the direction of travelling"
+              },
+              "word": "guide"
+            },
+            {
+              "shift": {
+                "of": 6,
+                "rank": 4,
+                "usually_means": "direct the course of; manage or control"
+              },
+              "word": "conduct"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "produce" }],
+          "definition": "have as a result or residue",
+          "examples": [
+            "The water left a mark on the silk dress",
+            "Her blood left a stain on the napkin"
+          ],
+          "fit": null,
+          "id": "v02635659",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 14,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 2,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": { "of": 14, "rank": 7, "usually_means": "go away from a place" },
+              "word": "leave"
+            },
+            {
+              "shift": {
+                "of": 3,
+                "rank": 2,
+                "usually_means": "issue or terminate (in a specified way, state, etc.); end"
+              },
+              "word": "result"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "leave" }],
+          "definition": "tend to or result in",
+          "examples": ["This remark lead to further arguments among the guests"],
+          "fit": null,
+          "id": "v02635956",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [{ "word": "entail" }, { "word": "necessitate" }],
+          "of": 14,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 3,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "precede" }],
+          "definition": "travel in front of; go in advance of others",
+          "examples": ["The procession was headed by John"],
+          "fit": null,
+          "id": "v01999423",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [{ "word": "draw away" }],
+          "of": 14,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 4,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": { "of": 9, "rank": 3, "usually_means": "to go or travel towards" },
+              "word": "head"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "induce" }],
+          "definition": "cause to undertake a certain action",
+          "examples": ["Her greed led her to forge the checks"],
+          "fit": null,
+          "id": "v00771632",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [{ "word": "give" }],
+          "of": 14,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 5,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "be" }],
+          "definition": "stretch out over a distance, space, time, or scope; run or extend between two points or beyond a certain point",
+          "examples": [
+            "Service runs all the way to Cranbury",
+            "His knowledge doesn't go very far",
+            "My memory extends back to my fourth year of life"
+          ],
+          "fit": null,
+          "id": "v02685951",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [{ "word": "come" }, { "word": "radiate" }, { "word": "go far" }],
+          "of": 14,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 6,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 30,
+                "rank": 7,
+                "usually_means": "change location; move, travel, or proceed, also metaphorically"
+              },
+              "word": "go"
+            },
+            {
+              "shift": {
+                "of": 41,
+                "rank": 3,
+                "usually_means": "move fast by using one's feet, with one foot off the ground at any given time"
+              },
+              "word": "run"
+            },
+            {
+              "shift": { "of": 25, "rank": 6, "usually_means": "go across or through" },
+              "word": "pass"
+            },
+            {
+              "shift": { "of": 17, "rank": 2, "usually_means": "extend in scope or range or area" },
+              "word": "extend"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "direct" }],
+          "definition": "be in charge of",
+          "examples": ["Who is heading this project?"],
+          "fit": null,
+          "id": "v02440244",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [
+            { "word": "captain" },
+            { "word": "chair" },
+            { "word": "spearhead" },
+            { "word": "take hold" }
+          ],
+          "of": 14,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 7,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": { "of": 9, "rank": 2, "usually_means": "to go or travel towards" },
+              "word": "head"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [],
+          "definition": "be ahead of others; be the first",
+          "examples": ["she topped her class every year"],
+          "fit": null,
+          "id": "v02687385",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 14,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 8,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 10,
+                "rank": 4,
+                "usually_means": "be superior or better than some standard"
+              },
+              "word": "top"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "promote" }],
+          "definition": "be conducive to",
+          "examples": ["The use of computers in the classroom lead to better writing"],
+          "fit": null,
+          "id": "v02555908",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 14,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 9,
+          "similar": [],
+          "synonyms": [
+            { "word": "conduce" },
+            {
+              "shift": { "of": 4, "rank": 3, "usually_means": "bestow a quality on" },
+              "word": "contribute"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "perform" }],
+          "definition": "lead, as in the performance of a composition",
+          "examples": ["conduct an orchestra; Barenboim conducted the Chicago symphony for years"],
+          "fit": null,
+          "id": "v01732921",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 14,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 10,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": { "of": 13, "rank": 8, "usually_means": "command with authority" },
+              "word": "direct"
+            },
+            {
+              "shift": {
+                "of": 6,
+                "rank": 2,
+                "usually_means": "direct the course of; manage or control"
+              },
+              "word": "conduct"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "be" }],
+          "definition": "lead, extend, or afford access",
+          "examples": ["This door goes to the basement", "The road runs South"],
+          "fit": null,
+          "id": "v02686471",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 14,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 11,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 30,
+                "rank": 25,
+                "usually_means": "change location; move, travel, or proceed, also metaphorically"
+              },
+              "word": "go"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "travel" }],
+          "definition": "move ahead (of others) in time or space",
+          "examples": [],
+          "fit": null,
+          "id": "v01999218",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [{ "word": "head" }],
+          "of": 14,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 12,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 5,
+                "rank": 4,
+                "usually_means": "be earlier in time; go back further"
+              },
+              "word": "precede"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "pass" }],
+          "definition": "cause something to pass or lead somewhere",
+          "examples": ["Run the wire behind the cabinet"],
+          "fit": null,
+          "id": "v02686625",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 14,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 13,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 41,
+                "rank": 23,
+                "usually_means": "move fast by using one's feet, with one foot off the ground at any given time"
+              },
+              "word": "run"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "hash out" }],
+          "definition": "preside over",
+          "examples": ["John moderated the discussion"],
+          "fit": null,
+          "id": "v00813790",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 14,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 14,
+          "similar": [],
+          "synonyms": [
+            { "word": "moderate" },
+            {
+              "shift": {
+                "of": 2,
+                "rank": 2,
+                "usually_means": "act or preside as chair, as of an academic department in a university"
+              },
+              "word": "chair"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "advantage" }],
+          "definition": "an advantage held by a competitor in a race",
+          "examples": ["he took the lead at the last turn"],
+          "fit": null,
+          "id": "n05157143",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 17,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 1,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "metallic element" }],
+          "definition": "a soft heavy toxic malleable metallic element; bluish white when freshly cut but tarnishes readily to dull grey",
+          "examples": ["the children were playing with lead soldiers"],
+          "fit": null,
+          "id": "n14643467",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [
+            { "word": "hard lead" },
+            { "word": "antimonial lead" },
+            { "word": "pig lead" }
+          ],
+          "of": 17,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈɛd", "phones": "L EH1 D" },
+          "sense_no": 2,
+          "similar": [],
+          "synonyms": [{ "word": "Pb" }, { "word": "atomic number 82" }]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "evidence" }],
+          "definition": "evidence pointing to a possible solution",
+          "examples": [
+            "the police are following a promising lead",
+            "the trail led straight to the perpetrator"
+          ],
+          "fit": null,
+          "id": "n05826914",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 17,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 3,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 11,
+                "rank": 2,
+                "usually_means": "a line or route along which something travels or moves"
+              },
+              "word": "track"
+            },
+            {
+              "shift": {
+                "of": 3,
+                "rank": 3,
+                "usually_means": "a track or mark left by something that has passed"
+              },
+              "word": "trail"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "leadership" }],
+          "definition": "a position of leadership (especially in the phrase `take the lead')",
+          "examples": [
+            "he takes the lead in any group",
+            "we were just waiting for someone to take the lead",
+            "they didn't follow our lead"
+          ],
+          "fit": null,
+          "id": "n01256743",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 17,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 4,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "angle" }],
+          "definition": "the angle between the direction a gun is aimed and the position of a moving target (correcting for the flight time of the missile)",
+          "examples": [],
+          "fit": null,
+          "id": "n13893129",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 17,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 5,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "section" }],
+          "definition": "the introductory section of a story",
+          "examples": ["it was an amusing lead-in to a very serious matter"],
+          "fit": null,
+          "id": "n06270879",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 17,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 6,
+          "similar": [],
+          "synonyms": [{ "word": "lead-in" }, { "word": "lede" }]
+        },
+        {
+          "antonyms": [{ "word": "deficit" }],
+          "broader": [{ "word": "score" }],
+          "definition": "(sports) the score by which a team or individual is winning",
+          "examples": [],
+          "fit": null,
+          "id": "n13596422",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 17,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 7,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "actor" }],
+          "definition": "an actor who plays a principal role",
+          "examples": [],
+          "fit": null,
+          "id": "n10648696",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [
+            { "word": "idol" },
+            { "word": "co-star" },
+            { "word": "film star" },
+            { "word": "television star" }
+          ],
+          "of": 17,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 8,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 8,
+                "rank": 4,
+                "usually_means": "(astronomy) a celestial body of hot gases that radiates energy derived from thermonuclear reactions in the int"
+              },
+              "word": "star"
+            },
+            {
+              "shift": {
+                "of": 6,
+                "rank": 3,
+                "usually_means": "the original amount of a debt on which interest is calculated"
+              },
+              "word": "principal"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "position" }],
+          "definition": "(baseball) the position taken by a base runner preparing to advance to the next base",
+          "examples": ["he took a long lead off first"],
+          "fit": null,
+          "id": "n08592165",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 17,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 9,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "guidance" }],
+          "definition": "an indication of potential opportunity",
+          "examples": ["he got a tip on the stock market", "a good lead for a job"],
+          "fit": null,
+          "id": "n06651577",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 17,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 10,
+          "similar": [],
+          "synonyms": [
+            { "word": "steer" },
+            { "word": "confidential information" },
+            {
+              "shift": {
+                "of": 8,
+                "rank": 5,
+                "usually_means": "air moving (sometimes with considerable force) from an area of high pressure to an area of low pressure"
+              },
+              "word": "wind"
+            },
+            {
+              "shift": {
+                "of": 5,
+                "rank": 3,
+                "usually_means": "the extreme end of something; especially something pointed"
+              },
+              "word": "tip"
+            },
+            {
+              "shift": { "of": 5, "rank": 5, "usually_means": "an indirect suggestion" },
+              "word": "hint"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "news article" }],
+          "definition": "a news story of major importance",
+          "examples": [],
+          "fit": null,
+          "id": "n06271192",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 17,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 11,
+          "similar": [],
+          "synonyms": [{ "word": "lead story" }]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "timing" }],
+          "definition": "the timing of ignition relative to the position of the piston in an internal-combustion engine",
+          "examples": [],
+          "fit": null,
+          "id": "n05051088",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 17,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 12,
+          "similar": [],
+          "synonyms": [{ "word": "spark advance" }]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "restraint" }],
+          "definition": "restraint consisting of a rope (or light chain) used to restrain an animal",
+          "examples": [],
+          "fit": null,
+          "id": "n03652932",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 17,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 13,
+          "similar": [],
+          "synonyms": [{ "word": "leash" }, { "word": "tether" }]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "strip" }],
+          "definition": "thin strip of metal used to separate lines of type in printing",
+          "examples": [],
+          "fit": null,
+          "id": "n03651265",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 17,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈɛd", "phones": "L EH1 D" },
+          "sense_no": 14,
+          "similar": [],
+          "synonyms": [{ "word": "leading" }]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "graphite" }],
+          "definition": "mixture of graphite with clay in different degrees of hardness; the marking substance in a pencil",
+          "examples": [],
+          "fit": null,
+          "id": "n03651084",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 17,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 15,
+          "similar": [],
+          "synonyms": [{ "word": "pencil lead" }]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "wire" }, { "word": "jumper" }],
+          "definition": "a jumper that consists of a short piece of wire",
+          "examples": ["it was a tangle of jumper cables and clip leads"],
+          "fit": null,
+          "id": "n03604843",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [{ "word": "clip lead" }],
+          "of": 17,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 16,
+          "similar": [],
+          "synonyms": [
+            { "word": "jumper cable" },
+            { "word": "jumper lead" },
+            { "word": "booster cable" }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "turn" }],
+          "definition": "the playing of a card to start a trick in bridge",
+          "examples": ["the lead was in the dummy"],
+          "fit": null,
+          "id": "n01256270",
+          "imagery": [],
+          "lemma": "lead",
+          "narrower": [],
+          "of": 17,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "lˈid", "phones": "L IY1 D" },
+          "sense_no": 17,
+          "similar": [],
+          "synonyms": []
+        }
+      ],
+      "source": "WordNet 3.0, Princeton University",
+      "total_senses": 31,
+      "word": "lead"
+    },
+    {
+      "context_used": false,
+      "forms": ["fast"],
+      "found": true,
+      "notes": [],
+      "pos_counts": { "adjective": 10, "adverb": 2, "noun": 1, "verb": 2 },
+      "reordered": false,
+      "senses": [
+        {
+          "antonyms": [],
+          "broader": [],
+          "definition": "quickly or rapidly (often used as a combining form)",
+          "examples": [
+            "how fast can he get here?",
+            "ran as fast as he could",
+            "needs medical help fast"
+          ],
+          "fit": null,
+          "id": "r00086000",
+          "imagery": [],
+          "lemma": "fast",
+          "narrower": [],
+          "of": 2,
+          "pos": "r",
+          "pos_label": "adverb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 1,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [],
+          "definition": "firmly or closely",
+          "examples": ["held fast to the rope", "her foot was stuck fast", "held tight"],
+          "fit": null,
+          "id": "r00086404",
+          "imagery": [],
+          "lemma": "fast",
+          "narrower": [],
+          "of": 2,
+          "pos": "r",
+          "pos_label": "adverb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 2,
+          "similar": [],
+          "synonyms": [{ "word": "tight" }]
+        },
+        {
+          "antonyms": [{ "word": "slow" }],
+          "broader": [],
+          "definition": "acting or moving or capable of acting or moving quickly",
+          "examples": ["fast film", "on the fast track in school", "set a fast pace"],
+          "fit": null,
+          "id": "a00976508",
+          "imagery": [],
+          "lemma": "fast",
+          "narrower": [],
+          "of": 10,
+          "pos": "a",
+          "pos_label": "adjective",
+          "related": [
+            { "word": "speed" },
+            { "word": "quick" },
+            { "word": "smart" },
+            { "word": "express" },
+            { "word": "immediate" },
+            { "word": "sudden" },
+            { "word": "rapid" },
+            { "word": "fleet" },
+            { "word": "accelerated" },
+            { "word": "speedy" }
+          ],
+          "said_as": null,
+          "sense_no": 1,
+          "similar": [
+            { "word": "rapid" },
+            { "word": "instant" },
+            { "word": "fleet" },
+            { "word": "swift" },
+            { "word": "accelerated" },
+            { "word": "instantaneous" },
+            { "word": "hurrying" },
+            { "word": "straightaway" },
+            { "word": "scurrying" },
+            { "word": "alacritous" },
+            { "word": "double-quick" },
+            { "word": "fast-breaking" },
+            { "word": "fast-paced" },
+            { "word": "high-speed" }
+          ],
+          "synonyms": []
+        },
+        {
+          "antonyms": [{ "word": "slow" }],
+          "broader": [],
+          "definition": "(used of timepieces) indicating a time ahead of or later than the correct time",
+          "examples": ["my watch is fast"],
+          "fit": null,
+          "id": "a00983573",
+          "imagery": [],
+          "lemma": "fast",
+          "narrower": [],
+          "of": 10,
+          "pos": "a",
+          "pos_label": "adjective",
+          "related": [],
+          "said_as": null,
+          "sense_no": 2,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [{ "word": "slow" }],
+          "broader": [],
+          "definition": "at a rapid tempo",
+          "examples": ["the band played a fast fox trot"],
+          "fit": null,
+          "id": "a00981818",
+          "imagery": [],
+          "lemma": "fast",
+          "narrower": [],
+          "of": 10,
+          "pos": "a",
+          "pos_label": "adjective",
+          "related": [
+            { "word": "presto" },
+            { "word": "allegro" },
+            { "word": "allegretto" },
+            { "word": "andantino" },
+            { "word": "prestissimo" },
+            { "word": "vivace" }
+          ],
+          "said_as": null,
+          "sense_no": 3,
+          "similar": [
+            { "word": "presto" },
+            { "word": "allegro" },
+            { "word": "allegretto" },
+            { "word": "andantino" },
+            { "word": "prestissimo" },
+            { "word": "vivace" }
+          ],
+          "synonyms": []
+        },
+        {
+          "antonyms": [{ "via": "smooth", "word": "rough" }],
+          "broader": [],
+          "definition": "(of surfaces) conducive to rapid speeds",
+          "examples": ["a fast road", "grass courts are faster than clay"],
+          "fit": null,
+          "id": "a02237502",
+          "imagery": [],
+          "lemma": "fast",
+          "narrower": [],
+          "of": 10,
+          "pos": "a",
+          "pos_label": "adjective",
+          "related": [{ "word": "smooth" }],
+          "said_as": null,
+          "sense_no": 4,
+          "similar": [
+            { "word": "smooth" },
+            { "word": "flowing" },
+            { "word": "velvet" },
+            { "word": "glassy" },
+            { "word": "velvety" },
+            { "word": "creaseless" },
+            { "word": "uncreased" },
+            { "word": "even-textured" },
+            { "word": "fine-textured" },
+            { "word": "smooth-textured" },
+            { "word": "velvet-textured" },
+            {
+              "shift": {
+                "of": 3,
+                "rank": 2,
+                "usually_means": "well-groomed and neatly tailored; especially too well-groomed"
+              },
+              "word": "sleek"
+            },
+            {
+              "shift": {
+                "of": 3,
+                "rank": 2,
+                "usually_means": "not having or joined by a seam or seams"
+              },
+              "word": "seamless"
+            },
+            {
+              "shift": {
+                "of": 2,
+                "rank": 2,
+                "usually_means": "made efficient by stripping off nonessentials"
+              },
+              "word": "streamlined"
+            }
+          ],
+          "synonyms": []
+        },
+        {
+          "antonyms": [{ "via": "impervious", "word": "pervious" }],
+          "broader": [],
+          "definition": "resistant to destruction or fading",
+          "examples": ["fast colors"],
+          "fit": null,
+          "id": "a01774091",
+          "imagery": [],
+          "lemma": "fast",
+          "narrower": [],
+          "of": 10,
+          "pos": "a",
+          "pos_label": "adjective",
+          "related": [{ "word": "impervious" }],
+          "said_as": null,
+          "sense_no": 5,
+          "similar": [
+            { "word": "proof" },
+            { "word": "impervious" },
+            { "word": "soundproof" },
+            { "word": "imperviable" },
+            { "word": "acid-fast" },
+            { "word": "colorfast" },
+            { "word": "greaseproof" },
+            { "word": "mothproof" },
+            { "word": "moth-resistant" },
+            { "word": "corrosion-resistant" },
+            { "word": "rot-resistant" },
+            { "word": "runproof" },
+            { "word": "ladder-proof" },
+            { "word": "run-resistant" }
+          ],
+          "synonyms": []
+        },
+        {
+          "antonyms": [{ "via": "immoral", "word": "moral" }],
+          "broader": [],
+          "definition": "unrestrained by convention or morality",
+          "examples": [
+            "Congreve draws a debauched aristocratic society",
+            "deplorably dissipated and degraded",
+            "riotous living"
+          ],
+          "fit": null,
+          "id": "a01549568",
+          "imagery": [],
+          "lemma": "fast",
+          "narrower": [],
+          "of": 10,
+          "pos": "a",
+          "pos_label": "adjective",
+          "related": [{ "word": "immoral" }],
+          "said_as": null,
+          "sense_no": 6,
+          "similar": [
+            { "word": "immoral" },
+            { "word": "degenerate" },
+            { "word": "disgraceful" },
+            { "word": "degraded" },
+            { "word": "scandalous" },
+            { "word": "dissipated" },
+            { "word": "libertine" },
+            { "word": "debauched" },
+            { "word": "dissolute" },
+            {
+              "shift": {
+                "of": 2,
+                "rank": 2,
+                "usually_means": "glaringly vivid and graphic; marked by sensationalism"
+              },
+              "word": "shocking"
+            },
+            {
+              "shift": {
+                "of": 2,
+                "rank": 2,
+                "usually_means": "(used of conduct or character) deserving or bringing disgrace or shame"
+              },
+              "word": "shameful"
+            },
+            {
+              "shift": {
+                "of": 3,
+                "rank": 3,
+                "usually_means": "produced or growing in extreme abundance"
+              },
+              "word": "riotous"
+            },
+            {
+              "shift": { "of": 2, "rank": 2, "usually_means": "recklessly wasteful" },
+              "word": "profligate"
+            },
+            {
+              "shift": { "of": 3, "rank": 2, "usually_means": "afflicted with scrofula" },
+              "word": "scrofulous"
+            }
+          ],
+          "synonyms": [
+            { "word": "degenerate" },
+            { "word": "degraded" },
+            { "word": "dissipated" },
+            { "word": "libertine" },
+            { "word": "debauched" },
+            { "word": "dissolute" },
+            {
+              "shift": {
+                "of": 3,
+                "rank": 3,
+                "usually_means": "produced or growing in extreme abundance"
+              },
+              "word": "riotous"
+            },
+            {
+              "shift": { "of": 2, "rank": 2, "usually_means": "recklessly wasteful" },
+              "word": "profligate"
+            }
+          ]
+        },
+        {
+          "antonyms": [{ "via": "hurried", "word": "unhurried" }],
+          "broader": [],
+          "definition": "hurried and brief",
+          "examples": [
+            "paid a flying visit",
+            "took a flying glance at the book",
+            "a quick inspection"
+          ],
+          "fit": null,
+          "id": "a01270486",
+          "imagery": [],
+          "lemma": "fast",
+          "narrower": [],
+          "of": 10,
+          "pos": "a",
+          "pos_label": "adjective",
+          "related": [{ "word": "hurried" }],
+          "said_as": null,
+          "sense_no": 7,
+          "similar": [
+            { "word": "rushed" },
+            { "word": "hasty" },
+            { "word": "hurried" },
+            { "word": "precipitate" },
+            { "word": "headlong" },
+            { "word": "precipitous" },
+            { "word": "overhasty" },
+            { "word": "precipitant" },
+            { "word": "pell-mell" },
+            {
+              "shift": {
+                "of": 6,
+                "rank": 2,
+                "usually_means": "accomplished rapidly and without delay"
+              },
+              "word": "quick"
+            },
+            {
+              "shift": { "of": 2, "rank": 2, "usually_means": "moving swiftly" },
+              "word": "flying"
+            },
+            {
+              "shift": { "of": 2, "rank": 2, "usually_means": "not accepting reservations" },
+              "word": "rush"
+            },
+            {
+              "shift": {
+                "of": 2,
+                "rank": 2,
+                "usually_means": "lacking a visible order or organization"
+              },
+              "word": "helter-skelter"
+            }
+          ],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 6,
+                "rank": 2,
+                "usually_means": "accomplished rapidly and without delay"
+              },
+              "word": "quick"
+            },
+            { "shift": { "of": 2, "rank": 2, "usually_means": "moving swiftly" }, "word": "flying" }
+          ]
+        },
+        {
+          "antonyms": [{ "via": "fixed", "word": "unfixed" }],
+          "broader": [],
+          "definition": "securely fixed in place",
+          "examples": ["the post was still firm after being hit by the car"],
+          "fit": null,
+          "id": "a01059711",
+          "imagery": [],
+          "lemma": "fast",
+          "narrower": [],
+          "of": 10,
+          "pos": "a",
+          "pos_label": "adjective",
+          "related": [{ "word": "fixed" }],
+          "said_as": null,
+          "sense_no": 8,
+          "similar": [
+            { "word": "taped" },
+            { "word": "leaded" },
+            { "word": "geostationary" },
+            { "word": "geosynchronous" },
+            { "word": "unadjustable" },
+            {
+              "shift": {
+                "of": 10,
+                "rank": 9,
+                "usually_means": "marked by firm determination or resolution; not shakable"
+              },
+              "word": "firm"
+            },
+            {
+              "shift": {
+                "of": 4,
+                "rank": 3,
+                "usually_means": "(of a number) having a fixed and unchanging value"
+              },
+              "word": "fixed"
+            },
+            {
+              "shift": { "of": 2, "rank": 2, "usually_means": "standing still" },
+              "word": "stationary"
+            },
+            {
+              "shift": {
+                "of": 2,
+                "rank": 2,
+                "usually_means": "not capable of movement or of being moved"
+              },
+              "word": "immobile"
+            }
+          ],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 10,
+                "rank": 9,
+                "usually_means": "marked by firm determination or resolution; not shakable"
+              },
+              "word": "firm"
+            },
+            {
+              "shift": {
+                "of": 2,
+                "rank": 2,
+                "usually_means": "not capable of movement or of being moved"
+              },
+              "word": "immobile"
+            }
+          ]
+        },
+        {
+          "antonyms": [{ "via": "faithful", "word": "unfaithful" }],
+          "broader": [],
+          "definition": "unwavering in devotion to friend or vow or cause",
+          "examples": [
+            "a firm ally",
+            "loyal supporters",
+            "the true-hearted soldier...of Tippecanoe"
+          ],
+          "fit": null,
+          "id": "a00959244",
+          "imagery": [],
+          "lemma": "fast",
+          "narrower": [],
+          "of": 10,
+          "pos": "a",
+          "pos_label": "adjective",
+          "related": [{ "word": "faithful" }],
+          "said_as": null,
+          "sense_no": 9,
+          "similar": [
+            { "word": "faithful" },
+            { "word": "truehearted" },
+            {
+              "shift": {
+                "of": 12,
+                "rank": 3,
+                "usually_means": "consistent with fact or reality; not false"
+              },
+              "word": "true"
+            },
+            {
+              "shift": {
+                "of": 10,
+                "rank": 10,
+                "usually_means": "marked by firm determination or resolution; not shakable"
+              },
+              "word": "firm"
+            },
+            {
+              "shift": { "of": 3, "rank": 3, "usually_means": "steadfast in allegiance or duty" },
+              "word": "loyal"
+            }
+          ],
+          "synonyms": [
+            { "word": "truehearted" },
+            {
+              "shift": {
+                "of": 10,
+                "rank": 10,
+                "usually_means": "marked by firm determination or resolution; not shakable"
+              },
+              "word": "firm"
+            },
+            {
+              "shift": { "of": 3, "rank": 3, "usually_means": "steadfast in allegiance or duty" },
+              "word": "loyal"
+            }
+          ]
+        },
+        {
+          "antonyms": [{ "via": "causative", "word": "noncausative" }],
+          "broader": [],
+          "definition": "(of a photographic lens or emulsion) causing a shortening of exposure time",
+          "examples": ["a fast lens"],
+          "fit": null,
+          "id": "a00323873",
+          "imagery": [],
+          "lemma": "fast",
+          "narrower": [],
+          "of": 10,
+          "pos": "a",
+          "pos_label": "adjective",
+          "related": [{ "word": "causative" }],
+          "said_as": null,
+          "sense_no": 10,
+          "similar": [
+            { "word": "contributing" },
+            { "word": "motivating" },
+            { "word": "causal" },
+            { "word": "activating" },
+            { "word": "conducive" },
+            { "word": "contributory" },
+            { "word": "causative" },
+            { "word": "precipitating" },
+            { "word": "abortifacient" },
+            { "word": "actuating" },
+            { "word": "anorexigenic" },
+            { "word": "contributive" },
+            { "word": "errhine" },
+            { "word": "inducive" }
+          ],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "abstinence" }],
+          "definition": "abstaining from food",
+          "examples": [],
+          "fit": null,
+          "id": "n01069980",
+          "imagery": [],
+          "lemma": "fast",
+          "narrower": [{ "word": "diet" }, { "word": "Ramadan" }, { "word": "hunger strike" }],
+          "of": 1,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 1,
+          "similar": [],
+          "synonyms": [{ "word": "fasting" }]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "abstain" }],
+          "definition": "abstain from certain foods, as for religious or medical reasons",
+          "examples": ["Catholics sometimes fast during Lent"],
+          "fit": null,
+          "id": "v01189604",
+          "imagery": [],
+          "lemma": "fast",
+          "narrower": [{ "word": "diet" }],
+          "of": 2,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 1,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "abstain" }],
+          "definition": "abstain from eating",
+          "examples": ["Before the medical exam, you must fast"],
+          "fit": null,
+          "id": "v01189427",
+          "imagery": [],
+          "lemma": "fast",
+          "narrower": [{ "word": "diet" }],
+          "of": 2,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 2,
+          "similar": [],
+          "synonyms": []
+        }
+      ],
+      "source": "WordNet 3.0, Princeton University",
+      "total_senses": 15,
+      "word": "fast"
+    },
+    {
+      "context_used": false,
+      "forms": ["tear"],
+      "found": true,
+      "notes": [
+        "This word is said differently depending on its meaning. Each meaning shows how it is said."
+      ],
+      "pos_counts": { "noun": 4, "verb": 5 },
+      "reordered": false,
+      "senses": [
+        {
+          "antonyms": [],
+          "broader": [{ "word": "separate" }],
+          "definition": "separate or cause to separate abruptly",
+          "examples": ["The rope snapped", "tear the paper"],
+          "fit": null,
+          "id": "v01573515",
+          "imagery": [],
+          "lemma": "tear",
+          "narrower": [{ "word": "shred" }, { "word": "rend" }, { "word": "lacerate" }],
+          "of": 5,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "tˈɛr", "phones": "T EH1 R" },
+          "sense_no": 1,
+          "similar": [],
+          "synonyms": [
+            { "word": "rupture" },
+            {
+              "shift": {
+                "of": 13,
+                "rank": 2,
+                "usually_means": "utter in an angry, sharp, or abrupt tone"
+              },
+              "word": "snap"
+            },
+            { "shift": { "of": 5, "rank": 3, "usually_means": "ruin completely" }, "word": "bust" }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "separate" }],
+          "definition": "to separate or be separated by force",
+          "examples": ["planks were in danger of being torn from the crossbars"],
+          "fit": null,
+          "id": "v01556346",
+          "imagery": [],
+          "lemma": "tear",
+          "narrower": [{ "word": "cleave" }],
+          "of": 5,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "tˈɛr", "phones": "T EH1 R" },
+          "sense_no": 2,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "rush" }],
+          "definition": "move quickly and violently",
+          "examples": ["The car tore down the street", "He came charging into my office"],
+          "fit": null,
+          "id": "v02055267",
+          "imagery": [],
+          "lemma": "tear",
+          "narrower": [{ "word": "rip" }],
+          "of": 5,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "tˈɛr", "phones": "T EH1 R" },
+          "sense_no": 3,
+          "similar": [],
+          "synonyms": [
+            { "word": "shoot down" },
+            {
+              "shift": {
+                "of": 25,
+                "rank": 4,
+                "usually_means": "to make a rush at or sudden attack upon, as in battle"
+              },
+              "word": "charge"
+            },
+            {
+              "shift": { "of": 20, "rank": 7, "usually_means": "hit with a missile from a weapon" },
+              "word": "shoot"
+            },
+            {
+              "shift": { "of": 4, "rank": 3, "usually_means": "to strive with determination" },
+              "word": "buck"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "strip" }],
+          "definition": "strip of feathers",
+          "examples": ["pull a chicken", "pluck the capon"],
+          "fit": null,
+          "id": "v01384275",
+          "imagery": [],
+          "lemma": "tear",
+          "narrower": [],
+          "of": 5,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "tˈɛr", "phones": "T EH1 R" },
+          "sense_no": 4,
+          "similar": [],
+          "synonyms": [
+            { "word": "deplumate" },
+            {
+              "shift": { "of": 17, "rank": 14, "usually_means": "cause to move by pulling" },
+              "word": "pull"
+            },
+            {
+              "shift": { "of": 6, "rank": 5, "usually_means": "pull or pull out sharply" },
+              "word": "pluck"
+            },
+            {
+              "shift": {
+                "of": 2,
+                "rank": 2,
+                "usually_means": "strip of honors, possessions, or attributes"
+              },
+              "word": "deplume"
+            },
+            {
+              "shift": {
+                "of": 2,
+                "rank": 2,
+                "usually_means": "strip of honors, possessions, or attributes"
+              },
+              "word": "displume"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "cry" }],
+          "definition": "fill with tears or shed tears",
+          "examples": ["Her eyes were tearing"],
+          "fit": null,
+          "id": "v00066977",
+          "imagery": [],
+          "lemma": "tear",
+          "narrower": [],
+          "of": 5,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "tˈɛr", "phones": "T EH1 R" },
+          "sense_no": 5,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "drop" }],
+          "definition": "a drop of the clear salty saline solution secreted by the lacrimal glands",
+          "examples": ["his story brought tears to her eyes"],
+          "fit": null,
+          "id": "n05405324",
+          "imagery": [{ "word": "water" }],
+          "lemma": "tear",
+          "narrower": [],
+          "of": 4,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "tˈɪr", "phones": "T IH1 R" },
+          "sense_no": 1,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 2,
+                "rank": 2,
+                "usually_means": "anything shaped like a falling drop (as a pendant gem on an earring)"
+              },
+              "word": "teardrop"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "opening" }],
+          "definition": "an opening made forcibly as by pulling apart",
+          "examples": ["there was a rip in his pants", "she had snags in her stockings"],
+          "fit": null,
+          "id": "n09410928",
+          "imagery": [],
+          "lemma": "tear",
+          "narrower": [],
+          "of": 4,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "tˈɪr", "phones": "T IH1 R" },
+          "sense_no": 2,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 11,
+                "rank": 5,
+                "usually_means": "extending the legs at right angles to the trunk (one in front and the other in back)"
+              },
+              "word": "split"
+            },
+            {
+              "shift": {
+                "of": 4,
+                "rank": 2,
+                "usually_means": "a payment or series of payments made by the lessee to an owner for use of some property, facility, equipment, "
+              },
+              "word": "rent"
+            },
+            {
+              "shift": {
+                "of": 4,
+                "rank": 2,
+                "usually_means": "a dissolute man in fashionable society"
+              },
+              "word": "rip"
+            },
+            {
+              "shift": { "of": 4, "rank": 3, "usually_means": "a sharp protuberance" },
+              "word": "snag"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "revel" }],
+          "definition": "an occasion for excessive eating or drinking",
+          "examples": ["they went on a bust that lasted three days"],
+          "fit": null,
+          "id": "n00510723",
+          "imagery": [],
+          "lemma": "tear",
+          "narrower": [{ "word": "piss-up" }],
+          "of": 4,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "tˈɪr", "phones": "T IH1 R" },
+          "sense_no": 3,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 4,
+                "rank": 4,
+                "usually_means": "(sports) a division during which one team is on the offensive"
+              },
+              "word": "bout"
+            },
+            {
+              "shift": { "of": 4, "rank": 4, "usually_means": "a complete failure" },
+              "word": "bust"
+            },
+            {
+              "shift": { "of": 2, "rank": 2, "usually_means": "any act of immoderate indulgence" },
+              "word": "binge"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "separation" }],
+          "definition": "the act of tearing",
+          "examples": ["he took the manuscript in both hands and gave it a mighty tear"],
+          "fit": null,
+          "id": "n00391086",
+          "imagery": [],
+          "lemma": "tear",
+          "narrower": [{ "word": "rent" }, { "word": "laceration" }],
+          "of": 4,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": { "in_dictionary": true, "ipa": "tˈɪr", "phones": "T IH1 R" },
+          "sense_no": 4,
+          "similar": [],
+          "synonyms": []
+        }
+      ],
+      "source": "WordNet 3.0, Princeton University",
+      "total_senses": 9,
+      "word": "tear"
+    },
+    {
+      "context_used": false,
+      "forms": [],
+      "found": false,
+      "notes": ["WordNet does not have “zzqx”. It may be slang, a name, or spelled differently."],
+      "pos_counts": {},
+      "reordered": false,
+      "senses": [],
+      "source": "WordNet 3.0, Princeton University",
+      "total_senses": 0,
+      "word": "zzqx"
+    },
+    {
+      "context_used": false,
+      "forms": ["run", "running"],
+      "found": true,
+      "notes": [],
+      "pos_counts": { "adjective": 6, "noun": 5, "verb": 41 },
+      "reordered": false,
+      "senses": [
+        {
+          "antonyms": [],
+          "broader": [{ "word": "travel rapidly" }],
+          "definition": "move fast by using one's feet, with one foot off the ground at any given time",
+          "examples": ["Don't run--you'll be out of breath", "The children ran to the store"],
+          "fit": null,
+          "id": "v01926311",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [
+            { "word": "rush" },
+            { "word": "streak" },
+            { "word": "sprint" },
+            { "word": "hare" },
+            { "word": "jog" },
+            { "word": "trot" },
+            { "word": "outrun" },
+            { "word": "romp" },
+            { "word": "scurry" },
+            { "word": "lope" },
+            { "word": "run bases" }
+          ],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 1,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "leave" }],
+          "definition": "flee; take to one's heels; cut and run",
+          "examples": [
+            "If you see this man, run!",
+            "The burglars escaped before the police showed up"
+          ],
+          "fit": null,
+          "id": "v02075049",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [{ "word": "flee" }, { "word": "skedaddle" }],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 2,
+          "similar": [],
+          "synonyms": [
+            { "word": "lam" },
+            { "word": "scat" },
+            { "word": "scarper" },
+            { "word": "turn tail" },
+            { "word": "run away" },
+            { "word": "hightail it" },
+            { "word": "head for the hills" },
+            { "word": "take to the woods" },
+            { "word": "fly the coop" },
+            {
+              "shift": { "of": 7, "rank": 6, "usually_means": "run away from confinement" },
+              "word": "escape"
+            },
+            { "shift": { "of": 3, "rank": 3, "usually_means": "avoid paying" }, "word": "bunk" },
+            {
+              "shift": { "of": 5, "rank": 5, "usually_means": "move away or escape suddenly" },
+              "word": "break away"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "be" }],
+          "definition": "stretch out over a distance, space, time, or scope; run or extend between two points or beyond a certain point",
+          "examples": [
+            "Service runs all the way to Cranbury",
+            "His knowledge doesn't go very far",
+            "My memory extends back to my fourth year of life"
+          ],
+          "fit": null,
+          "id": "v02685951",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [{ "word": "come" }, { "word": "radiate" }, { "word": "go far" }],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 3,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 30,
+                "rank": 7,
+                "usually_means": "change location; move, travel, or proceed, also metaphorically"
+              },
+              "word": "go"
+            },
+            {
+              "shift": { "of": 14, "rank": 6, "usually_means": "take somebody somewhere" },
+              "word": "lead"
+            },
+            {
+              "shift": { "of": 25, "rank": 6, "usually_means": "go across or through" },
+              "word": "pass"
+            },
+            {
+              "shift": { "of": 17, "rank": 2, "usually_means": "extend in scope or range or area" },
+              "word": "extend"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "direct" }],
+          "definition": "direct or control; projects, businesses, etc.",
+          "examples": ["She is running a relief operation in the Sudan"],
+          "fit": null,
+          "id": "v02443849",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [
+            { "word": "work" },
+            { "word": "block" },
+            { "word": "financier" },
+            { "word": "warm up" }
+          ],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 4,
+          "similar": [],
+          "synonyms": [{ "word": "operate" }]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "be" }],
+          "definition": "have a particular form",
+          "examples": ["the story or argument runs as follows", "as the saying goes..."],
+          "fit": null,
+          "id": "v02721284",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 5,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 30,
+                "rank": 6,
+                "usually_means": "change location; move, travel, or proceed, also metaphorically"
+              },
+              "word": "go"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "move" }],
+          "definition": "move along, of liquids",
+          "examples": ["Water flowed into the cave", "the Missouri feeds into the Mississippi"],
+          "fit": null,
+          "id": "v02066939",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [
+            { "word": "waste" },
+            { "word": "stream" },
+            { "word": "jet" },
+            { "word": "pour" },
+            { "word": "drain" },
+            { "word": "tide" },
+            { "word": "spill" },
+            { "word": "flush" },
+            { "word": "eddy" },
+            { "word": "gutter" },
+            { "word": "trickle" },
+            { "word": "circulate" },
+            { "word": "seep" },
+            { "word": "run down" }
+          ],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 6,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": { "of": 3, "rank": 2, "usually_means": "move swiftly through or over" },
+              "word": "course"
+            },
+            {
+              "shift": {
+                "of": 7,
+                "rank": 2,
+                "usually_means": "move or progress freely as if in a stream"
+              },
+              "word": "flow"
+            },
+            { "shift": { "of": 11, "rank": 8, "usually_means": "provide as food" }, "word": "feed" }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [],
+          "definition": "perform as expected when applied",
+          "examples": [
+            "The washing machine won't go unless it's plugged in",
+            "Does this old car still run well?",
+            "This old radio doesn't work anymore"
+          ],
+          "fit": null,
+          "id": "v01525666",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [
+            { "word": "service" },
+            { "word": "cut" },
+            { "word": "double" },
+            { "word": "roll" }
+          ],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 7,
+          "similar": [],
+          "synonyms": [
+            { "word": "function" },
+            {
+              "shift": {
+                "of": 30,
+                "rank": 12,
+                "usually_means": "change location; move, travel, or proceed, also metaphorically"
+              },
+              "word": "go"
+            },
+            {
+              "shift": {
+                "of": 27,
+                "rank": 4,
+                "usually_means": "exert oneself by doing mental or physical work for a purpose or out of necessity"
+              },
+              "word": "work"
+            },
+            {
+              "shift": {
+                "of": 7,
+                "rank": 2,
+                "usually_means": "direct or control; projects, businesses, etc."
+              },
+              "word": "operate"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "be" }],
+          "definition": "change or be different within limits",
+          "examples": [
+            "Estimates for the losses in the earthquake range as high as $2 billion",
+            "Interest rates run from 5 to 10 percent",
+            "The instruments ranged from tuba to cymbals"
+          ],
+          "fit": null,
+          "id": "v02727039",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 8,
+          "similar": [],
+          "synonyms": [{ "word": "range" }]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "race" }],
+          "definition": "run, stand, or compete for an office or a position",
+          "examples": ["Who's running for treasurer this year?"],
+          "fit": null,
+          "id": "v01094086",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [
+            { "word": "stump" },
+            { "word": "rerun" },
+            { "word": "whistlestop" },
+            { "word": "cross-file" }
+          ],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 9,
+          "similar": [],
+          "synonyms": [{ "word": "campaign" }]
+        },
+        {
+          "antonyms": [],
+          "broader": [],
+          "definition": "cause to emit recorded audio or video",
+          "examples": [
+            "They ran the tapes over and over again",
+            "I'll play you my favorite record",
+            "He never tires of playing that video"
+          ],
+          "fit": null,
+          "id": "v01717169",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 10,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": { "of": 35, "rank": 18, "usually_means": "participate in games or sport" },
+              "word": "play"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "travel" }],
+          "definition": "move about freely and without restraint, or act as if running around in an uncontrolled way",
+          "examples": [
+            "who are these people running around in the building?",
+            "She runs around telling everyone of her troubles",
+            "let the dogs run free"
+          ],
+          "fit": null,
+          "id": "v02099829",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 11,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "be" }],
+          "definition": "have a tendency or disposition to do or be something; be inclined",
+          "examples": [
+            "She tends to be nervous before her lectures",
+            "These dresses run small",
+            "He inclined to corpulence"
+          ],
+          "fit": null,
+          "id": "v02719399",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [{ "word": "suffer" }, { "word": "gravitate" }, { "word": "take kindly to" }],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 12,
+          "similar": [],
+          "synonyms": [
+            { "word": "tend" },
+            { "word": "incline" },
+            { "word": "be given" },
+            {
+              "shift": {
+                "of": 5,
+                "rank": 3,
+                "usually_means": "to incline or bend from a vertical position"
+              },
+              "word": "lean"
+            }
+          ]
+        },
+        {
+          "antonyms": [{ "word": "idle" }],
+          "broader": [{ "word": "function" }],
+          "definition": "be operating, running or functioning",
+          "examples": ["The car is still running--turn it off!"],
+          "fit": null,
+          "id": "v01526290",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 13,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "become" }],
+          "definition": "change from one state to another",
+          "examples": ["run amok", "run rogue", "run riot"],
+          "fit": null,
+          "id": "v00549063",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 14,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "process" }],
+          "definition": "cause to perform",
+          "examples": ["run a subject", "run a process"],
+          "fit": null,
+          "id": "v00517529",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [{ "word": "rerun" }],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 15,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "incur" }],
+          "definition": "be affected by; be subjected to",
+          "examples": ["run a temperature", "run a risk"],
+          "fit": null,
+          "id": "v02720904",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 16,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "continue" }],
+          "definition": "continue to exist",
+          "examples": ["These stories die hard", "The legend of Elvis endures"],
+          "fit": null,
+          "id": "v02647497",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [{ "word": "carry over" }, { "word": "reverberate" }],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 17,
+          "similar": [],
+          "synonyms": [
+            { "word": "persist" },
+            { "word": "die hard" },
+            {
+              "shift": {
+                "of": 7,
+                "rank": 7,
+                "usually_means": "put up with something or somebody unpleasant"
+              },
+              "word": "endure"
+            },
+            {
+              "shift": {
+                "of": 5,
+                "rank": 3,
+                "usually_means": "be larger in number, quantity, power, status or importance"
+              },
+              "word": "prevail"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "occur" }],
+          "definition": "occur persistently",
+          "examples": ["Musical talent runs in the family"],
+          "fit": null,
+          "id": "v02612234",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 18,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "enforce" }],
+          "definition": "carry out a process or program, as on a computer or a machine",
+          "examples": [
+            "Run the dishwasher",
+            "run a new program on the Mac",
+            "the computer executed the instruction"
+          ],
+          "fit": null,
+          "id": "v02563327",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [{ "word": "step" }],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 19,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 7,
+                "rank": 5,
+                "usually_means": "kill as a means of socially sanctioned punishment"
+              },
+              "word": "execute"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "circulate" }],
+          "definition": "include as the content; broadcast or publicize",
+          "examples": [
+            "We ran the ad three times",
+            "This paper carries a restaurant review",
+            "All major networks carried the press conference"
+          ],
+          "fit": null,
+          "id": "v01746359",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 20,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 40,
+                "rank": 15,
+                "usually_means": "move while supporting, either in a vehicle or in one's hands or on one's body"
+              },
+              "word": "carry"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "carry through" }],
+          "definition": "carry out",
+          "examples": ["run an errand"],
+          "fit": null,
+          "id": "v01641545",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 21,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [],
+          "definition": "pass over, across, or through",
+          "examples": [
+            "He ran his eyes over her body",
+            "She ran her fingers along the carved figurine",
+            "He drew her hair through his fingers"
+          ],
+          "fit": null,
+          "id": "v01212230",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [{ "word": "thread" }, { "word": "rub" }],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 22,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": { "of": 25, "rank": 11, "usually_means": "go across or through" },
+              "word": "pass"
+            },
+            {
+              "shift": { "of": 36, "rank": 29, "usually_means": "cause to move by pulling" },
+              "word": "draw"
+            },
+            {
+              "shift": {
+                "of": 5,
+                "rank": 5,
+                "usually_means": "direct the course; determine the direction of travelling"
+              },
+              "word": "guide"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "pass" }],
+          "definition": "cause something to pass or lead somewhere",
+          "examples": ["Run the wire behind the cabinet"],
+          "fit": null,
+          "id": "v02686625",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 23,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": { "of": 14, "rank": 13, "usually_means": "take somebody somewhere" },
+              "word": "lead"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "succeed" }],
+          "definition": "make without a miss",
+          "examples": [],
+          "fit": null,
+          "id": "v02525312",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 24,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "trade" }],
+          "definition": "deal in illegally, such as arms or liquor",
+          "examples": [],
+          "fit": null,
+          "id": "v02242256",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 25,
+          "similar": [],
+          "synonyms": [{ "word": "black market" }]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "move" }],
+          "definition": "cause an animal to move fast",
+          "examples": ["run the dogs"],
+          "fit": null,
+          "id": "v02092309",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 26,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "diffuse" }],
+          "definition": "be diffused",
+          "examples": ["These dyes and colors are guaranteed not to run"],
+          "fit": null,
+          "id": "v02060792",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [{ "word": "crock" }],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 27,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": { "of": 5, "rank": 4, "usually_means": "lose blood from one's body" },
+              "word": "bleed"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "sail" }],
+          "definition": "sail before the wind",
+          "examples": [],
+          "fit": null,
+          "id": "v01927903",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 28,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "pass" }],
+          "definition": "cover by running; run a certain distance",
+          "examples": ["She ran 10 miles that day"],
+          "fit": null,
+          "id": "v01914947",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 29,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "last" }],
+          "definition": "extend or continue for a certain period of time",
+          "examples": ["The film runs 5 hours"],
+          "fit": null,
+          "id": "v02648110",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 30,
+          "similar": [],
+          "synonyms": [{ "word": "run for" }]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "free" }],
+          "definition": "set animals loose to graze",
+          "examples": [],
+          "fit": null,
+          "id": "v02421921",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 31,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "accompany" }],
+          "definition": "keep company",
+          "examples": ["the heifers run with the bulls to produce offspring"],
+          "fit": null,
+          "id": "v01927747",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 32,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": { "of": 3, "rank": 3, "usually_means": "keep company with; hang out with" },
+              "word": "consort"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [],
+          "definition": "run with the ball; in such sports as football",
+          "examples": [],
+          "fit": null,
+          "id": "v01927447",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 33,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "travel" }],
+          "definition": "travel rapidly, by any (unspecified) means",
+          "examples": [
+            "Run to the store!",
+            "She always runs to Italy, because she has a lover there"
+          ],
+          "fit": null,
+          "id": "v01926984",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 34,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "travel" }],
+          "definition": "travel a route regularly",
+          "examples": ["Ships ply the waters near the coast"],
+          "fit": null,
+          "id": "v01864038",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 35,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 6,
+                "rank": 3,
+                "usually_means": "give what is desired or needed, especially support, food or sustenance"
+              },
+              "word": "ply"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "capture" }],
+          "definition": "pursue for food or sport (as of wild animals)",
+          "examples": [
+            "Goering often hunted wild boars in Poland",
+            "The dogs are running deer",
+            "The Duke hunted in these woods"
+          ],
+          "fit": null,
+          "id": "v01143838",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [
+            { "word": "course" },
+            { "word": "drive" },
+            { "word": "seal" },
+            { "word": "rabbit" },
+            { "word": "whale" },
+            { "word": "turtle" },
+            { "word": "hawk" },
+            { "word": "falcon" },
+            { "word": "snipe" },
+            { "word": "ferret" },
+            { "word": "fowl" },
+            { "word": "poach" },
+            { "word": "still-hunt" },
+            { "word": "foxhunt" }
+          ],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 36,
+          "similar": [],
+          "synonyms": [{ "word": "hunt" }, { "word": "hunt down" }, { "word": "track down" }]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "compete" }],
+          "definition": "compete in a race",
+          "examples": [
+            "he is running the Marathon this year",
+            "let's race and see who gets there first"
+          ],
+          "fit": null,
+          "id": "v01086103",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [
+            { "word": "place" },
+            { "word": "show" },
+            { "word": "campaign" },
+            { "word": "boat-race" },
+            { "word": "horse-race" },
+            { "word": "speed skate" }
+          ],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 37,
+          "similar": [],
+          "synonyms": [
+            { "shift": { "of": 4, "rank": 2, "usually_means": "move fast" }, "word": "race" }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "change" }],
+          "definition": "progress by being changed",
+          "examples": [
+            "The speech has to go through several more drafts",
+            "run through your presentation before the meeting"
+          ],
+          "fit": null,
+          "id": "v00539110",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 38,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 30,
+                "rank": 14,
+                "usually_means": "change location; move, travel, or proceed, also metaphorically"
+              },
+              "word": "go"
+            },
+            {
+              "shift": {
+                "of": 16,
+                "rank": 13,
+                "usually_means": "change location; move, travel, or proceed, also metaphorically"
+              },
+              "word": "move"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "dissolve" }],
+          "definition": "reduce or cause to be reduced from a solid to a liquid state, usually by heating",
+          "examples": ["melt butter", "melt down gold", "The wax melted in the sun"],
+          "fit": null,
+          "id": "v00444629",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [{ "word": "try" }, { "word": "fuse" }],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 39,
+          "similar": [],
+          "synonyms": [{ "word": "melt" }, { "word": "melt down" }]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "break" }],
+          "definition": "come unraveled or undone as if by snagging",
+          "examples": ["Her nylons were running"],
+          "fit": null,
+          "id": "v00334803",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 40,
+          "similar": [],
+          "synonyms": [{ "word": "ladder" }]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "disintegrate" }],
+          "definition": "become undone",
+          "examples": ["the sweater unraveled"],
+          "fit": null,
+          "id": "v00332672",
+          "imagery": [],
+          "lemma": "run",
+          "narrower": [],
+          "of": 41,
+          "pos": "v",
+          "pos_label": "verb",
+          "related": [],
+          "said_as": null,
+          "sense_no": 41,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 3,
+                "rank": 3,
+                "usually_means": "become or cause to become undone by separating the fibers or threads of"
+              },
+              "word": "unravel"
+            }
+          ]
+        },
+        {
+          "antonyms": [{ "word": "standing" }],
+          "broader": [],
+          "definition": "(of fluids) moving or issuing in a stream",
+          "examples": [
+            "as mountain stream with freely running water",
+            "hovels without running water"
+          ],
+          "fit": null,
+          "id": "a01240591",
+          "imagery": [],
+          "lemma": "running",
+          "narrower": [],
+          "of": 6,
+          "pos": "a",
+          "pos_label": "adjective",
+          "related": [{ "word": "gushing" }, { "word": "jetting" }],
+          "said_as": null,
+          "sense_no": 1,
+          "similar": [
+            { "word": "pouring" },
+            { "word": "gushing" },
+            { "word": "spouting" },
+            { "word": "squirting" },
+            { "word": "jetting" },
+            { "word": "spurting" }
+          ],
+          "synonyms": []
+        },
+        {
+          "antonyms": [{ "via": "continual", "word": "sporadic" }],
+          "broader": [],
+          "definition": "continually repeated over a period of time",
+          "examples": ["a running joke among us"],
+          "fit": null,
+          "id": "a00592754",
+          "imagery": [],
+          "lemma": "running",
+          "narrower": [],
+          "of": 6,
+          "pos": "a",
+          "pos_label": "adjective",
+          "related": [{ "word": "continual" }],
+          "said_as": null,
+          "sense_no": 2,
+          "similar": [
+            { "word": "repeated" },
+            { "word": "persistent" },
+            { "word": "recurring" },
+            { "word": "repetitive" },
+            { "word": "continual" },
+            { "word": "recurrent" },
+            { "word": "insistent" },
+            {
+              "shift": { "of": 3, "rank": 3, "usually_means": "lasting three seasons or more" },
+              "word": "perennial"
+            },
+            {
+              "shift": {
+                "of": 2,
+                "rank": 2,
+                "usually_means": "not to be placated or appeased or moved by entreaty"
+              },
+              "word": "relentless"
+            },
+            {
+              "shift": {
+                "of": 3,
+                "rank": 3,
+                "usually_means": "not to be placated or appeased or moved by entreaty"
+              },
+              "word": "unrelenting"
+            },
+            {
+              "shift": {
+                "of": 2,
+                "rank": 2,
+                "usually_means": "of or relating to or typical of a revenant"
+              },
+              "word": "revenant"
+            }
+          ],
+          "synonyms": []
+        },
+        {
+          "antonyms": [{ "word": "passing" }],
+          "broader": [],
+          "definition": "of advancing the ball by running",
+          "examples": ["the team's running plays worked better than its pass plays"],
+          "fit": null,
+          "id": "a01241757",
+          "imagery": [],
+          "lemma": "running",
+          "narrower": [],
+          "of": 6,
+          "pos": "a",
+          "pos_label": "adjective",
+          "related": [],
+          "said_as": null,
+          "sense_no": 3,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [{ "word": "standing" }],
+          "broader": [],
+          "definition": "executed or initiated by running",
+          "examples": [
+            "running plays worked better than pass plays",
+            "took a running jump",
+            "a running start"
+          ],
+          "fit": null,
+          "id": "a01240413",
+          "imagery": [],
+          "lemma": "running",
+          "narrower": [],
+          "of": 6,
+          "pos": "a",
+          "pos_label": "adjective",
+          "related": [],
+          "said_as": null,
+          "sense_no": 4,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [{ "via": "lengthwise", "word": "crosswise" }],
+          "broader": [],
+          "definition": "measured lengthwise",
+          "examples": ["cost of lumber per running foot"],
+          "fit": null,
+          "id": "a01445438",
+          "imagery": [],
+          "lemma": "running",
+          "narrower": [],
+          "of": 6,
+          "pos": "a",
+          "pos_label": "adjective",
+          "related": [{ "word": "lengthwise" }],
+          "said_as": null,
+          "sense_no": 5,
+          "similar": [
+            { "word": "lengthwise" },
+            { "word": "lengthways" },
+            { "word": "end-to-end" },
+            { "word": "fore-and-aft" },
+            {
+              "shift": {
+                "of": 5,
+                "rank": 5,
+                "usually_means": "designating or involving an equation whose terms are of the first degree"
+              },
+              "word": "linear"
+            },
+            {
+              "shift": {
+                "of": 3,
+                "rank": 2,
+                "usually_means": "of or relating to lines of longitude"
+              },
+              "word": "longitudinal"
+            },
+            {
+              "shift": {
+                "of": 3,
+                "rank": 3,
+                "usually_means": "of or relating to or resembling an axis of rotation"
+              },
+              "word": "axial"
+            }
+          ],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 5,
+                "rank": 5,
+                "usually_means": "designating or involving an equation whose terms are of the first degree"
+              },
+              "word": "linear"
+            }
+          ]
+        },
+        {
+          "antonyms": [{ "via": "functioning", "word": "malfunctioning" }],
+          "broader": [],
+          "definition": "(of e.g. a machine) performing or capable of performing",
+          "examples": ["in running (or working) order", "a functional set of brakes"],
+          "fit": null,
+          "id": "a01091728",
+          "imagery": [],
+          "lemma": "running",
+          "narrower": [],
+          "of": 6,
+          "pos": "a",
+          "pos_label": "adjective",
+          "related": [{ "word": "functioning" }],
+          "said_as": null,
+          "sense_no": 6,
+          "similar": [
+            { "word": "functioning" },
+            {
+              "shift": {
+                "of": 8,
+                "rank": 7,
+                "usually_means": "being or moving higher in position or greater in some value; being above a former position or level"
+              },
+              "word": "up"
+            },
+            {
+              "shift": { "of": 5, "rank": 4, "usually_means": "actively engaged in paid work" },
+              "word": "working"
+            },
+            {
+              "shift": {
+                "of": 6,
+                "rank": 6,
+                "usually_means": "designed for or capable of a particular function or use"
+              },
+              "word": "functional"
+            },
+            {
+              "shift": {
+                "of": 4,
+                "rank": 4,
+                "usually_means": "being in force or having or exerting force"
+              },
+              "word": "operative"
+            }
+          ],
+          "synonyms": [
+            {
+              "shift": { "of": 5, "rank": 4, "usually_means": "actively engaged in paid work" },
+              "word": "working"
+            },
+            {
+              "shift": {
+                "of": 6,
+                "rank": 6,
+                "usually_means": "designed for or capable of a particular function or use"
+              },
+              "word": "functional"
+            },
+            {
+              "shift": {
+                "of": 4,
+                "rank": 4,
+                "usually_means": "being in force or having or exerting force"
+              },
+              "word": "operative"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "football play" }],
+          "definition": "(American football) a play in which a player attempts to carry the ball through or past the opposing team",
+          "examples": [
+            "the defensive line braced to stop the run",
+            "the coach put great emphasis on running"
+          ],
+          "fit": null,
+          "id": "n00558883",
+          "imagery": [],
+          "lemma": "running",
+          "narrower": [
+            { "word": "return" },
+            { "word": "draw" },
+            { "word": "rush" },
+            { "word": "reverse" },
+            { "word": "end run" }
+          ],
+          "of": 5,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 1,
+          "similar": [],
+          "synonyms": [
+            { "word": "running play" },
+            { "word": "running game" },
+            {
+              "shift": {
+                "of": 16,
+                "rank": 5,
+                "usually_means": "a score in baseball made by a runner touching all four bases safely"
+              },
+              "word": "run"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "locomotion" }],
+          "definition": "the act of running; traveling on foot at a fast pace",
+          "examples": ["he broke into a run", "his daily run keeps him fit"],
+          "fit": null,
+          "id": "n00293916",
+          "imagery": [],
+          "lemma": "running",
+          "narrower": [{ "word": "dash" }],
+          "of": 5,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 2,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 16,
+                "rank": 7,
+                "usually_means": "a score in baseball made by a runner touching all four bases safely"
+              },
+              "word": "run"
+            }
+          ]
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "operation" }],
+          "definition": "the state of being in operation",
+          "examples": ["the engine is running smoothly"],
+          "fit": null,
+          "id": "n14009481",
+          "imagery": [],
+          "lemma": "running",
+          "narrower": [],
+          "of": 5,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 3,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "administration" }],
+          "definition": "the act of administering or being in charge of something",
+          "examples": ["he has responsibility for the running of two companies at the same time"],
+          "fit": null,
+          "id": "n01136985",
+          "imagery": [],
+          "lemma": "running",
+          "narrower": [{ "word": "administrivia" }],
+          "of": 5,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 4,
+          "similar": [],
+          "synonyms": []
+        },
+        {
+          "antonyms": [],
+          "broader": [{ "word": "track and field" }],
+          "definition": "the act of participating in an athletic competition involving running on a track",
+          "examples": [],
+          "fit": null,
+          "id": "n00440039",
+          "imagery": [],
+          "lemma": "running",
+          "narrower": [],
+          "of": 5,
+          "pos": "n",
+          "pos_label": "noun",
+          "related": [],
+          "said_as": null,
+          "sense_no": 5,
+          "similar": [],
+          "synonyms": [
+            {
+              "shift": {
+                "of": 11,
+                "rank": 11,
+                "usually_means": "a line or route along which something travels or moves"
+              },
+              "word": "track"
+            }
+          ]
+        }
+      ],
+      "source": "WordNet 3.0, Princeton University",
+      "total_senses": 52,
+      "word": "running"
+    }
+  ],
+  "pos_rhymes": [
+    [
+      ["might", "perfect", 1, "masculine"],
+      ["white", "perfect", 1, "masculine"],
+      ["light", "perfect", 1, "masculine"],
+      ["site", "perfect", 1, "masculine"],
+      ["despite", "perfect", 2, "masculine"],
+      ["flight", "perfect", 1, "masculine"],
+      ["sight", "perfect", 1, "masculine"],
+      ["height", "perfect", 1, "masculine"],
+      ["slight", "perfect", 1, "masculine"],
+      ["wright", "perfect", 1, "masculine"],
+      ["spite", "perfect", 1, "masculine"],
+      ["rite", "perfect", 1, "masculine"],
+      ["kite", "perfect", 1, "masculine"],
+      ["plight", "perfect", 1, "masculine"],
+      ["fright", "perfect", 1, "masculine"],
+      ["blight", "perfect", 1, "masculine"],
+      ["wight", "perfect", 1, "masculine"],
+      ["sprite", "perfect", 1, "masculine"],
+      ["byte", "perfect", 1, "masculine"],
+      ["mite", "perfect", 1, "masculine"],
+      ["electrolyte", "perfect", 4, "masculine"],
+      ["side", "near", 1, "masculine"],
+      ["inside", "near", 2, "masculine"],
+      ["guide", "near", 1, "masculine"],
+      ["hide", "near", 1, "masculine"],
+      ["pride", "near", 1, "masculine"],
+      ["slide", "near", 1, "masculine"],
+      ["bride", "near", 1, "masculine"],
+      ["tide", "near", 1, "masculine"],
+      ["upside", "near", 2, "masculine"],
+      ["clyde", "near", 1, "masculine"],
+      ["stride", "near", 1, "masculine"],
+      ["TOTAL", 32]
+    ],
+    [
+      ["made", "perfect", 1, "masculine"],
+      ["played", "perfect", 1, "masculine"],
+      ["paid", "perfect", 1, "masculine"],
+      ["laid", "perfect", 1, "masculine"],
+      ["stayed", "perfect", 1, "masculine"],
+      ["upgrade", "perfect", 2, "masculine"],
+      ["delayed", "perfect", 2, "masculine"],
+      ["raid", "perfect", 1, "masculine"],
+      ["displayed", "perfect", 2, "masculine"],
+      ["wade", "perfect", 1, "masculine"],
+      ["portrayed", "perfect", 2, "masculine"],
+      ["persuade", "perfect", 2, "masculine"],
+      ["weighed", "perfect", 1, "masculine"],
+      ["betrayed", "perfect", 2, "masculine"],
+      ["prayed", "perfect", 1, "masculine"],
+      ["surveyed", "perfect", 2, "masculine"],
+      ["invade", "perfect", 2, "masculine"],
+      ["sprayed", "perfect", 1, "masculine"],
+      ["cascade", "perfect", 2, "masculine"],
+      ["conveyed", "perfect", 2, "masculine"],
+      ["evade", "perfect", 2, "masculine"],
+      ["prepaid", "perfect", 2, "masculine"],
+      ["repaid", "perfect", 2, "masculine"],
+      ["degrade", "perfect", 2, "masculine"],
+      ["downgrade", "perfect", 2, "masculine"],
+      ["swayed", "perfect", 1, "masculine"],
+      ["masquerade", "perfect", 3, "masculine"],
+      ["forbade", "perfect", 2, "masculine"],
+      ["obeyed", "perfect", 2, "masculine"],
+      ["dissuade", "perfect", 2, "masculine"],
+      ["remade", "perfect", 2, "masculine"],
+      ["wait", "near", 1, "masculine"],
+      ["create", "near", 2, "masculine"],
+      ["update", "near", 2, "masculine"],
+      ["debate", "near", 2, "masculine"],
+      ["ate", "near", 1, "masculine"],
+      ["relate", "near", 2, "masculine"],
+      ["translate", "near", 2, "masculine"],
+      ["await", "near", 2, "masculine"],
+      ["recreate", "near", 3, "masculine"],
+      ["equate", "near", 2, "masculine"],
+      ["reinstate", "near", 3, "masculine"],
+      ["inflate", "near", 2, "masculine"],
+      ["TOTAL", 43]
+    ]
+  ],
+  "rhymes": [
+    [
+      ["made", "perfect", 1, "masculine"],
+      ["played", "perfect", 1, "masculine"],
+      ["paid", "perfect", 1, "masculine"],
+      ["trade", "perfect", 1, "masculine"],
+      ["grade", "perfect", 1, "masculine"],
+      ["aid", "perfect", 1, "masculine"],
+      ["afraid", "perfect", 2, "masculine"],
+      ["laid", "perfect", 1, "masculine"],
+      ["stayed", "perfect", 1, "masculine"],
+      ["decade", "perfect", 2, "masculine"],
+      ["they'd", "perfect", 1, "masculine"],
+      ["upgrade", "perfect", 2, "masculine"],
+      ["delayed", "perfect", 2, "masculine"],
+      ["blade", "perfect", 1, "masculine"],
+      ["raid", "perfect", 1, "masculine"],
+      ["displayed", "perfect", 2, "masculine"],
+      ["parade", "perfect", 2, "masculine"],
+      ["shade", "perfect", 1, "masculine"],
+      ["wade", "perfect", 1, "masculine"],
+      ["brigade", "perfect", 2, "masculine"],
+      ["maid", "perfect", 1, "masculine"],
+      ["portrayed", "perfect", 2, "masculine"],
+      ["persuade", "perfect", 2, "masculine"],
+      ["homemade", "perfect", 2, "masculine"],
+      ["weighed", "perfect", 1, "masculine"],
+      ["jade", "perfect", 1, "masculine"],
+      ["betrayed", "perfect", 2, "masculine"],
+      ["arcade", "perfect", 2, "masculine"],
+      ["unpaid", "perfect", 2, "masculine"],
+      ["aide", "perfect", 1, "masculine"],
+      ["prayed", "perfect", 1, "masculine"],
+      ["surveyed", "perfect", 2, "masculine"],
+      ["grenade", "perfect", 2, "masculine"],
+      ["handmade", "perfect", 2, "masculine"],
+      ["invade", "perfect", 2, "masculine"],
+      ["crusade", "perfect", 2, "masculine"],
+      ["blockade", "perfect", 2, "masculine"],
+      ["sprayed", "perfect", 1, "masculine"],
+      ["cascade", "perfect", 2, "masculine"],
+      ["lemonade", "perfect", 3, "masculine"],
+      ["conveyed", "perfect", 2, "masculine"],
+      ["evade", "perfect", 2, "masculine"],
+      ["spade", "perfect", 1, "masculine"],
+      ["prepaid", "perfect", 2, "masculine"],
+      ["repaid", "perfect", 2, "masculine"],
+      ["degrade", "perfect", 2, "masculine"],
+      ["slade", "perfect", 1, "masculine"],
+      ["suede", "perfect", 1, "masculine"],
+      ["braid", "perfect", 1, "masculine"],
+      ["downgrade", "perfect", 2, "masculine"],
+      ["swayed", "perfect", 1, "masculine"],
+      ["promenade", "perfect", 3, "masculine"],
+      ["dade", "perfect", 1, "masculine"],
+      ["masquerade", "perfect", 3, "masculine"],
+      ["forbade", "perfect", 2, "masculine"],
+      ["obeyed", "perfect", 2, "masculine"],
+      ["dissuade", "perfect", 2, "masculine"],
+      ["remade", "perfect", 2, "masculine"],
+      ["great", "near", 1, "masculine"],
+      ["state", "near", 1, "masculine"],
+      ["wait", "near", 1, "masculine"],
+      ["late", "near", 1, "masculine"],
+      ["date", "near", 1, "masculine"],
+      ["rate", "near", 1, "masculine"],
+      ["hate", "near", 1, "masculine"],
+      ["straight", "near", 1, "masculine"],
+      ["create", "near", 2, "masculine"],
+      ["eight", "near", 1, "masculine"],
+      ["weight", "near", 1, "masculine"],
+      ["estate", "near", 2, "masculine"],
+      ["update", "near", 2, "masculine"],
+      ["debate", "near", 2, "masculine"],
+      ["mate", "near", 1, "masculine"],
+      ["plate", "near", 1, "masculine"],
+      ["gate", "near", 1, "masculine"],
+      ["fate", "near", 1, "masculine"],
+      ["ate", "near", 1, "masculine"],
+      ["kate", "near", 1, "masculine"],
+      ["relate", "near", 2, "masculine"],
+      ["freight", "near", 1, "masculine"],
+      ["interstate", "near", 3, "masculine"],
+      ["translate", "near", 2, "masculine"],
+      ["bait", "near", 1, "masculine"],
+      ["slate", "near", 1, "masculine"],
+      ["nate", "near", 1, "masculine"],
+      ["lightweight", "near", 2, "masculine"],
+      ["overweight", "near", 3, "masculine"],
+      ["skate", "near", 1, "masculine"],
+      ["tate", "near", 1, "masculine"],
+      ["trait", "near", 1, "masculine"],
+      ["kuwait", "near", 2, "masculine"],
+      ["await", "near", 2, "masculine"],
+      ["strait", "near", 1, "masculine"],
+      ["dictate", "near", 2, "masculine"],
+      ["recreate", "near", 3, "masculine"],
+      ["innate", "near", 2, "masculine"],
+      ["crate", "near", 1, "masculine"],
+      ["upstate", "near", 2, "masculine"],
+      ["equate", "near", 2, "masculine"],
+      ["ornate", "near", 2, "masculine"],
+      ["grate", "near", 1, "masculine"],
+      ["cate", "near", 1, "masculine"],
+      ["gait", "near", 1, "masculine"],
+      ["reinstate", "near", 3, "masculine"],
+      ["inflate", "near", 2, "masculine"],
+      ["TOTAL", 105]
+    ],
+    [
+      ["fayed", "homophone", 1, "masculine"],
+      ["buffeted", "rich", 2, "masculine"],
+      ["made", "perfect", 1, "masculine"],
+      ["played", "perfect", 1, "masculine"],
+      ["paid", "perfect", 1, "masculine"],
+      ["trade", "perfect", 1, "masculine"],
+      ["grade", "perfect", 1, "masculine"],
+      ["aid", "perfect", 1, "masculine"],
+      ["afraid", "perfect", 2, "masculine"],
+      ["laid", "perfect", 1, "masculine"],
+      ["stayed", "perfect", 1, "masculine"],
+      ["decade", "perfect", 2, "masculine"],
+      ["they'd", "perfect", 1, "masculine"],
+      ["upgrade", "perfect", 2, "masculine"],
+      ["delayed", "perfect", 2, "masculine"],
+      ["blade", "perfect", 1, "masculine"],
+      ["raid", "perfect", 1, "masculine"],
+      ["displayed", "perfect", 2, "masculine"],
+      ["parade", "perfect", 2, "masculine"],
+      ["shade", "perfect", 1, "masculine"],
+      ["wade", "perfect", 1, "masculine"],
+      ["brigade", "perfect", 2, "masculine"],
+      ["maid", "perfect", 1, "masculine"],
+      ["portrayed", "perfect", 2, "masculine"],
+      ["persuade", "perfect", 2, "masculine"],
+      ["homemade", "perfect", 2, "masculine"],
+      ["weighed", "perfect", 1, "masculine"],
+      ["jade", "perfect", 1, "masculine"],
+      ["betrayed", "perfect", 2, "masculine"],
+      ["arcade", "perfect", 2, "masculine"],
+      ["unpaid", "perfect", 2, "masculine"],
+      ["aide", "perfect", 1, "masculine"],
+      ["prayed", "perfect", 1, "masculine"],
+      ["surveyed", "perfect", 2, "masculine"],
+      ["grenade", "perfect", 2, "masculine"],
+      ["handmade", "perfect", 2, "masculine"],
+      ["invade", "perfect", 2, "masculine"],
+      ["crusade", "perfect", 2, "masculine"],
+      ["blockade", "perfect", 2, "masculine"],
+      ["sprayed", "perfect", 1, "masculine"],
+      ["cascade", "perfect", 2, "masculine"],
+      ["lemonade", "perfect", 3, "masculine"],
+      ["conveyed", "perfect", 2, "masculine"],
+      ["evade", "perfect", 2, "masculine"],
+      ["spade", "perfect", 1, "masculine"],
+      ["prepaid", "perfect", 2, "masculine"],
+      ["repaid", "perfect", 2, "masculine"],
+      ["degrade", "perfect", 2, "masculine"],
+      ["slade", "perfect", 1, "masculine"],
+      ["suede", "perfect", 1, "masculine"],
+      ["braid", "perfect", 1, "masculine"],
+      ["downgrade", "perfect", 2, "masculine"],
+      ["swayed", "perfect", 1, "masculine"],
+      ["promenade", "perfect", 3, "masculine"],
+      ["dade", "perfect", 1, "masculine"],
+      ["masquerade", "perfect", 3, "masculine"],
+      ["forbade", "perfect", 2, "masculine"],
+      ["obeyed", "perfect", 2, "masculine"],
+      ["dissuade", "perfect", 2, "masculine"],
+      ["remade", "perfect", 2, "masculine"],
+      ["ade", "perfect", 1, "masculine"],
+      ["strayed", "perfect", 1, "masculine"],
+      ["cade", "perfect", 1, "masculine"],
+      ["dismayed", "perfect", 2, "masculine"],
+      ["usaid", "perfect", 3, "masculine"],
+      ["serenade", "perfect", 3, "masculine"],
+      ["charade", "perfect", 2, "masculine"],
+      ["outweighed", "perfect", 2, "masculine"],
+      ["overpaid", "perfect", 3, "masculine"],
+      ["tirade", "perfect", 2, "masculine"],
+      ["underpaid", "perfect", 3, "masculine"],
+      ["decayed", "perfect", 2, "masculine"],
+      ["kincaid", "perfect", 2, "masculine"],
+      ["frayed", "perfect", 1, "masculine"],
+      ["replayed", "perfect", 2, "masculine"],
+      ["glade", "perfect", 1, "masculine"],
+      ["quaid", "perfect", 1, "masculine"],
+      ["manmade", "perfect", 2, "masculine"],
+      ["stade", "perfect", 1, "masculine"],
+      ["unafraid", "perfect", 3, "masculine"],
+      ["preyed", "perfect", 1, "masculine"],
+      ["disobeyed", "perfect", 3, "masculine"],
+      ["bade", "perfect", 1, "masculine"],
+      ["brocade", "perfect", 2, "masculine"],
+      ["sayed", "perfect", 1, "masculine"],
+      ["crocheted", "perfect", 2, "masculine"],
+      ["staid", "perfect", 1, "masculine"],
+      ["arrayed", "perfect", 2, "masculine"],
+      ["spayed", "perfect", 1, "masculine"],
+      ["palisade", "perfect", 3, "masculine"],
+      ["overplayed", "perfect", 3, "masculine"],
+      ["colonnade", "perfect", 3, "masculine"],
+      ["flayed", "perfect", 1, "masculine"],
+      ["rayed", "perfect", 1, "masculine"],
+      ["sauteed", "perfect", 2, "masculine"],
+      ["unmade", "perfect", 2, "masculine"],
+      ["zaid", "perfect", 1, "masculine"],
+      ["abrade", "perfect", 2, "masculine"],
+      ["allayed", "perfect", 2, "masculine"],
+      ["bayed", "perfect", 1, "masculine"],
+      ["brascade", "perfect", 2, "masculine"],
+      ["cliched", "perfect", 2, "masculine"],
+      ["eyde", "perfect", 1, "masculine"],
+      ["filleted", "perfect", 2, "masculine"],
+      ["gade", "perfect", 1, "masculine"],
+      ["goldade", "perfect", 2, "masculine"],
+      ["granade", "perfect", 2, "masculine"],
+      ["hade", "perfect", 1, "masculine"],
+      ["haid", "perfect", 1, "masculine"],
+      ["heyd", "perfect", 1, "masculine"],
+      ["heyde", "perfect", 1, "masculine"],
+      ["home-made", "perfect", 2, "masculine"],
+      ["kade", "perfect", 1, "masculine"],
+      ["kincade", "perfect", 2, "masculine"],
+      ["lade", "perfect", 1, "masculine"],
+      ["marcade", "perfect", 2, "masculine"],
+      ["mayde", "perfect", 1, "masculine"],
+      ["mccade", "perfect", 2, "masculine"],
+      ["mcdade", "perfect", 2, "masculine"],
+      ["mcdaid", "perfect", 2, "masculine"],
+      ["TOTAL", 3119]
+    ],
+    [
+      ["lorincz", "near", 2, "feminine"],
+      ["important", "assonance", 3, "feminine"],
+      ["often", "assonance", 2, "feminine"],
+      ["office", "assonance", 2, "feminine"],
+      ["wanted", "assonance", 2, "feminine"],
+      ["morning", "assonance", 2, "feminine"],
+      ["talking", "assonance", 2, "feminine"],
+      ["according", "assonance", 3, "feminine"],
+      ["performance", "assonance", 3, "feminine"],
+      ["august", "assonance", 2, "feminine"],
+      ["foreign", "assonance", 2, "feminine"],
+      ["normal", "assonance", 2, "feminine"],
+      ["california", "assonance", 4, "feminine"],
+      ["reported", "assonance", 3, "feminine"],
+      ["forces", "assonance", 2, "feminine"],
+      ["calling", "assonance", 2, "feminine"],
+      ["awesome", "assonance", 2, "feminine"],
+      ["walking", "assonance", 2, "feminine"],
+      ["sources", "assonance", 2, "feminine"],
+      ["option", "assonance", 2, "feminine"],
+      ["options", "assonance", 2, "feminine"],
+      ["supporting", "assonance", 3, "feminine"],
+      ["forest", "assonance", 2, "feminine"],
+      ["supported", "assonance", 3, "feminine"],
+      ["boston", "assonance", 2, "feminine"],
+      ["recorded", "assonance", 3, "feminine"],
+      ["corporate", "assonance", 2, "feminine"],
+      ["causes", "assonance", 2, "feminine"],
+      ["offering", "assonance", 2, "feminine"],
+      ["warning", "assonance", 2, "feminine"],
+      ["drawing", "assonance", 2, "feminine"],
+      ["storage", "assonance", 2, "feminine"],
+      ["importance", "assonance", 3, "feminine"],
+      ["performing", "assonance", 3, "feminine"],
+      ["reporting", "assonance", 3, "feminine"],
+      ["causing", "assonance", 2, "feminine"],
+      ["portion", "assonance", 2, "feminine"],
+      ["jordan", "assonance", 2, "feminine"],
+      ["recording", "assonance", 3, "feminine"],
+      ["chocolate", "assonance", 2, "feminine"],
+      ["historic", "assonance", 3, "feminine"],
+      ["gotten", "assonance", 2, "feminine"],
+      ["awful", "assonance", 2, "feminine"],
+      ["courses", "assonance", 2, "feminine"],
+      ["georgia", "assonance", 2, "feminine"],
+      ["moral", "assonance", 2, "feminine"],
+      ["enforcement", "assonance", 3, "feminine"],
+      ["formal", "assonance", 2, "feminine"],
+      ["horses", "assonance", 2, "feminine"],
+      ["losses", "assonance", 2, "feminine"],
+      ["boring", "assonance", 2, "feminine"],
+      ["morgan", "assonance", 2, "feminine"],
+      ["mortgage", "assonance", 2, "feminine"],
+      ["forum", "assonance", 2, "feminine"],
+      ["gordon", "assonance", 2, "feminine"],
+      ["austin", "assonance", 2, "feminine"],
+      ["scoring", "assonance", 2, "feminine"],
+      ["awarded", "assonance", 3, "feminine"],
+      ["cotton", "assonance", 2, "feminine"],
+      ["gorgeous", "assonance", 2, "feminine"],
+      ["aug", "assonance", 2, "feminine"],
+      ["crossing", "assonance", 2, "feminine"],
+      ["lawrence", "assonance", 2, "feminine"],
+      ["fortune", "assonance", 2, "feminine"],
+      ["auction", "assonance", 2, "feminine"],
+      ["autumn", "assonance", 2, "feminine"],
+      ["oral", "assonance", 2, "feminine"],
+      ["warren", "assonance", 2, "feminine"],
+      ["enormous", "assonance", 3, "feminine"],
+      ["abortion", "assonance", 3, "feminine"],
+      ["laura", "assonance", 2, "feminine"],
+      ["warrant", "assonance", 2, "feminine"],
+      ["longest", "assonance", 2, "feminine"],
+      ["portrait", "assonance", 2, "feminine"],
+      ["forcing", "assonance", 2, "feminine"],
+      ["forming", "assonance", 2, "feminine"],
+      ["gospel", "assonance", 2, "feminine"],
+      ["portland", "assonance", 2, "feminine"],
+      ["sporting", "assonance", 2, "feminine"],
+      ["morris", "assonance", 2, "feminine"],
+      ["wallet", "assonance", 2, "feminine"],
+      ["ga", "assonance", 2, "feminine"],
+      ["norman", "assonance", 2, "feminine"],
+      ["organ", "assonance", 2, "feminine"],
+      ["trauma", "assonance", 2, "feminine"],
+      ["accordance", "assonance", 3, "feminine"],
+      ["strongest", "assonance", 2, "feminine"],
+      ["proportion", "assonance", 3, "feminine"],
+      ["exhausted", "assonance", 3, "feminine"],
+      ["forests", "assonance", 2, "feminine"],
+      ["exploring", "assonance", 3, "feminine"],
+      ["belonging", "assonance", 3, "feminine"],
+      ["supportive", "assonance", 3, "feminine"],
+      ["wallace", "assonance", 2, "feminine"],
+      ["warming", "assonance", 2, "feminine"],
+      ["withdrawal", "assonance", 3, "feminine"],
+      ["audit", "assonance", 2, "feminine"],
+      ["drawings", "assonance", 2, "feminine"],
+      ["ignoring", "assonance", 3, "feminine"],
+      ["puerto", "assonance", 2, "feminine"],
+      ["orbit", "assonance", 2, "feminine"],
+      ["smallest", "assonance", 2, "feminine"],
+      ["organs", "assonance", 2, "feminine"],
+      ["portal", "assonance", 2, "feminine"],
+      ["launching", "assonance", 2, "feminine"],
+      ["lauren", "assonance", 2, "feminine"],
+      ["portions", "assonance", 2, "feminine"],
+      ["caution", "assonance", 2, "feminine"],
+      ["boarding", "assonance", 2, "feminine"],
+      ["florence", "assonance", 2, "feminine"],
+      ["imported", "assonance", 3, "feminine"],
+      ["honda", "assonance", 2, "feminine"],
+      ["shortage", "assonance", 2, "feminine"],
+      ["bosses", "assonance", 2, "feminine"],
+      ["chorus", "assonance", 2, "feminine"],
+      ["recordings", "assonance", 3, "feminine"],
+      ["launches", "assonance", 2, "feminine"],
+      ["transported", "assonance", 3, "feminine"],
+      ["boris", "assonance", 2, "feminine"],
+      ["haunted", "assonance", 2, "feminine"],
+      ["TOTAL", 2036]
+    ],
+    [
+      ["invites", "perfect", 2, "masculine"],
+      ["tonight's", "perfect", 2, "masculine"],
+      ["unites", "perfect", 2, "masculine"],
+      ["excites", "perfect", 2, "masculine"],
+      ["TOTAL", 4]
+    ],
+    [
+      ["funny", "perfect", 2, "feminine"],
+      ["honey", "perfect", 2, "feminine"],
+      ["sunny", "perfect", 2, "feminine"],
+      ["TOTAL", 3]
+    ],
+    [
+      ["higher", "perfect", 2, "feminine"],
+      ["entire", "perfect", 3, "feminine"],
+      ["prior", "perfect", 2, "feminine"],
+      ["require", "perfect", 3, "feminine"],
+      ["desire", "perfect", 3, "feminine"],
+      ["wire", "perfect", 2, "feminine"],
+      ["hire", "perfect", 2, "feminine"],
+      ["acquire", "perfect", 3, "feminine"],
+      ["retire", "perfect", 3, "feminine"],
+      ["buyer", "perfect", 2, "feminine"],
+      ["liar", "perfect", 2, "feminine"],
+      ["tire", "perfect", 2, "feminine"],
+      ["inspire", "perfect", 2, "masculine"],
+      ["admire", "perfect", 2, "masculine"],
+      ["choir", "perfect", 2, "feminine"],
+      ["supplier", "perfect", 3, "feminine"],
+      ["meyer", "perfect", 2, "feminine"],
+      ["dire", "perfect", 2, "feminine"],
+      ["flyer", "perfect", 2, "feminine"],
+      ["dryer", "perfect", 2, "feminine"],
+      ["expire", "perfect", 2, "masculine"],
+      ["tyre", "perfect", 1, "masculine"],
+      ["attire", "perfect", 3, "feminine"],
+      ["aspire", "perfect", 2, "masculine"],
+      ["shire", "perfect", 1, "masculine"],
+      ["sire", "perfect", 2, "feminine"],
+      ["inquire", "perfect", 2, "masculine"],
+      ["dyer", "perfect", 2, "feminine"],
+      ["ceasefire", "perfect", 3, "feminine"],
+      ["mcguire", "perfect", 2, "masculine"],
+      ["maguire", "perfect", 2, "masculine"],
+      ["squire", "perfect", 1, "masculine"],
+      ["ire", "perfect", 1, "masculine"],
+      ["skier", "perfect", 1, "masculine"],
+      ["drier", "perfect", 2, "feminine"],
+      ["pryor", "perfect", 2, "feminine"],
+      ["spire", "perfect", 1, "masculine"],
+      ["dwyer", "perfect", 2, "feminine"],
+      ["friar", "perfect", 2, "feminine"],
+      ["TOTAL", 39]
+    ]
+  ],
+  "tails": [
+    [
+      "AE Z AY S",
+      [
+        "abshire",
+        "admire",
+        "admires",
+        "advice",
+        "advise",
+        "advised",
+        "aggrandize",
+        "alcide",
+        "allied",
+        "allied's",
+        "allies",
+        "allies'",
+        "ally",
+        "allys",
+        "alpine",
+        "altai",
+        "alvite",
+        "alwine",
+        "amrein",
+        "anti",
+        "antis",
+        "antwine",
+        "arganbright",
+        "ashline",
+        "axline",
+        "azides",
+        "backbite",
+        "backfire",
+        "backlight",
+        "backlights",
+        "backside",
+        "backsides",
+        "backslide",
+        "bagpipe",
+        "bagpipes",
+        "bakrie",
+        "ballantyne",
+        "bandai",
+        "baptize",
+        "baptized",
+        "bareis",
+        "basnight",
+        "basye",
+        "blackshire",
+        "brandeis",
+        "brandwein",
+        "cacti",
+        "calcite",
+        "calite",
+        "campsite",
+        "campsites",
+        "capsize",
+        "capsized",
+        "castile",
+        "catlike",
+        "champine",
+        "chastise",
+        "chastised",
+        "dannemeyer",
+        "disenfranchise",
+        "disenfranchised",
+        "dragline",
+        "draheim",
+        "enfranchise",
+        "enfranchised",
+        "fanlike",
+        "flaplike",
+        "flashlight",
+        "flashlights",
+        "franchise",
+        "franchised",
+        "francyne",
+        "gadflies",
+        "gadfly",
+        "gaslight",
+        "gathright",
+        "gladstein",
+        "glasslike",
+        "gradstein",
+        "gradstein's",
+        "grandchild",
+        "graphite",
+        "grasslike",
+        "hadline",
+        "half-time",
+        "halftime",
+        "halftimes",
+        "halide",
+        "halite",
+        "hambright",
+        "hamsphire",
+        "kalbfleisch",
+        "kansai",
+        "kathline",
+        "lambright",
+        "landline",
+        "landmine",
+        "landmines",
+        "landslide",
+        "landslides",
+        "langbein",
+        "macalpine",
+        "maffei",
+        "maglaj",
+        "maglaj's",
+        "magpie",
+        "magpies",
+        "malrite",
+        "malrite's",
+        "manheim",
+        "mankind",
+        "mankind's",
+        "mankinds",
+        "mannheim",
+        "mantei",
+        "manthei",
+        "matheis",
+        "mattei",
+        "mattheis",
+        "mcalpine",
+        "nankai",
+        "operandi",
+        "panfile",
+        "pastime",
+        "pastimes",
+        "plantlike",
+        "polyamide",
+        "propagandize",
+        "rabbi",
+        "rabbis",
+        "ragtime",
+        "ramstein",
+        "rankine",
+        "sadye",
+        "shampine",
+        "shanghai",
+        "shanghai's",
+        "stand-by",
+        "standby",
+        "standbys",
+        "stanline",
+        "strandline",
+        "strandlines",
+        "straszheim",
+        "tactile",
+        "taddei",
+        "tagline",
+        "transcribe",
+        "transcribed",
+        "transcribes",
+        "vampire",
+        "vampire's",
+        "vampires",
+        "vandine",
+        "vanduyn",
+        "vanduyne",
+        "vandyke",
+        "vandyne",
+        "vanhise",
+        "vanschaick",
+        "vanskike",
+        "vanslyke",
+        "vantuyl",
+        "vanwyhe",
+        "workmanlike"
+      ]
+    ],
+    ["AO L N AY T L AO NG", []],
+    [
+      "AH N IY",
+      [
+        "abductee",
+        "abductees",
+        "abdulaziz",
+        "abee",
+        "abeles",
+        "abilities",
+        "ability",
+        "abnormalities",
+        "abnormality",
+        "abnormally",
+        "aborigine",
+        "aborigines",
+        "abruptly",
+        "absentee",
+        "absentees",
+        "absorbency",
+        "absurdities",
+        "absurdity",
+        "abundantly",
+        "abysmally",
+        "academe",
+        "academies",
+        "academy",
+        "academy's",
+        "acceptability",
+        "acceptably",
+        "accidentally",
+        "accidently",
+        "accompanied",
+        "accompanies",
+        "accompany",
+        "accountancy",
+        "accuracies",
+        "accuracy",
+        "accurately",
+        "acetylene",
+        "achee",
+        "achene",
+        "achenes",
+        "achieve",
+        "achieved",
+        "achieves",
+        "acidity",
+        "acidly",
+        "acree",
+        "activities",
+        "activity",
+        "actuality",
+        "actually",
+        "acuity",
+        "adamantly",
+        "adaptability",
+        "additionally",
+        "adee",
+        "adelstein",
+        "adenine",
+        "adenosine",
+        "adequacy",
+        "adequately",
+        "admirably",
+        "admiralty",
+        "admissibility",
+        "adriel",
+        "advisedly",
+        "advocacy",
+        "affably",
+        "affectionately",
+        "affinities",
+        "affinity",
+        "affordability",
+        "affordably",
+        "afield",
+        "agassi",
+        "agencies",
+        "agencies'",
+        "agency",
+        "agency's",
+        "aggrieve",
+        "aggrieved",
+        "agility",
+        "agleam",
+        "agonies",
+        "agony",
+        "agree",
+        "agreed",
+        "agrees",
+        "agriculturally",
+        "ahmeek",
+        "aimlessly",
+        "akey",
+        "alacrity",
+        "aladeen",
+        "albany",
+        "albany's",
+        "albee",
+        "alchemically",
+        "alchemy",
+        "aleen",
+        "alene",
+        "aleve",
+        "algemene",
+        "alkalinity",
+        "allee",
+        "allegedly",
+        "allenby",
+        "allenby's",
+        "almasy",
+        "alternately",
+        "altimetry",
+        "alwaleed",
+        "amalie",
+        "ambiguities",
+        "ambiguity",
+        "ambitiously",
+        "ameen",
+        "amenities",
+        "amenity",
+        "amiability",
+        "amiably",
+        "amicably",
+        "ammeen",
+        "amnesties",
+        "amnesty",
+        "amphetamine",
+        "amphetamines",
+        "amputee",
+        "amputees",
+        "anaesthesiology",
+        "analogies",
+        "analogy",
+        "analyses",
+        "analyticity",
+        "anatomically",
+        "anatomy",
+        "andree",
+        "andreen",
+        "andries",
+        "androgyny",
+        "anecdotally",
+        "anemone",
+        "anencephaly",
+        "anesthesiology",
+        "angeles'",
+        "angeline",
+        "angrily",
+        "aniline",
+        "animosities",
+        "animosity",
+        "aniseed",
+        "annamese",
+        "anneal",
+        "annually",
+        "annuity",
+        "anomalies",
+        "anomaly",
+        "anomie",
+        "anonymously",
+        "anthologies",
+        "anthology",
+        "anthony",
+        "anthony's",
+        "anthropology",
+        "antigone",
+        "antigone's",
+        "antigones",
+        "antipathies",
+        "antipathy",
+        "antiquities",
+        "antiquity",
+        "antony",
+        "anxieties",
+        "anxiety",
+        "anxiously",
+        "anybody",
+        "anybody's",
+        "apathy",
+        "apennine",
+        "aperitif",
+        "apiece",
+        "apogee",
+        "apologies",
+        "apology",
+        "apostrophe",
+        "apostrophes",
+        "apparently",
+        "appeal",
+        "appealed",
+        "appeals",
+        "appease",
+        "appeased",
+        "appendectomies",
+        "appendectomy",
+        "appleans",
+        "applebee",
+        "applebee's",
+        "appleby",
+        "appleseed",
+        "applicability",
+        "appreciably",
+        "approximately"
+      ]
+    ]
+  ],
+  "usual_pos": {
+    "blue": "n",
+    "fast": "r",
+    "leaves": "v",
+    "night": "n",
+    "quickly": "r",
+    "run": "v",
+    "running": "v",
+    "zzqx": null
+  },
+  "words": {
+    "808": {
+      "ambiguous": false,
+      "note": "Read as a plain number. Add your own pronunciation if you say it differently (like “eight-oh-eight”).",
+      "pronunciations": [
+        {
+          "ipa": "ˈeɪthˈʌndrədˈeɪt",
+          "phones": "EY1 T HH AH1 N D R AH0 D EY1 T",
+          "source": "guess",
+          "stress": "1101",
+          "syllables": 4
+        }
+      ],
+      "status": "guess",
+      "syllables_max": 4,
+      "syllables_min": 4,
+      "word": "808"
+    },
+    "café": {
+      "ambiguous": false,
+      "note": "",
+      "pronunciations": [
+        {
+          "ipa": "kəfˈeɪ",
+          "phones": "K AH0 F EY1",
+          "source": "dictionary",
+          "stress": "01",
+          "syllables": 2
+        },
+        {
+          "ipa": "kæfˈeɪ",
+          "phones": "K AE0 F EY1",
+          "source": "dictionary",
+          "stress": "01",
+          "syllables": 2
+        }
+      ],
+      "status": "known",
+      "syllables_max": 2,
+      "syllables_min": 2,
+      "word": "café"
+    },
+    "fade": {
+      "ambiguous": false,
+      "note": "",
+      "pronunciations": [
+        {
+          "ipa": "fˈeɪd",
+          "phones": "F EY1 D",
+          "source": "dictionary",
+          "stress": "1",
+          "syllables": 1
+        }
+      ],
+      "status": "known",
+      "syllables_max": 1,
+      "syllables_min": 1,
+      "word": "fade"
+    },
+    "fire": {
+      "ambiguous": true,
+      "note": "",
+      "pronunciations": [
+        {
+          "ipa": "fˈaɪɚ",
+          "phones": "F AY1 ER0",
+          "source": "dictionary",
+          "stress": "10",
+          "syllables": 2
+        },
+        {
+          "ipa": "fˈaɪr",
+          "phones": "F AY1 R",
+          "source": "dictionary",
+          "stress": "1",
+          "syllables": 1
+        }
+      ],
+      "status": "known",
+      "syllables_max": 2,
+      "syllables_min": 1,
+      "word": "fire"
+    },
+    "hi-hat": {
+      "ambiguous": false,
+      "note": "Built from the parts of the compound.",
+      "pronunciations": [
+        {
+          "ipa": "hˈaɪhˈæt",
+          "phones": "HH AY1 HH AE1 T",
+          "source": "derived",
+          "stress": "11",
+          "syllables": 2
+        }
+      ],
+      "status": "derived",
+      "syllables_max": 2,
+      "syllables_min": 2,
+      "word": "hi-hat"
+    },
+    "jay's": {
+      "ambiguous": false,
+      "note": "",
+      "pronunciations": [
+        {
+          "ipa": "dʒˈeɪz",
+          "phones": "JH EY1 Z",
+          "source": "dictionary",
+          "stress": "1",
+          "syllables": 1
+        }
+      ],
+      "status": "known",
+      "syllables_max": 1,
+      "syllables_min": 1,
+      "word": "jay's"
+    },
+    "nothin'": {
+      "ambiguous": false,
+      "note": "",
+      "pronunciations": [
+        {
+          "ipa": "nˈʌθɪn",
+          "phones": "N AH1 TH IH0 N",
+          "source": "dictionary",
+          "stress": "10",
+          "syllables": 2
+        }
+      ],
+      "status": "known",
+      "syllables_max": 2,
+      "syllables_min": 2,
+      "word": "nothin'"
+    },
+    "orange": {
+      "ambiguous": false,
+      "note": "",
+      "pronunciations": [
+        {
+          "ipa": "ˈɔrəndʒ",
+          "phones": "AO1 R AH0 N JH",
+          "source": "dictionary",
+          "stress": "10",
+          "syllables": 2
+        },
+        {
+          "ipa": "ˈɔrɪndʒ",
+          "phones": "AO1 R IH0 N JH",
+          "source": "dictionary",
+          "stress": "10",
+          "syllables": 2
+        }
+      ],
+      "status": "known",
+      "syllables_max": 2,
+      "syllables_min": 2,
+      "word": "orange"
+    },
+    "record": {
+      "ambiguous": false,
+      "note": "",
+      "pronunciations": [
+        {
+          "ipa": "rəkˈɔrd",
+          "phones": "R AH0 K AO1 R D",
+          "source": "dictionary",
+          "stress": "01",
+          "syllables": 2
+        },
+        {
+          "ipa": "rˈɛkɚd",
+          "phones": "R EH1 K ER0 D",
+          "source": "dictionary",
+          "stress": "10",
+          "syllables": 2
+        },
+        {
+          "ipa": "rɪkˈɔrd",
+          "phones": "R IH0 K AO1 R D",
+          "source": "dictionary",
+          "stress": "01",
+          "syllables": 2
+        }
+      ],
+      "status": "known",
+      "syllables_max": 2,
+      "syllables_min": 2,
+      "word": "record"
+    },
+    "twenty-four": {
+      "ambiguous": false,
+      "note": "",
+      "pronunciations": [
+        {
+          "ipa": "twˈɛntifˌɔr",
+          "phones": "T W EH1 N T IY0 F AO2 R",
+          "source": "dictionary",
+          "stress": "102",
+          "syllables": 3
+        }
+      ],
+      "status": "known",
+      "syllables_max": 3,
+      "syllables_min": 3,
+      "word": "twenty-four"
+    },
+    "zzqx": {
+      "ambiguous": false,
+      "note": "Not in the dictionary: syllables are a guess.",
+      "pronunciations": [],
+      "status": "guess",
+      "syllables_max": 1,
+      "syllables_min": 1,
+      "word": "zzqx"
+    }
+  }
+}

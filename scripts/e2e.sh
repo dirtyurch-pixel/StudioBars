@@ -63,3 +63,4 @@ run phase6.cjs
 run phase8.cjs
 run phase7.cjs
 run phone_local.cjs
+run phone_words.cjs

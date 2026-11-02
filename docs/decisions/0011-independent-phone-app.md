@@ -1,6 +1,6 @@
-# 0011: Independent phone app (step 1 of 4)
+# 0011: Independent phone app (steps 1 and 2 of 4)
 
-Status: step 1 built; awaiting owner review.
+Status: steps 1 and 2 built; awaiting owner review.
 
 The owner wants a phone app that works on its own and syncs with the PC later. Earlier work made the phone a window onto
 a server; that was the wrong default and is corrected here.
@@ -23,8 +23,19 @@ a server; that was the wrong default and is corrected here.
 Songs list, new song, writing pad, sections, locked lines, notes, undo/redo, autosave, history and restore,
 import (txt/md/json), export, backup/restore, works offline, installable to the home screen.
 
+## Step 2 includes (rhymes and words on the device)
+- Syllable counts in the margin, rhyme colours, the Rhymes tab (all filters incl. part of speech, your own
+  pronunciations, phrase rhymes) and the Words tab (meanings, synonyms, the phrase bank).
+- The Python rhyme/word code is ported to TypeScript (`src/local/phonetics`, `src/local/lexicon`, `src/local/localWords.ts`).
+  `parity.test.ts` checks the phone code gives the SAME answers as the PC code on real data (fixture made by
+  `scripts/make_phone_parity.py`).
+- The dictionaries are copied unmodified into the phone build (`frontend/phone-data.mjs`) with their licences:
+  CMU dictionary and the familiarity list (~1.2 MB to download) are stored for offline use when the app is first opened;
+  WordNet (~8 MB) downloads the first time the Words tab or the part-of-speech filter is used, then works offline.
+- The online helper (Datamuse) is not offered on the phone.
+- The database moved to version 2 (adds your pronunciations and phrases); songs from step 1 are kept (tested).
+
 ## Not yet (later steps)
-2. Rhymes, syllables and word meanings offline (ship the CMU dictionary and WordNet to the device).
 3. AI helper (direct from the phone with the owner's key), Craft and Melody tabs.
 4. Syncing with the PC version (today: move songs with export/backup files).
 Music player, vocal recording and the PC-only server features are not in the phone version.

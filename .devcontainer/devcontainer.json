@@ -2,7 +2,6 @@
   "name": "Studio Bars",
   "image": "mcr.microsoft.com/devcontainers/python:1-3.12-bookworm",
   "features": { "ghcr.io/devcontainers/features/node:1": { "version": "lts" } },
-  "postCreateCommand": "bash scripts/codespace.sh --setup",
   "postStartCommand": "nohup bash scripts/codespace.sh > /tmp/studio-bars.log 2>&1 &",
   "forwardPorts": [8000],
   "portsAttributes": {

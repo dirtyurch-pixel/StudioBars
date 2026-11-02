@@ -10,6 +10,7 @@ const money = (n: number) => `$${n.toFixed(n < 1 ? 3 : 2)}`
 export function AiSetup({ status, onStatus, onClose }: Props) {
   const [key, setKey] = useState('')
   const [agree, setAgree] = useState(false)
+  const [remember, setRemember] = useState(true)
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
   const [cap, setCap] = useState(String(status.cap_usd))
@@ -36,11 +37,15 @@ export function AiSetup({ status, onStatus, onClose }: Props) {
   const saveKey = () =>
     run(
       async () => {
-        const s = await api.putAiKey(status.provider, key)
+        const s = await api.putAiKey(status.provider, key, remember)
         setKey('') // the key is never kept in the page after it is saved
         return s
       },
-      LOCAL ? 'Key saved on this device.' : 'Key saved on this computer.',
+      !LOCAL
+        ? 'Key saved on this computer.'
+        : remember
+          ? 'Key saved on this device.'
+          : 'Key kept until you close Studio Bars (not saved).',
     )
 
   const saveSettings = (extra: Parameters<typeof api.putAiSettings>[0] = {}) =>
@@ -108,11 +113,13 @@ export function AiSetup({ status, onStatus, onClose }: Props) {
                 A key is saved{' '}
                 {status.key.source === 'env'
                   ? '(from the computer’s settings)'
-                  : LOCAL
-                    ? 'on this device'
-                    : 'on this computer'}
+                  : status.key.source === 'session'
+                    ? 'until you close Studio Bars (not saved)'
+                    : LOCAL
+                      ? 'on this device'
+                      : 'on this computer'}
                 : <code>{status.key.hint}</code>.{' '}
-                {status.key.source === 'file' && (
+                {(status.key.source === 'file' || status.key.source === 'session') && (
                   <button
                     className="btn btn-ghost"
                     disabled={busy}
@@ -125,7 +132,7 @@ export function AiSetup({ status, onStatus, onClose }: Props) {
             ) : (
               <p className="muted">
                 {LOCAL
-                  ? 'No key yet. Paste it below once. It is kept only in this browser on this device and is only ever sent to Anthropic. Anyone who can use this browser could use it, so set a monthly spending limit on the key at console.anthropic.com too.'
+                  ? 'No key yet. Paste it below. It is only ever sent to Anthropic. If you let this device remember it, it is kept in this browser, where anyone using this browser, or any code running on this web address, could use it. Set a monthly spending limit on the key at console.anthropic.com too, or untick “Remember” so it is forgotten when you close Studio Bars.'
                   : 'No key yet. Paste it below once. It is kept only on the computer running Studio Bars, never in your browser or in Git.'}
               </p>
             )}
@@ -147,6 +154,18 @@ export function AiSetup({ status, onStatus, onClose }: Props) {
                   Save key
                 </button>
               </div>
+            )}
+            {LOCAL && status.key.source !== 'env' && (
+              <label className="ai-check">
+                <input
+                  type="checkbox"
+                  checked={remember}
+                  onChange={(e) => setRemember(e.target.checked)}
+                />
+                <span>
+                  Remember the key on this device (untick to forget it when you close the app)
+                </span>
+              </label>
             )}
           </div>
 
@@ -241,7 +260,9 @@ export function AiSetup({ status, onStatus, onClose }: Props) {
 
       <label className="ai-field">
         <span>
-          Monthly spending limit (US dollars). Requests that could go over it are blocked.
+          Monthly spending limit (US dollars). Each request first reserves the most it could cost,
+          and requests that could go over the limit are blocked. These are estimates from published
+          prices; set a limit with your AI company too.
         </span>
         <input
           className="input"

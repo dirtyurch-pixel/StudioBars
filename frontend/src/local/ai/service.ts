@@ -64,8 +64,14 @@ async function settings() {
 }
 type Settings = Awaited<ReturnType<typeof settings>>
 
+/** Keys the writer chose NOT to keep: held in this page's memory only, gone when the app is closed. */
+const sessionKeys = new Map<string, string>()
+
 async function getKey(provider: string): Promise<string | null> {
-  return (await db().get<{ value: string }>('settings', `ai_key_${provider}`))?.value || null
+  return (
+    sessionKeys.get(provider) ??
+    ((await db().get<{ value: string }>('settings', `ai_key_${provider}`))?.value || null)
+  )
 }
 const hint = (k: string) => (k.length >= 8 ? '…' + k.slice(-4) : '…')
 
@@ -141,7 +147,11 @@ export async function status(): Promise<AiStatus> {
   const key = await getKey(s.provider)
   return {
     ...s,
-    key: { configured: Boolean(key), source: key ? 'file' : null, hint: key ? hint(key) : null },
+    key: {
+      configured: Boolean(key),
+      source: key ? (sessionKeys.has(s.provider) ? 'session' : 'file') : null,
+      hint: key ? hint(key) : null,
+    },
     usage: await monthTotals(),
     models: Object.entries(MODELS).map(([id, m]) => ({
       id,
@@ -200,7 +210,7 @@ export async function updateSettings(data: Partial<Settings>): Promise<AiStatus>
   return status()
 }
 
-export async function setKey(provider: string, key: string): Promise<AiStatus> {
+export async function setKey(provider: string, key: string, remember = true): Promise<AiStatus> {
   if (!(PROVIDERS as readonly string[]).includes(provider))
     throw fail(422, 'BAD_KEY', 'Unknown provider.')
   const k = key.trim()
@@ -210,13 +220,21 @@ export async function setKey(provider: string, key: string): Promise<AiStatus> {
       'BAD_KEY',
       'That does not look like an API key (it should be one long line of letters and numbers, no spaces).',
     )
-  await put(`ai_key_${provider}`, k)
+  if (remember) {
+    sessionKeys.delete(provider)
+    await put(`ai_key_${provider}`, k)
+  } else {
+    // not written anywhere: only this open app holds it
+    sessionKeys.set(provider, k)
+    await db().del('settings', `ai_key_${provider}`)
+  }
   return status()
 }
 
 export async function deleteKey(provider: string): Promise<AiStatus> {
   if (!(PROVIDERS as readonly string[]).includes(provider))
     throw fail(422, 'BAD_SETTING', 'Unknown AI provider.')
+  sessionKeys.delete(provider)
   await db().del('settings', `ai_key_${provider}`)
   return status()
 }
@@ -300,12 +318,73 @@ async function call(
   )
 }
 
-async function spend(s: Settings, task: string, reply: Reply, est: number, pr: [number, number]) {
+/**
+ * Before anything is sent, reserve the request's HIGHEST possible cost, inside the cross-tab write lock. Two tabs
+ * can therefore never both squeeze under the limit, and a request that is cut off part-way stays counted.
+ */
+async function reserve(s: Settings, task: string, worst: number): Promise<string> {
+  return exclusive(async () => {
+    await checkBudget(worst)
+    const id = newId()
+    const row: Usage = {
+      id,
+      ts: nowIso(),
+      month: month(),
+      provider: s.provider,
+      model: s.model,
+      task: `${task} (reserved)`,
+      input_tokens: 0,
+      output_tokens: 0,
+      cost_usd: worst,
+    }
+    await db().put('ai_usage', id, row)
+    return id
+  })
+}
+
+/** The AI company answered with an error before doing any work: nothing was charged. */
+const NOT_CHARGED = new Set([
+  'AI_KEY_REJECTED',
+  'AI_BILLING',
+  'AI_FORBIDDEN',
+  'AI_MODEL_MISSING',
+  'AI_BUSY',
+])
+
+/** After a failed request: release the reservation if nothing was charged, else keep an estimate. */
+async function settleFailure(id: string, e: unknown, s: Settings, task: string, est: number) {
+  const code = e instanceof ApiFail ? e.code : ''
+  if (NOT_CHARGED.has(code) || (e instanceof ApiFail && e.status === 400)) {
+    await db().del('ai_usage', id)
+    return
+  }
+  // cut off, timed out, refused or unreadable: it may have been charged, so keep the estimate (never zero)
+  await db().put('ai_usage', id, {
+    id,
+    ts: nowIso(),
+    month: month(),
+    provider: s.provider,
+    model: s.model,
+    task: `${task} (not confirmed)`,
+    input_tokens: 0,
+    output_tokens: 0,
+    cost_usd: est,
+  } satisfies Usage)
+}
+
+async function spend(
+  id: string,
+  s: Settings,
+  task: string,
+  reply: Reply,
+  est: number,
+  pr: [number, number],
+) {
   const inT = reply.input_tokens || est
   const outT = reply.output_tokens || estimateTokens(reply.text)
   const c = cost(inT, outT, pr[0], pr[1])
   const row: Usage = {
-    id: newId(),
+    id,
     ts: nowIso(),
     month: month(),
     provider: s.provider,
@@ -337,9 +416,15 @@ export async function suggest(
       'SLOW_DOWN',
       'That was a lot of requests very quickly. Wait a few seconds and try again.',
     )
-  await checkBudget(p.worst_cost)
-  const reply = await call(s, p, signal)
-  const c = await spend(s, req.task, reply, p.est_in, p.prices)
+  const resId = await reserve(s, req.task, p.worst_cost)
+  let reply: Reply
+  try {
+    reply = await call(s, p, signal)
+  } catch (e) {
+    await settleFailure(resId, e, s, req.task, p.est_cost)
+    throw e
+  }
+  const c = await spend(resId, s, req.task, reply, p.est_in, p.prices)
   const usage = {
     input_tokens: reply.input_tokens,
     output_tokens: reply.output_tokens,
@@ -429,9 +514,16 @@ export async function testConnection() {
   }
   const [pi, po] = prices(s.model, s.price_in, s.price_out)
   const est = estimateTokens(p.user + p.user)
-  await checkBudget(cost(est, p.max_tokens, pi, po))
   if (!limiter.allow()) throw fail(429, 'SLOW_DOWN', 'Wait a few seconds and try again.')
-  const reply = await call(s, p)
-  await spend(s, 'test', reply, est, [pi, po])
+  const worst = cost(est, p.max_tokens, pi, po)
+  const id = await reserve(s, 'test', worst)
+  let reply: Reply
+  try {
+    reply = await call(s, p)
+  } catch (e) {
+    await settleFailure(id, e, s, 'test', worst)
+    throw e
+  }
+  await spend(id, s, 'test', reply, est, [pi, po])
   return { ok: true, month: await monthTotals() }
 }

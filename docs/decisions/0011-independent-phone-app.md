@@ -112,6 +112,24 @@ import (txt/md/json), export, backup/restore, works offline, installable to the 
 - Tested: `e2e/offline_update.cjs` (offline meaning lookup, a simulated update, typing saved before the reload,
   another app's cache left alone).
 
+## Safety and honesty (reliability phase, step 5)
+- PC PIN sign-in (`backend/app/access.py`): each sign-in gets a random token (`secrets.token_urlsafe`); the server
+  keeps only its SHA-256 with a 30-day expiry; sign-out cancels it on the server; changing the PIN cancels all
+  sessions; "/api/auth/logout-everywhere". The cookie is `Secure` over https (or `X-Forwarded-Proto: https`). PINs under
+  6 characters are refused by the server itself. With NO PIN, only the computer itself (loopback) may use the API.
+  Sessions are in memory, so restarting the server signs everyone out. Plain-http Wi-Fi use is still readable by
+  others on that network: use https (e.g. Tailscale) for anything beyond a trusted home network.
+- Phone AI key: "Remember the key on this device" can be unticked, so the key lives only in the open app's memory.
+  The warning now says that any code running on this web address could read a remembered key.
+- Phone AI spending limit: each request reserves its highest possible cost inside the cross-tab lock before
+  anything is sent; a finished request records its real cost; a request the provider refused up front (bad key,
+  billing, rate limit, model missing) is released; a request cut off, timed out or refused mid-way keeps an
+  estimate marked "not confirmed". The limit text says these are estimates.
+- Online helper wording on the phone now says the first letters typed in the look-up box are sent for spelling
+  suggestions.
+- Tested: `tests/test_access.py` (13), `src/local/ai/service.test.ts` (two requests at once, cut-off, refused,
+  session-only key).
+
 ## Waveform and beat markers (PC and phone)
 - The player can show the track's waveform (`src/music/Waveform.tsx`, maths in `src/music/wave.ts`). The browser decodes
   the audio once and draws the loudest point of 800 slices; tap it to jump. Files over 80 MB are not drawn (memory on

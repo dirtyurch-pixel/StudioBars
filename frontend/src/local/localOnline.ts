@@ -61,7 +61,8 @@ export async function onlineStatus(): Promise<OnlineStatus> {
     service: 'Datamuse',
     host: 'api.datamuse.com',
     cached_answers: (await db().all('online')).length,
-    sends: 'Only the single word you look up. Never your lyrics or song titles.',
+    sends:
+      'The word you look up, and the first letters you type in the look-up box (for spelling suggestions). Never your lyrics or song titles.',
     key_notice: 'Datamuse has announced that an API key will be required from 1 February 2027.',
   }
 }

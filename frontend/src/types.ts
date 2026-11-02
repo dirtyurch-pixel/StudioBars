@@ -311,7 +311,7 @@ export type AiStatus = {
   cap_usd: number
   price_in: number
   price_out: number
-  key: { configured: boolean; source: 'env' | 'file' | null; hint: string | null }
+  key: { configured: boolean; source: 'env' | 'file' | 'session' | null; hint: string | null }
   usage: AiUsage
   models: { id: string; label: string; typical_request_usd: number }[]
   providers: { id: string; label: string }[]

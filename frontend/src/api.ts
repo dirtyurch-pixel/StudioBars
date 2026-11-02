@@ -427,9 +427,9 @@ export const putAiSettings = (data: AiSettingsIn) =>
   LOCAL
     ? loc(localAi.updateSettings(data as never))
     : json<AiStatus>('/api/ai/settings', body('PUT', data))
-export const putAiKey = (provider: string, key: string) =>
+export const putAiKey = (provider: string, key: string, remember = true) =>
   LOCAL
-    ? loc(localAi.setKey(provider, key))
+    ? loc(localAi.setKey(provider, key, remember))
     : json<AiStatus>('/api/ai/key', body('PUT', { provider, key }))
 export const deleteAiKey = (provider: string) =>
   LOCAL

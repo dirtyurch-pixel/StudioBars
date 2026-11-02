@@ -264,7 +264,7 @@ describe('AiSetup', () => {
     fireEvent.change(input, { target: { value: 'sk-ant-secret-1234567' } })
     fireEvent.click(screen.getByRole('button', { name: 'Save key' }))
     await waitFor(() =>
-      expect(api.putAiKey).toHaveBeenCalledWith('anthropic', 'sk-ant-secret-1234567'),
+      expect(api.putAiKey).toHaveBeenCalledWith('anthropic', 'sk-ant-secret-1234567', true),
     )
     await waitFor(() =>
       expect((screen.getByLabelText(/Your Claude API key/) as HTMLInputElement).value).toBe(''),

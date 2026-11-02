@@ -4,7 +4,7 @@ import { ApiFail } from '../api'
 
 /** Shows a PIN screen only when the server has a PIN set (phone/tablet use). Local use never sees it. */
 export function AuthGate({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<'checking' | 'open' | 'locked'>('checking')
+  const [state, setState] = useState<'checking' | 'open' | 'locked' | 'refused'>('checking')
   const [pin, setPin] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
@@ -12,7 +12,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const check = useCallback(async () => {
     try {
       const s = await api.authStatus()
-      setState(!s.required || s.ok ? 'open' : 'locked')
+      setState(s.ok ? 'open' : s.required ? 'locked' : 'refused')
     } catch {
       setState('open') // server unreachable: let the editor show its normal offline banner
     }
@@ -42,6 +42,19 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
   if (state === 'checking') return <p className="muted lock-wait">Loading…</p>
   if (state === 'open') return <>{children}</>
+  if (state === 'refused')
+    return (
+      <main className="lock-screen">
+        <div className="lock-card" role="alert">
+          <h1>Studio Bars</h1>
+          <p>
+            Studio Bars only opens on the computer it runs on until a PIN is set. To use it from
+            this device, start it on the computer with a PIN (for example with
+            start-studio-bars-phone.bat).
+          </p>
+        </div>
+      </main>
+    )
   return (
     <main className="lock-screen">
       <form onSubmit={submit} className="lock-card" aria-label="Enter PIN">

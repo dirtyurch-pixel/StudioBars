@@ -56,14 +56,10 @@ async def pin_lock(request: Request, call_next):
         and request.method != "OPTIONS"
     ):
         if not access.is_ok(request):
+            code, message = access.refusal(request)
             return JSONResponse(
-                status_code=401,
-                content={
-                    "detail": {
-                        "code": "PIN_REQUIRED",
-                        "message": "Enter your PIN to open Studio Bars.",
-                    }
-                },
+                status_code=401 if code == "PIN_REQUIRED" else 403,
+                content={"detail": {"code": code, "message": message}},
             )
     return await call_next(request)
 

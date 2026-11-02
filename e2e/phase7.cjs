@@ -21,7 +21,7 @@ let CURRENT = null
 
   await page.goto(URL_)
   await page.getByLabel('PIN', { exact: true }).waitFor()
-  check('without the PIN the app shows only a PIN screen', (await page.getByText('My songs').count()) === 0)
+  check('without the PIN the app shows only a PIN screen', (await page.getByText('Your songs').count()) === 0)
   const api = await page.evaluate(() => fetch('/api/songs').then((r) => r.status))
   check('without the PIN the lyrics API refuses (401)', api === 401, String(api))
 

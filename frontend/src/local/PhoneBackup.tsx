@@ -208,18 +208,19 @@ export function PhoneBackup({
           💾
         </span>
         <span className="backup-text">
-          <b>Saved on this device.</b> <small>{lastText(last)}</small>
+          <b>Back up your work</b>
+          <small>Saved on this device. {lastText(last)}</small>
         </span>
         <button
-          className={`btn ${stale ? 'btn-primary' : 'btn-ghost'} btn-sm`}
+          className={`btn ${stale ? 'btn-primary' : ''} btn-sm`}
           onClick={() => void backup()}
           disabled={!!busy}
           aria-label="Back up everything"
         >
           Back up
         </button>
-        <button className="btn btn-ghost btn-sm" onClick={goSettings} aria-label="Restore a backup">
-          Restore
+        <button className="btn btn-ghost btn-sm" onClick={goSettings} aria-label="Manage backups">
+          Manage
         </button>
         {status}
       </section>

@@ -96,7 +96,7 @@ function wav(seconds, rate = 8000) {
   page = B.page
   await page.goto(URL_)
   await page.getByText('No songs yet').waitFor()
-  await page.getByRole('button', { name: 'Restore a backup' }).click()
+  await page.getByRole('button', { name: 'Manage backups' }).click()
   // a damaged copy is refused before anything changes
   const bad = Buffer.from(raw)
   bad[bad.length - 5] ^= 0xff

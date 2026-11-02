@@ -106,7 +106,7 @@ let CURRENT = null
   const backupPath = await bk.path()
   check('back up gives one checked file', /\.sbbackup$/.test(bk.suggestedFilename()) && fs.readFileSync(backupPath).subarray(0, 8).toString() === 'SBARCH01')
   await page.getByText(/Backup checked ✓ 1 song/).waitFor()
-  await page.getByRole('button', { name: 'Restore a backup' }).click()
+  await page.getByRole('button', { name: 'Manage backups' }).click()
   await page.getByLabel('Backup file').setInputFiles(backupPath)
   await page.getByRole('button', { name: 'Add what’s missing' }).click()
   await page.getByText(/Restored and checked ✓/).waitFor()

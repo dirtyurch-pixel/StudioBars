@@ -5,7 +5,8 @@ import { NewSongDialog } from '../components/NewSongDialog'
 import { PhoneBackup } from '../local/PhoneBackup'
 import { useToast } from '../components/toastContext'
 import { goSettings, goSong } from '../route'
-import { ago } from '../time'
+import { ago, dayLabel } from '../time'
+import { RowMenu } from '../components/RowMenu'
 import { GENRES, type SongSummary } from '../types'
 
 const genreLabel = (id: string) => GENRES.find((g) => g.id === id)?.label ?? id
@@ -56,80 +57,45 @@ export default function Dashboard() {
     }
   }
 
-  const greeting = (() => {
-    const h = new Date().getHours()
-    return h < 5
-      ? 'Late night session'
-      : h < 12
-        ? 'Good morning'
-        : h < 18
-          ? 'Good afternoon'
-          : 'Good evening'
-  })()
-  const shown = songs?.filter((s) => s.title.toLowerCase().includes(query.trim().toLowerCase()))
+  const q = query.trim().toLowerCase()
+  const shown = songs?.filter(
+    (s) =>
+      !q ||
+      s.title.toLowerCase().includes(q) ||
+      s.genres.some((g) => genreLabel(g).toLowerCase().includes(q)),
+  )
 
   return (
     <main className="page home">
       <header className="home-top">
         <h1 className="brand">
-          <i /> Studio Bars
+          Studio Bars<span className="brand-dot">.</span>
         </h1>
         <button className="icon-btn" onClick={goSettings} aria-label="Settings" title="Settings">
           ⚙
         </button>
       </header>
 
-      <section className="home-hero">
-        <p className="home-greet">{greeting}</p>
-        <h2 className="home-title">What are we writing today?</h2>
-        <div className="home-tiles">
-          <button
-            className="tile tile-new"
-            onClick={() => setDialog('new')}
-            aria-label="+ New song"
-          >
-            <span className="tile-icon" aria-hidden="true">
-              ＋
-            </span>
-            <span className="tile-text">
-              <b>New song</b>
-              <small>Start on a fresh pad</small>
-            </span>
-          </button>
-          <button
-            className="tile tile-import"
-            onClick={() => setDialog('import')}
-            aria-label="Import"
-          >
-            <span className="tile-icon" aria-hidden="true">
-              ⇣
-            </span>
-            <span className="tile-text">
-              <b>Import</b>
-              <small>Paste or open lyrics</small>
-            </span>
-          </button>
-        </div>
-      </section>
-
-      {LOCAL && <PhoneBackup compact onRestored={() => void load()} />}
+      <div className="home-head">
+        <h2 className="home-title">Your songs</h2>
+        <button
+          className="btn btn-primary home-new"
+          onClick={() => setDialog('new')}
+          aria-label="+ New song"
+        >
+          + New
+        </button>
+      </div>
 
       {!!songs?.length && (
-        <div className="home-sec">
-          <h2>
-            My songs <span className="count">{songs.length}</span>
-          </h2>
-          {songs.length > 4 && (
-            <input
-              className="input home-search"
-              type="search"
-              placeholder="Search songs"
-              aria-label="Search songs"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-          )}
-        </div>
+        <input
+          className="input home-search"
+          type="search"
+          placeholder="Search your songs"
+          aria-label="Search songs"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
       )}
       {error && (
         <div className="state state-error" role="alert">
@@ -157,7 +123,9 @@ export default function Dashboard() {
             <span />
           </div>
           <h2>No songs yet</h2>
-          <p>Your first bars start here. Start a new song, or import lyrics you already have.</p>
+          <p>
+            Your first bars start here. Start a new song, or import lyrics you already have below.
+          </p>
           <button className="btn btn-primary" onClick={() => setDialog('new')}>
             + New song
           </button>
@@ -167,24 +135,17 @@ export default function Dashboard() {
         <p className="hint">No song titles match “{query}”.</p>
       )}
 
-      <ul className="song-list song-grid">
+      <ul className="song-rows">
         {shown?.map((s) => (
-          <li key={s.id} className="song-card">
+          <li key={s.id} className="song-card song-row">
             <button className="song-open" onClick={() => goSong(s.id)}>
               <span className="song-title">{s.title}</span>
-              {(s.genres.length > 0 || !!s.bpm) && (
-                <span className="song-chips">
-                  {s.genres.map((g) => (
-                    <span key={g} className="chip">
-                      {genreLabel(g)}
-                    </span>
-                  ))}
-                  {s.bpm ? <span className="chip chip-dim">{s.bpm} BPM</span> : null}
-                </span>
-              )}
               <span className="song-meta">
-                {s.line_count} line{s.line_count === 1 ? '' : 's'}
-                {s.locked_count ? ` · 🔒 ${s.locked_count}` : ''} · {ago(s.updated_at)}
+                {[
+                  ...s.genres.map(genreLabel),
+                  dayLabel(s.updated_at),
+                  ...(s.locked_count ? [`🔒 ${s.locked_count}`] : []),
+                ].join(' · ')}
               </span>
             </button>
             {confirmId === s.id ? (
@@ -198,18 +159,27 @@ export default function Dashboard() {
                 </button>
               </span>
             ) : (
-              <button
-                className="icon-btn song-del"
-                aria-label={`Delete ${s.title}`}
-                title="Move to trash"
-                onClick={() => setConfirmId(s.id)}
-              >
-                🗑
-              </button>
+              <RowMenu
+                title={s.title}
+                onOpen={() => goSong(s.id)}
+                onDelete={() => setConfirmId(s.id)}
+              />
             )}
           </li>
         ))}
       </ul>
+
+      <div className="home-more" role="group" aria-label="More">
+        {LOCAL && <PhoneBackup compact onRestored={() => void load()} />}
+        <button className="home-row" onClick={() => setDialog('import')} aria-label="Import">
+          <span aria-hidden="true">⇣</span>
+          <span>
+            <b>Import a song</b>
+            <small>Paste lyrics or open a text or Studio Bars file</small>
+          </span>
+          <span aria-hidden="true">›</span>
+        </button>
+      </div>
 
       {trash.length > 0 && (
         <section className="trash">

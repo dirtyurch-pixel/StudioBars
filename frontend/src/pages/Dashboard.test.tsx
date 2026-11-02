@@ -47,19 +47,30 @@ describe('Dashboard states', () => {
     expect(await screen.findByText('Rain on Glass')).toBeInTheDocument()
   })
 
-  it('lists songs with genre, lines and locked count', async () => {
+  it('lists songs with genre, when they were edited and locked count', async () => {
     api.listSongs.mockResolvedValue([song])
     wrap()
-    expect(await screen.findByText('R&B')).toBeInTheDocument()
-    expect(screen.getByText('82 BPM')).toBeInTheDocument()
-    expect(screen.getByText(/12 lines · 🔒 2/)).toBeInTheDocument()
+    expect(await screen.findByText('R&B · Today · 🔒 2')).toBeInTheDocument()
+  })
+
+  it('searches by title or genre', async () => {
+    api.listSongs.mockResolvedValue([
+      song,
+      { ...song, id: 'xyz98765', title: 'Club Night', genres: ['house'] },
+    ])
+    wrap()
+    await screen.findByText('Club Night')
+    fireEvent.change(screen.getByLabelText('Search songs'), { target: { value: 'house' } })
+    expect(screen.queryByText('Rain on Glass')).toBeNull()
+    expect(screen.getByText('Club Night')).toBeInTheDocument()
   })
 
   it('asks before deleting', async () => {
     api.listSongs.mockResolvedValue([song])
     api.deleteSong.mockResolvedValue(undefined)
     wrap()
-    fireEvent.click(await screen.findByLabelText('Delete Rain on Glass'))
+    fireEvent.click(await screen.findByLabelText('More for Rain on Glass'))
+    fireEvent.click(screen.getByLabelText('Delete Rain on Glass'))
     expect(api.deleteSong).not.toHaveBeenCalled()
     fireEvent.click(screen.getByText('Yes, delete'))
     await waitFor(() => expect(api.deleteSong).toHaveBeenCalledWith('abc12345'))

@@ -235,6 +235,7 @@ const dump = async () => {
 
   // 14. delete -> trash -> restore
   await page.getByLabel('Back to my songs').click()
+  await page.getByLabel('More for E2E Rain (imported)', { exact: true }).click()
   await page.getByLabel('Delete E2E Rain (imported)', { exact: true }).click()
   await page.getByRole('button', { name: 'Yes, delete' }).click()
   await page.getByRole('button', { name: /Show trash/ }).click()

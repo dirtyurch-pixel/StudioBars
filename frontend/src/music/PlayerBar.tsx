@@ -1,8 +1,20 @@
 import { useEffect, useRef, useState } from 'react'
 import { SPEEDS, formatTime, loopActive } from './logic'
 import { usePlayer } from './playerContext'
+import { Waveform } from './Waveform'
 
 const EXPAND_DELAY_MS = 450
+const WAVE_PREF = 'sb-show-wave'
+
+function initialWave(): boolean {
+  try {
+    const v = localStorage.getItem(WAVE_PREF)
+    if (v !== null) return v === '1'
+  } catch {
+    /* storage blocked: fall back to the screen size */
+  }
+  return !window.matchMedia?.('(max-width: 860px)').matches
+}
 const TEXT_FIELD =
   'input[data-line-input], textarea, input:not([type]), input[type="text"], input[type="search"]'
 
@@ -10,6 +22,16 @@ export function PlayerBar() {
   const p = usePlayer()
   const ref = useRef<HTMLElement>(null)
   const [typing, setTyping] = useState(false)
+  const [showWave, setShowWave] = useState(initialWave)
+  const toggleWave = () =>
+    setShowWave((v) => {
+      try {
+        localStorage.setItem(WAVE_PREF, v ? '0' : '1')
+      } catch {
+        /* not saved; fine */
+      }
+      return !v
+    })
 
   // On a phone, shrink to the essentials while a text field has the keyboard open.
   // It grows back only after a short delay: a tap on a button takes focus away from the field
@@ -23,7 +45,9 @@ export function PlayerBar() {
       timer = setTimeout(() => setTyping(false), EXPAND_DELAY_MS)
     }
     const on = (e: FocusEvent) => {
-      if (small?.matches && (e.target as HTMLElement)?.matches?.(TEXT_FIELD)) {
+      const el = e.target as HTMLElement
+      // a box inside the player itself (the tempo box) must not hide the player
+      if (small?.matches && el?.matches?.(TEXT_FIELD) && !ref.current?.contains(el)) {
         clearTimeout(timer)
         setTyping(true)
       } else later() // focus moved to a button or link: wait before growing, so the tap lands
@@ -151,6 +175,8 @@ export function PlayerBar() {
         </div>
       )}
 
+      {p.track && showWave && <Waveform />}
+
       {p.track && (
         <div className="pl-extra">
           <button
@@ -185,6 +211,14 @@ export function PlayerBar() {
           >
             {p.repeat === 'one' ? '🔂' : '🔁'}
             <small>{p.repeat === 'off' ? 'off' : p.repeat}</small>
+          </button>
+          <button
+            className={`pl-btn${showWave ? ' on' : ''}`}
+            aria-label="Show waveform and beats"
+            aria-pressed={showWave}
+            onClick={toggleWave}
+          >
+            〰 <small>wave</small>
           </button>
           <span className="pl-sep" aria-hidden="true" />
           <button

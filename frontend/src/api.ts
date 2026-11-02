@@ -51,6 +51,7 @@ import * as localOnline from './local/localOnline'
 import * as localAi from './local/ai/service'
 import * as localCraft from './local/craft/store'
 import * as localMusic from './local/music'
+import type { Beats } from './music/wave'
 export { ApiFail }
 
 /** Phone version: everything is kept on this device and there is no server. */
@@ -238,6 +239,18 @@ export const patchTrack = (id: string, data: Partial<Pick<Track, 'title' | 'arti
   LOCAL
     ? loc(localMusic.patchTrack(id, data))
     : json<Track>(`/api/music/tracks/${id}`, body('PATCH', data))
+export const getTrackBeats = (id: string) =>
+  LOCAL
+    ? loc(localMusic.getBeats(id))
+    : json<{ beats: Beats | null }>(`/api/music/tracks/${id}/beats`).then((r) => r.beats)
+export const saveTrackBeats = (id: string, b: Beats) =>
+  LOCAL
+    ? loc(localMusic.saveBeats(id, b))
+    : json<{ beats: Beats }>(`/api/music/tracks/${id}/beats`, body('PUT', b)).then((r) => r.beats)
+export const clearTrackBeats = async (id: string): Promise<void> => {
+  if (LOCAL) return loc(localMusic.clearBeats(id))
+  await request(`/api/music/tracks/${id}/beats`, { method: 'DELETE' })
+}
 export const deleteTrack = async (id: string) => {
   if (LOCAL) return loc(localMusic.deleteTrack(id))
   await request(`/api/music/tracks/${id}`, body('DELETE'))

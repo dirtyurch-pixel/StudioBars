@@ -8,6 +8,7 @@
 - **Phone/tablet mode (owner request, outside the original phase order): built.** One address, mandatory PIN, installable. 
 
 - **Phase 5 (Craft tab: Flow grid, Takes, Vault, Plan/idea board, Scan + rhyme chains): built, tested here.** Details and what is NOT included: `docs/decisions/0008-craft-tools.md`. - **Phase 6 (core set): helper styles, metaphor/wordplay, My style, singability, scratch vocal recorder: built, tested here.** See `docs/decisions/0009-ai-personas-style-recording.md` for limits (microphone needs https or localhost; no waveform/transcription/training yet). - **Phase 8 (core): melody sketch, chords, hum-to-melody, lyric fit: built, tested here.** **Phase 7 (partial): Windows launchers (`start-studio-bars.bat`, `start-studio-bars-phone.bat`) and release checklist (`docs/RELEASE_CHECKLIST.md`); no installer; nothing tested on Windows or real devices.** Read `docs/RELEASE_CHECKLIST.md` first.
+- **Music player: waveform and beat markers (tap tempo, beat 1, bar lines, snap loop to beat): built, tested on PC and phone versions.** See `docs/decisions/0011-independent-phone-app.md`. Backend migration 10 (`track_beats`).
 
 - **Independent phone app, step 1 (owner request): built, tested here.** Songs live on the phone, no server. Published by `.github/workflows/pages.yml` once GitHub Pages is enabled. See `docs/decisions/0011-independent-phone-app.md`.
 

@@ -131,6 +131,7 @@ from .schemas import (  # noqa: E402
     PlaylistIn,
     PlaylistOrder,
     SongAudioLinkIn,
+    TrackBeatsIn,
     TrackUpdate,
 )
 
@@ -174,6 +175,21 @@ def patch_track(track_id: str, body: TrackUpdate, conn=Depends(get_conn)):
 @router.delete("/music/tracks/{track_id}", status_code=204)
 def remove_track(track_id: str, conn=Depends(get_conn)):
     music.delete_track(conn, track_id)
+
+
+@router.get("/music/tracks/{track_id}/beats")
+def track_beats(track_id: str, conn=Depends(get_conn)):
+    return {"beats": music.get_beats(conn, track_id)}
+
+
+@router.put("/music/tracks/{track_id}/beats")
+def put_track_beats(track_id: str, body: TrackBeatsIn, conn=Depends(get_conn)):
+    return {"beats": music.put_beats(conn, track_id, body)}
+
+
+@router.delete("/music/tracks/{track_id}/beats", status_code=204)
+def clear_track_beats(track_id: str, conn=Depends(get_conn)):
+    music.put_beats(conn, track_id, None)
 
 
 @router.get("/music/tracks/{track_id}/audio")

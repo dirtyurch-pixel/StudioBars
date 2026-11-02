@@ -271,6 +271,15 @@ MIGRATIONS: list[str] = [
         PRIMARY KEY (song_id, bar)
     );
     """,
+    # Version 10: tempo and beat-1 position per music track, for the beat markers on the waveform.
+    """
+    CREATE TABLE track_beats (
+        track_id TEXT PRIMARY KEY REFERENCES audio_tracks(id) ON DELETE CASCADE,
+        bpm REAL NOT NULL,
+        offset REAL NOT NULL DEFAULT 0,
+        updated_at TEXT NOT NULL
+    );
+    """,
 ]
 
 

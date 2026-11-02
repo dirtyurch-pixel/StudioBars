@@ -64,6 +64,18 @@ import (txt/md/json), export, backup/restore, works offline, installable to the 
 - Tested by running the whole Phase 1B music suite against the phone build (43 checks; the 5 PC-only checks about
   files on disk do not apply).
 
+## Waveform and beat markers (PC and phone)
+- The player can show the track's waveform (`src/music/Waveform.tsx`, maths in `src/music/wave.ts`). The browser decodes
+  the audio once and draws the loudest point of 800 slices; tap it to jump. Files over 80 MB are not drawn (memory on
+  phones); beat markers still work. The A–B loop is shaded on it. Switch it on/off with "〰 wave" (remembered per
+  browser; off by default on small screens).
+- Beat markers: tap along ("Tap", median of the last taps, tempo folded into 40–240 BPM) or type the BPM, then
+  "1 here" sets beat 1 at the playhead. Bar lines every 4 beats, live "bar N, beat N", and "Snap loop" moves A and B
+  to the nearest beats. Saved per track: PC in `track_beats` (migration 10, `GET/PUT/DELETE
+  /api/music/tracks/{id}/beats`), phone in the device's settings store. Deleting a track removes them.
+- 4/4 only; no automatic beat detection (tempo is what you tap or type).
+- Tested: `e2e/wave_beats.cjs` on the PC version, the phone version, and the phone version on a phone-sized screen.
+
 ## Not yet (later steps)
 4. Syncing with the PC version (today: move songs with export/backup files).
-Music player, vocal recording and the PC-only server features are not in the phone version.
+The PC-only server features (PIN serving mode, server-side files) are not in the phone version.

@@ -66,5 +66,7 @@ run phase7.cjs
 run phone_local.cjs
 # the full music-player suite again, against the phone version (music kept in the browser)
 APP_URL=http://127.0.0.1:4174/StudioBars/ MEDIA_DIR= SAME_DEVICE=1 run phase1b.cjs
+run wave_beats.cjs
+APP_URL=http://127.0.0.1:4174/StudioBars/ PHONE=1 run wave_beats.cjs
 run phone_words.cjs
 run phone_ai_craft.cjs

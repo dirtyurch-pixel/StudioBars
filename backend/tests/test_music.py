@@ -353,3 +353,36 @@ def test_chunked_oversize_is_refused_mid_stream(client, monkeypatch, tmp_path):
     r = client.post("/api/music/tracks", content=gen(), headers={"X-Filename": "big.wav"})
     assert r.status_code == 413
     assert [p for p in (tmp_path / "media").iterdir()] == []
+
+
+# ------------------------------------------------------------- beat markers
+
+
+def test_beats_save_read_clear(client):
+    t = add(client)
+    url = f"/api/music/tracks/{t['id']}/beats"
+    assert client.get(url).json() == {"beats": None}
+    r = client.put(url, json={"bpm": 92.456, "offset": 0.31234})
+    assert r.status_code == 200 and r.json()["beats"] == {"bpm": 92.46, "offset": 0.312}
+    assert client.get(url).json()["beats"] == {"bpm": 92.46, "offset": 0.312}
+    client.put(url, json={"bpm": 120})
+    assert client.get(url).json()["beats"] == {"bpm": 120.0, "offset": 0.0}
+    assert client.delete(url).status_code == 204
+    assert client.get(url).json() == {"beats": None}
+
+
+def test_beats_rules(client):
+    t = add(client)
+    url = f"/api/music/tracks/{t['id']}/beats"
+    for bad in [{"bpm": 20}, {"bpm": 300}, {"bpm": 90, "offset": -1}, {}]:
+        assert client.put(url, json=bad).status_code == 422, bad
+    assert client.get("/api/music/tracks/nope/beats").status_code == 404
+    assert client.put("/api/music/tracks/nope/beats", json={"bpm": 90}).status_code == 404
+
+
+def test_beats_go_when_track_is_deleted(client):
+    t = add(client)
+    client.put(f"/api/music/tracks/{t['id']}/beats", json={"bpm": 100})
+    assert client.delete(f"/api/music/tracks/{t['id']}").status_code == 204
+    t2 = add(client)
+    assert client.get(f"/api/music/tracks/{t2['id']}/beats").json() == {"beats": None}

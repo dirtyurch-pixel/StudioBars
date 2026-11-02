@@ -112,6 +112,11 @@ class TrackUpdate(BaseModel):
     album: ShortText | None = None
 
 
+class TrackBeatsIn(BaseModel):
+    bpm: float = Field(ge=40, le=240)
+    offset: float = Field(default=0, ge=0, le=36000)
+
+
 class PlaylistIn(BaseModel):
     name: Name
 

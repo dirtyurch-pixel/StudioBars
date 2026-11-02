@@ -8,6 +8,7 @@ import { newId } from '../editor/content'
 import type { PlaybackSaved, PlaylistDetail, PlaylistSummary, SongAudioLink, Track } from '../types'
 import { db, getSong, nowIso } from './localApi'
 import { exclusive } from './store'
+import { MAX_BPM, MIN_BPM, type Beats } from '../music/wave'
 
 const fail = (status: number, code: string, message: string) =>
   new ApiFail(message, { status, code })
@@ -198,6 +199,7 @@ export async function deleteTrack(id: string): Promise<void> {
       if (kept.length !== p.entries.length)
         await db().put('playlists', p.id, { ...p, entries: kept })
     }
+    await db().del('settings', 'beats:' + id)
     const u = urls.get(id)
     if (u) URL.revokeObjectURL(u)
     urls.delete(id)
@@ -381,4 +383,33 @@ export async function saveSongLink(
   }
   await db().put('settings', 'link:' + songId, { value: d })
   return d
+}
+
+// ---------------------------------------------------------------- beat markers (same rules as the PC version)
+
+export async function getBeats(trackId: string): Promise<Beats | null> {
+  await getTrack(trackId)
+  return (await db().get<{ value: Beats }>('settings', 'beats:' + trackId))?.value ?? null
+}
+
+export async function saveBeats(trackId: string, b: Beats): Promise<Beats> {
+  const bpm = Number(b?.bpm)
+  const offset = Number(b?.offset ?? 0)
+  if (!Number.isFinite(bpm) || bpm < MIN_BPM || bpm > MAX_BPM)
+    throw fail(422, 'INVALID', `Tempo must be ${MIN_BPM} to ${MAX_BPM} BPM.`)
+  if (!Number.isFinite(offset) || offset < 0 || offset > 36000)
+    throw fail(422, 'INVALID', 'Beat 1 must be inside the track.')
+  const value = { bpm: Math.round(bpm * 100) / 100, offset: Math.round(offset * 1000) / 1000 }
+  await exclusive(async () => {
+    await getTrack(trackId)
+    await db().put('settings', 'beats:' + trackId, { value })
+  })
+  return value
+}
+
+export async function clearBeats(trackId: string): Promise<void> {
+  await exclusive(async () => {
+    await getTrack(trackId)
+    await db().del('settings', 'beats:' + trackId)
+  })
 }

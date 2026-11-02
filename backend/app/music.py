@@ -14,7 +14,7 @@ from pathlib import Path
 from fastapi import Request
 
 from .db import tx
-from .schemas import PlaybackStateIn, SongAudioLinkIn, TrackUpdate
+from .schemas import PlaybackStateIn, SongAudioLinkIn, TrackBeatsIn, TrackUpdate
 from .service import ApiError, _song_row, new_id, now
 
 # extension -> media type served back to the player
@@ -234,6 +234,31 @@ def delete_track(conn, track_id: str) -> None:
         row = _track_row(conn, track_id)
         conn.execute("DELETE FROM audio_tracks WHERE id = ?", (track_id,))
     (media_dir() / row["storage_name"]).unlink(missing_ok=True)
+
+
+# ---------------------------------------------------------------- beat markers
+
+
+def get_beats(conn, track_id: str) -> dict | None:
+    _track_row(conn, track_id)
+    r = conn.execute(
+        "SELECT bpm, offset FROM track_beats WHERE track_id = ?", (track_id,)
+    ).fetchone()
+    return {"bpm": r["bpm"], "offset": r["offset"]} if r else None
+
+
+def put_beats(conn, track_id: str, data: TrackBeatsIn | None) -> dict | None:
+    with tx(conn):
+        _track_row(conn, track_id)
+        if data is None:
+            conn.execute("DELETE FROM track_beats WHERE track_id = ?", (track_id,))
+            return None
+        bpm, off = round(data.bpm, 2), round(data.offset, 3)
+        conn.execute(
+            "INSERT INTO track_beats VALUES (?,?,?,?) ON CONFLICT(track_id) DO UPDATE SET bpm=excluded.bpm, offset=excluded.offset, updated_at=excluded.updated_at",
+            (track_id, bpm, off, now()),
+        )
+    return {"bpm": bpm, "offset": off}
 
 
 # ---------------------------------------------------------------- playlists

@@ -879,7 +879,7 @@ export default function SongEditor({ id }: { id: string }) {
               ? 'Margin numbers are estimated syllables, not bar numbers. A range means the line can be said more than one way; ~ means a guess.'
               : 'Margin numbers are line positions, not bar numbers.'}
           </p>
-          {analysis.failed && (
+          {analysis.failed && !LOCAL && (
             <p className="hint hide-focus" role="status">
               Syllable counts and rhyme colours are paused: the Studio Bars server cannot be
               reached.

@@ -251,3 +251,38 @@ describe('import, export and backup', () => {
     await failsWith(L.previewImport('json', text), 'IMPORT_FAILED') // a backup is not a single song
   })
 })
+
+describe('saving is all-or-nothing', () => {
+  it('a storage failure during a save changes nothing, and the same save then works', async () => {
+    const store = new MemoryStore()
+    L.useStore(store)
+    const s = await newSong()
+    const before = (await L.listRevisions(s.id)).length
+    store.failNextBatch = true
+    await expect(write(s, ['first bar'])).rejects.toThrow()
+    const after = await L.getSong(s.id)
+    expect(after.version).toBe(s.version) // the version did not move on
+    expect(after.sections[0].lines[0].text).toBe('')
+    expect((await L.listRevisions(s.id)).length).toBe(before) // no half-made snapshot
+    // retrying with the same starting version succeeds (no false "changed elsewhere")
+    const ok = await write(s, ['first bar'])
+    expect(ok.version).toBe(s.version + 1)
+    expect((await L.listRevisions(s.id)).length).toBe(before + 1)
+  })
+
+  it('a failed restore of an earlier version leaves the song and history unchanged', async () => {
+    const store = new MemoryStore()
+    L.useStore(store)
+    const s = await newSong()
+    const v1 = await write(s, ['one'])
+    await L.createRevision(s.id, 'keep')
+    tick(10)
+    const v2 = await write(v1, ['two'])
+    const revs = await L.listRevisions(s.id)
+    const keep = revs.find((r) => r.description === 'keep')!
+    store.failNextBatch = true
+    await expect(L.restoreRevision(keep.id)).rejects.toThrow()
+    expect((await L.getSong(s.id)).version).toBe(v2.version)
+    expect((await L.listRevisions(s.id)).length).toBe(revs.length)
+  })
+})

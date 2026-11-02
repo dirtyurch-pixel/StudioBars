@@ -82,6 +82,15 @@ import (txt/md/json), export, backup/restore, works offline, installable to the 
 - Tested: `archive.test.ts` (including a simulated failure half-way leaving the device unchanged) and
   `e2e/backup_restore.cjs` (real browser, two separate "phones", fake microphone, real audio).
 
+## Safe saving (reliability phase, step 2)
+- On the phone, a song save and its automatic history snapshot are written in ONE transaction (both or neither),
+  as are "restore an earlier version" plus its "before restoring" snapshot, deleting a track plus its playlist
+  entries and beat markers, and adding songs from an older backup. A failed save leaves the version unchanged,
+  so retrying the same save works (no false "changed somewhere else").
+- "Saved" is shown only after the browser confirms the transaction completed.
+- The PC version already did this inside one SQLite transaction.
+- Tested: `localApi.test.ts` "saving is all-or-nothing" (simulated storage failure half-way).
+
 ## Waveform and beat markers (PC and phone)
 - The player can show the track's waveform (`src/music/Waveform.tsx`, maths in `src/music/wave.ts`). The browser decodes
   the audio once and draws the loudest point of 800 slices; tap it to jump. Files over 80 MB are not drawn (memory on

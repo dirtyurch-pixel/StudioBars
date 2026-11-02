@@ -19,7 +19,7 @@ import {
   type Song,
   type SongSummary,
 } from '../types'
-import { exclusive, IdbStore, MemoryStore, type Store } from './store'
+import { exclusive, IdbStore, MemoryStore, type Op, type Store } from './store'
 import {
   MAX_SECTIONS,
   ParseError,
@@ -300,8 +300,8 @@ export async function saveContent(
     }))
     song.version += 1
     song.updated_at = now()
-    await db().put('songs', id, song)
-    await maybeAutoSnapshot(song)
+    // the song and its history snapshot are stored together: both or neither
+    await db().batch([{ kind: 'songs', id, value: song }, ...(await autoSnapshotOps(song))])
     return clean(song)
   })
 }
@@ -388,7 +388,8 @@ const snapshotOf = (s: Song): Snapshot => ({
   sections: structuredClone(s.sections),
 })
 
-async function writeRevision(song: Song, kind: Revision['kind'], description: string) {
+/** A history snapshot, ready to be written together with the song change it belongs to. */
+function revisionOp(song: Song, kind: Revision['kind'], description: string): Op {
   const r: StoredRevision = {
     id: newId(),
     song_id: song.id,
@@ -397,7 +398,7 @@ async function writeRevision(song: Song, kind: Revision['kind'], description: st
     description,
     snapshot: snapshotOf(song),
   }
-  await db().put('revisions', r.id, r)
+  return { kind: 'revisions', id: r.id, value: r }
 }
 
 async function revisionsOf(songId: string) {
@@ -406,14 +407,15 @@ async function revisionsOf(songId: string) {
     .sort((a, b) => (a.created_at < b.created_at ? 1 : -1))
 }
 
-async function maybeAutoSnapshot(song: Song) {
+/** The automatic snapshot due with this save, if one is due (at most one every few minutes). */
+async function autoSnapshotOps(song: Song): Promise<Op[]> {
   const last = (await revisionsOf(song.id))[0]
   if (
     last &&
     (clock().getTime() - new Date(last.created_at).getTime()) / 1000 < AUTO_SNAPSHOT_SECONDS
   )
-    return
-  await writeRevision(song, 'auto', 'Automatic snapshot')
+    return []
+  return [revisionOp(song, 'auto', 'Automatic snapshot')]
 }
 
 export async function listRevisions(songId: string): Promise<Revision[]> {
@@ -430,7 +432,9 @@ export async function listRevisions(songId: string): Promise<Revision[]> {
 
 export async function createRevision(songId: string, description: string): Promise<Revision[]> {
   await exclusive(async () =>
-    writeRevision(await getStored(songId), 'manual', description.trim() || 'Manual snapshot'),
+    db().batch([
+      revisionOp(await getStored(songId), 'manual', description.trim() || 'Manual snapshot'),
+    ]),
   )
   return listRevisions(songId)
 }
@@ -451,7 +455,7 @@ export async function restoreRevision(revId: string): Promise<Song> {
         'Restoring this version would change or remove locked lines. Unlock them first.',
         { lineIds: bad },
       )
-    await writeRevision(song, 'pre-restore', 'Before restoring an earlier version')
+    const before = revisionOp(song, 'pre-restore', 'Before restoring an earlier version')
     const existing = new Map(song.sections.flatMap((s) => s.lines.map((l) => [l.id, l] as const)))
     song.sections = rev.snapshot.sections.map((s) => ({
       id: s.id,
@@ -466,7 +470,8 @@ export async function restoreRevision(revId: string): Promise<Song> {
     Object.assign(song, rev.snapshot.song, { genres: [...rev.snapshot.song.genres] })
     song.version += 1
     song.updated_at = now()
-    await db().put('songs', song.id, song)
+    // the "before restoring" snapshot and the restored song are stored together: both or neither
+    await db().batch([before, { kind: 'songs', id: song.id, value: song }])
     return clean(song)
   })
 }
@@ -609,9 +614,9 @@ export async function restoreBackup(content: string): Promise<number> {
       e instanceof ParseError ? e.message : 'A song in the backup could not be read.',
     )
   }
-  await exclusive(async () => {
-    for (const s of songs) await db().put('songs', s.id, s)
-  })
+  await exclusive(() =>
+    db().batch(songs.map((s) => ({ kind: 'songs' as const, id: s.id, value: s }))),
+  )
   return songs.length
 }
 

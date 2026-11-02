@@ -7,7 +7,7 @@ import { ApiFail } from '../apiFail'
 import { newId } from '../editor/content'
 import type { PlaybackSaved, PlaylistDetail, PlaylistSummary, SongAudioLink, Track } from '../types'
 import { db, getSong, nowIso } from './localApi'
-import { exclusive } from './store'
+import { exclusive, type Op } from './store'
 import { MAX_BPM, MIN_BPM, type Beats } from '../music/wave'
 
 const fail = (status: number, code: string, message: string) =>
@@ -193,13 +193,17 @@ export async function patchTrack(
 export async function deleteTrack(id: string): Promise<void> {
   await exclusive(async () => {
     await getTrack(id)
-    await db().del('tracks', id)
+    // the track, its places in playlists and its beat markers go together: all or nothing
+    const ops: Op[] = [
+      { kind: 'tracks', id, del: true },
+      { kind: 'settings', id: 'beats:' + id, del: true },
+    ]
     for (const p of await db().all<StoredPlaylist>('playlists')) {
       const kept = p.entries.filter((e) => e.track_id !== id)
       if (kept.length !== p.entries.length)
-        await db().put('playlists', p.id, { ...p, entries: kept })
+        ops.push({ kind: 'playlists', id: p.id, value: { ...p, entries: kept } })
     }
-    await db().del('settings', 'beats:' + id)
+    await db().batch(ops)
     const u = urls.get(id)
     if (u) URL.revokeObjectURL(u)
     urls.delete(id)

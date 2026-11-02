@@ -27,7 +27,6 @@ export default function Settings() {
   const [aiError, setAiError] = useState('')
   const [wave, setWave] = useState(readWave)
   const [storage, setStorage] = useState<{ used: number; quota: number } | null>(null)
-  const [persisted, setPersisted] = useState<boolean | null>(null)
 
   useEffect(() => {
     document.title = 'Settings · Studio Bars'
@@ -41,7 +40,6 @@ export default function Settings() {
         .estimate()
         .then((e) => setStorage({ used: e.usage ?? 0, quota: e.quota ?? 0 }))
         .catch(() => {})
-      navigator.storage.persisted?.().then(setPersisted, () => {})
     }
   }, [])
 
@@ -98,19 +96,12 @@ export default function Settings() {
       </section>
 
       {LOCAL && (
-        <section className="card set-sec" aria-labelledby="set-store">
+        <section className="card set-sec" id="restore" aria-labelledby="set-store">
           <h2 id="set-store">Storage and backups</h2>
           {storage && (
             <p>
               Using about <b>{mb(storage.used)}</b> on this device
               {storage.quota ? ` (the browser allows about ${mb(storage.quota)})` : ''}.
-            </p>
-          )}
-          {persisted !== null && (
-            <p className="hint">
-              {persisted
-                ? 'This browser has agreed to keep your data even when space runs low.'
-                : 'This browser may clear stored data when space runs low. Back up now and then.'}
             </p>
           )}
           <PhoneBackup onRestored={() => {}} />

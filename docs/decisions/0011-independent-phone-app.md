@@ -64,6 +64,24 @@ import (txt/md/json), export, backup/restore, works offline, installable to the 
 - Tested by running the whole Phase 1B music suite against the phone build (43 checks; the 5 PC-only checks about
   files on disk do not apply).
 
+## Complete backup and restore (reliability phase, step 1)
+- "Back up everything" makes ONE `.sbbackup` file (`src/local/archive.ts`): every stored record with its id (songs
+  and trash, history, notes, takes, vault, melody, recordings, pronunciations, phrase bank, AI usage, settings),
+  plus music, playlists and beat markers unless the writer unticks "Include music". Never included: the AI key, and the
+  cache of online word answers. Layout: `SBARCH01`, manifest length, manifest JSON, then the audio files, each with
+  a SHA-256.
+- The app reads its own file back and checks it before saying anything. The message says "Download started",
+  not "saved", because the app cannot see where the file ends up. "Last backup made …" is shown on the home screen.
+- Restore checks the whole file first (damaged or cut-off files are refused, nothing changes), then:
+  "Add what's missing" (anything already on the device is left alone; songs on both keep this device's version), or
+  "Replace everything" (the device ends up exactly like the backup; the AI key on this device is kept). Either way
+  it is ONE database transaction (all or nothing) and is read back afterwards. Older songs-only `.json` backups can
+  still be added.
+- Store writes now resolve only when the browser's transaction completes (not when the request is queued), and
+  `Store.batch()` writes many records atomically.
+- Tested: `archive.test.ts` (including a simulated failure half-way leaving the device unchanged) and
+  `e2e/backup_restore.cjs` (real browser, two separate "phones", fake microphone, real audio).
+
 ## Waveform and beat markers (PC and phone)
 - The player can show the track's waveform (`src/music/Waveform.tsx`, maths in `src/music/wave.ts`). The browser decodes
   the audio once and draws the loudest point of 800 slices; tap it to jump. Files over 80 MB are not drawn (memory on

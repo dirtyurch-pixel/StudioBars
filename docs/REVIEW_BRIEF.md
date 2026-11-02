@@ -45,7 +45,7 @@ check that both give identical output on the same input.
 
 ## Known weak spots (be tough on these)
 1. **Phone data lives only in browser storage.** The browser can clear it, so the app relies on the user making manual
-   backups. Music is not included in the backup.
+   backups. (Fixed after review: backups are now complete, self-checked and restore exactly; see decision 0011.)
 2. **AI key in the browser** (phone version): anyone using that browser could use the key. There is a warning, and the
    key is kept off the page after it is saved, but there is no encryption at rest.
 3. **Python and TypeScript copies of the same logic:** parity tests guard them, but every change has to be made twice.

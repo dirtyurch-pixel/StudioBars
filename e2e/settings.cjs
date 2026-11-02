@@ -18,7 +18,7 @@ const check = (name, ok, extra = '') => {
 
   await page.goto(APP)
   await page.getByRole('button', { name: 'Settings' }).click()
-  await page.getByRole('heading', { name: 'AI co-writer' }).waitFor()
+  await page.getByRole('heading', { name: 'AI co-writer', exact: true }).waitFor()
   check('the home screen has a Settings button that opens the settings page', page.url().endsWith('#/settings'))
   await page.getByLabel('AI setup').waitFor()
   check('AI setup is on the settings page (key box and spending limit)',
@@ -26,7 +26,7 @@ const check = (name, ok, extra = '') => {
   check('the online word helper switch is there', (await page.getByText(/Use the online word helper/).count()) === 1)
   check('storage and backups show only on the phone version',
     (await page.getByRole('heading', { name: 'Storage and backups' }).count()) === (PHONE_BUILD ? 1 : 0))
-  if (PHONE_BUILD) check('backup buttons are on the settings page', (await page.getByRole('button', { name: 'Back up all songs' }).count()) === 1)
+  if (PHONE_BUILD) check('backup buttons are on the settings page', (await page.getByRole('button', { name: 'Back up everything' }).count()) === 1)
 
   const box = page.getByLabel('Show the waveform and beat markers in the player')
   const before = await box.isChecked()

@@ -92,14 +92,19 @@ let CURRENT = null
   const json = JSON.parse(fs.readFileSync(await dl.path(), 'utf8'))
   check('a song can be exported as a file (same format as the PC version)', json.format === 'studio-bars-song' && json.sections[0].lines[0].is_locked === true)
 
-  // backup everything and restore it
+  // backup everything and restore it (full backups are covered in detail by backup_restore.cjs)
   await page.getByLabel('Back to my songs').click()
-  const [bk] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Back up all songs' }).click()])
+  const [bk] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Back up everything' }).click()])
   const backupPath = await bk.path()
-  check('back up all songs gives one file', JSON.parse(fs.readFileSync(backupPath, 'utf8')).songs.length === 1)
+  check('back up gives one checked file', /\.sbbackup$/.test(bk.suggestedFilename()) && fs.readFileSync(backupPath).subarray(0, 8).toString() === 'SBARCH01')
+  await page.getByText(/Backup checked ✓ 1 song/).waitFor()
+  await page.getByRole('button', { name: 'Restore a backup' }).click()
   await page.getByLabel('Backup file').setInputFiles(backupPath)
-  await page.getByText(/Added 1 song from the backup/).waitFor()
-  check('restoring a backup adds the songs without touching the existing ones', (await page.locator('.song-card').count()) === 2)
+  await page.getByRole('button', { name: 'Add what’s missing' }).click()
+  await page.getByText(/Restored and checked ✓/).waitFor()
+  await page.getByRole('button', { name: '← My songs' }).click()
+  await page.locator('.song-card').first().waitFor()
+  check('restoring onto the same phone keeps the one song (nothing duplicated)', (await page.locator('.song-card').count()) === 1)
 
   // import text
   await page.getByRole('button', { name: 'Import' }).click()

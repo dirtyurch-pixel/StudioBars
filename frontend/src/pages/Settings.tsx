@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import * as api from '../api'
 import { ApiFail, LOCAL } from '../api'
 import { AiSetup } from '../ai/AiSetup'
+import { OfflineStatus } from '../local/OfflineStatus'
 import { PhoneBackup } from '../local/PhoneBackup'
 import { goHome } from '../route'
 import type { AiStatus } from '../types'
@@ -94,6 +95,13 @@ export default function Settings() {
           Add or remove music with <b>♪ Library</b> in the player at the bottom.
         </p>
       </section>
+
+      {LOCAL && (
+        <section className="card set-sec" aria-labelledby="set-offline">
+          <h2 id="set-offline">Working offline</h2>
+          <OfflineStatus />
+        </section>
+      )}
 
       {LOCAL && (
         <section className="card set-sec" id="restore" aria-labelledby="set-store">

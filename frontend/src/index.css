@@ -2012,3 +2012,20 @@ input.file-hidden:focus-visible + .file-pick {
 .restore-box p {
   margin: 0;
 }
+.offline-status ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px;
+  display: grid;
+  gap: 4px;
+}
+.offline-status li.ok span {
+  color: var(--ok);
+}
+.offline-status li.no span {
+  color: var(--accent);
+}
+.update-banner {
+  background: var(--panel);
+  color: #fff;
+}

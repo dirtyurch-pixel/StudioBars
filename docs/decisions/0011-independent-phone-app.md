@@ -101,6 +101,17 @@ import (txt/md/json), export, backup/restore, works offline, installable to the 
 - Conflicts: "Keep my version as a copy" saves what is on screen as a new song "(my copy)" before "Load the latest".
 - Tested: phone_local (wrapping), phase1 (conflict copy).
 
+## Offline and updates (reliability phase, step 4)
+- Updates never swap the app mid-session: a new version downloads in the background, then a banner says
+  "A new version of Studio Bars is ready" with "Reload to update". Tapping it first asks every open song to save and
+  waits; if a save fails, the update waits too (`src/update.ts`, `UpdateBanner.tsx`, `sw.js` waits for SKIP_WAITING).
+  The first install still starts at once. The app looks for updates when it comes back to the front (30 min apart).
+- Old caches: only caches named `studio-bars-*` are removed (other apps can share dirtyurch-pixel.github.io).
+- Settings → "Working offline" shows what works with no connection and offers "Download word meanings for offline"
+  (WordNet, ~28 MB on disk, ~9 MB to download; fetched once so the offline helper keeps it).
+- Tested: `e2e/offline_update.cjs` (offline meaning lookup, a simulated update, typing saved before the reload,
+  another app's cache left alone).
+
 ## Waveform and beat markers (PC and phone)
 - The player can show the track's waveform (`src/music/Waveform.tsx`, maths in `src/music/wave.ts`). The browser decodes
   the audio once and draws the loudest point of 800 slices; tap it to jump. Files over 80 MB are not drawn (memory on

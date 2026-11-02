@@ -278,6 +278,10 @@ export default function SongEditor({ id }: { id: string }) {
     const onHide = () => {
       if (document.visibilityState === 'hidden') void flushRef.current()
     }
+    // "Reload to update" asks every open song to save first and waits for the answer
+    const onSaveNow = (e: Event) => {
+      ;(e as CustomEvent<{ waits: Promise<boolean>[] }>).detail.waits.push(saveNow())
+    }
     const onBeforeUnload = (e: BeforeUnloadEvent) => {
       if (dirty.current || metaPatch.current) {
         e.preventDefault()
@@ -286,6 +290,7 @@ export default function SongEditor({ id }: { id: string }) {
     }
     window.addEventListener('online', onOnline)
     window.addEventListener('offline', onOffline)
+    window.addEventListener('sb-save-now', onSaveNow)
     document.addEventListener('visibilitychange', onHide)
     window.addEventListener('beforeunload', onBeforeUnload)
     return () => {
@@ -293,10 +298,11 @@ export default function SongEditor({ id }: { id: string }) {
       window.removeEventListener('offline', onOffline)
       document.removeEventListener('visibilitychange', onHide)
       window.removeEventListener('beforeunload', onBeforeUnload)
+      window.removeEventListener('sb-save-now', onSaveNow)
       if (timer.current) clearTimeout(timer.current)
       if (dirty.current || metaPatch.current) void flushRef.current() // best effort on leaving
     }
-  }, [setSaveStatus])
+  }, [setSaveStatus, saveNow])
 
   // ---------------------------------------------------------- editing
   const blocked = useCallback(() => {

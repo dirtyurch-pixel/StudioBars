@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { AuthGate } from './components/AuthGate'
 import { LOCAL } from './api'
 import { ToastProvider } from './components/Toasts'
+import { UpdateBanner } from './components/UpdateBanner'
 import { MusicDrawer } from './music/MusicDrawer'
 import { PlayerBar } from './music/PlayerBar'
 import { PlayerProvider } from './music/PlayerProvider'
@@ -36,6 +37,7 @@ export default function App() {
             You are offline. Changes stay in this window until the connection returns.
           </div>
         )}
+        <UpdateBanner />
         <PlayerProvider>
           {route.name === 'song' ? (
             <SongEditor key={route.id} id={route.id} />

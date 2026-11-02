@@ -56,6 +56,14 @@ import (txt/md/json), export, backup/restore, works offline, installable to the 
 - `parity.test.ts` now also checks the scans, rhyme chains, syllable stress, the AI prompt and the AI-answer checks against
   the PC version (14 comparisons, all identical).
 
+## Music player on the phone
+- The same player as the PC (library, playlists with repeats, play/pause/next/previous, repeat, shuffle, speed with
+  pitch kept, A–B loop, songs remembering their music, loop and speed). Audio files are copied into the browser's
+  database on the device (`src/local/music.ts`, same checks as `backend/app/music.py`: real-format sniffing, size limit,
+  duplicates noticed). Music is not part of "Back up all songs" and is not shared with the PC; add it on each device.
+- Tested by running the whole Phase 1B music suite against the phone build (43 checks; the 5 PC-only checks about
+  files on disk do not apply).
+
 ## Not yet (later steps)
 4. Syncing with the PC version (today: move songs with export/backup files).
 Music player, vocal recording and the PC-only server features are not in the phone version.

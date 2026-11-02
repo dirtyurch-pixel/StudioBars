@@ -13,6 +13,8 @@ export type Kind =
   | 'ai_suggestions'
   | 'craft'
   | 'vocals'
+  | 'tracks'
+  | 'playlists'
 export const KINDS: Kind[] = [
   'songs',
   'revisions',
@@ -24,6 +26,8 @@ export const KINDS: Kind[] = [
   'ai_suggestions',
   'craft',
   'vocals',
+  'tracks',
+  'playlists',
 ]
 
 export interface Store {
@@ -45,6 +49,8 @@ export class MemoryStore implements Store {
     ai_suggestions: new Map(),
     craft: new Map(),
     vocals: new Map(),
+    tracks: new Map(),
+    playlists: new Map(),
   }
   async get<T>(kind: Kind, id: string) {
     const v = this.data[kind].get(id)
@@ -72,7 +78,7 @@ export class IdbStore implements Store {
   private db: Promise<IDBDatabase>
   constructor(name = DB_NAME) {
     this.db = new Promise((res, rej) => {
-      const open = indexedDB.open(name, 4) // v2: pronunciations, phrases; v3: settings, online answers; v4: AI, craft, vocals
+      const open = indexedDB.open(name, 5) // v2 pronunciations, phrases; v3 settings, online answers; v4 AI, craft, vocals; v5 music
       open.onupgradeneeded = () => {
         for (const k of KINDS)
           if (!open.result.objectStoreNames.contains(k)) open.result.createObjectStore(k)

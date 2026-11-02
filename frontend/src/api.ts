@@ -50,6 +50,7 @@ import * as localWords from './local/localWords'
 import * as localOnline from './local/localOnline'
 import * as localAi from './local/ai/service'
 import * as localCraft from './local/craft/store'
+import * as localMusic from './local/music'
 export { ApiFail }
 
 /** Phone version: everything is kept on this device and there is no server. */
@@ -203,58 +204,86 @@ export async function exportSong(id: string, format: ImportFormat) {
 }
 
 // ---------------------------------------------------------------- music
-export const listTracks = () => json<Track[]>('/api/music/tracks')
+export const listTracks = () =>
+  LOCAL ? loc(localMusic.listTracks()) : json<Track[]>('/api/music/tracks')
 export const trackAudioUrl = (t: Pick<Track, 'id' | 'file_version'>) =>
-  `${BASE}/api/music/tracks/${t.id}/audio?v=${t.file_version}`
+  LOCAL ? localMusic.trackUrl(t.id) : `${BASE}/api/music/tracks/${t.id}/audio?v=${t.file_version}`
 
 /** Copies one audio file into the library (the file goes to the local backend only). */
 export const uploadTrack = (file: File, duration: number | null) =>
-  json<Track>('/api/music/tracks', {
-    method: 'POST',
-    body: file,
-    headers: {
-      'Content-Type': 'application/octet-stream',
-      'X-Filename': encodeURIComponent(file.name),
-      ...(duration ? { 'X-Duration': String(duration) } : {}),
-    },
-  })
+  LOCAL
+    ? loc(localMusic.uploadTrack(file, duration))
+    : json<Track>('/api/music/tracks', {
+        method: 'POST',
+        body: file,
+        headers: {
+          'Content-Type': 'application/octet-stream',
+          'X-Filename': encodeURIComponent(file.name),
+          ...(duration ? { 'X-Duration': String(duration) } : {}),
+        },
+      })
 export const relinkTrack = (id: string, file: File, duration: number | null) =>
-  json<Track>(`/api/music/tracks/${id}/relink`, {
-    method: 'POST',
-    body: file,
-    headers: {
-      'Content-Type': 'application/octet-stream',
-      'X-Filename': encodeURIComponent(file.name),
-      ...(duration ? { 'X-Duration': String(duration) } : {}),
-    },
-  })
+  LOCAL
+    ? loc(localMusic.relinkTrack(id, file, duration))
+    : json<Track>(`/api/music/tracks/${id}/relink`, {
+        method: 'POST',
+        body: file,
+        headers: {
+          'Content-Type': 'application/octet-stream',
+          'X-Filename': encodeURIComponent(file.name),
+          ...(duration ? { 'X-Duration': String(duration) } : {}),
+        },
+      })
 export const patchTrack = (id: string, data: Partial<Pick<Track, 'title' | 'artist' | 'album'>>) =>
-  json<Track>(`/api/music/tracks/${id}`, body('PATCH', data))
+  LOCAL
+    ? loc(localMusic.patchTrack(id, data))
+    : json<Track>(`/api/music/tracks/${id}`, body('PATCH', data))
 export const deleteTrack = async (id: string) => {
+  if (LOCAL) return loc(localMusic.deleteTrack(id))
   await request(`/api/music/tracks/${id}`, body('DELETE'))
 }
-export const listPlaylists = () => json<PlaylistSummary[]>('/api/music/playlists')
-export const getPlaylist = (id: string) => json<PlaylistDetail>(`/api/music/playlists/${id}`)
+export const listPlaylists = () =>
+  LOCAL ? loc(localMusic.listPlaylists()) : json<PlaylistSummary[]>('/api/music/playlists')
+export const getPlaylist = (id: string) =>
+  LOCAL ? loc(localMusic.getPlaylist(id)) : json<PlaylistDetail>(`/api/music/playlists/${id}`)
 export const createPlaylist = (name: string) =>
-  json<PlaylistDetail>('/api/music/playlists', body('POST', { name }))
+  LOCAL
+    ? loc(localMusic.createPlaylist(name))
+    : json<PlaylistDetail>('/api/music/playlists', body('POST', { name }))
 export const renamePlaylist = (id: string, name: string) =>
-  json<PlaylistDetail>(`/api/music/playlists/${id}`, body('PATCH', { name }))
+  LOCAL
+    ? loc(localMusic.renamePlaylist(id, name))
+    : json<PlaylistDetail>(`/api/music/playlists/${id}`, body('PATCH', { name }))
 export const deletePlaylist = async (id: string) => {
+  if (LOCAL) return loc(localMusic.deletePlaylist(id))
   await request(`/api/music/playlists/${id}`, body('DELETE'))
 }
 export const addToPlaylist = (id: string, trackId: string) =>
-  json<PlaylistDetail>(`/api/music/playlists/${id}/tracks`, body('POST', { track_id: trackId }))
+  LOCAL
+    ? loc(localMusic.addToPlaylist(id, trackId))
+    : json<PlaylistDetail>(`/api/music/playlists/${id}/tracks`, body('POST', { track_id: trackId }))
 export const removeFromPlaylist = (id: string, entryId: string) =>
-  json<PlaylistDetail>(`/api/music/playlists/${id}/tracks/${entryId}`, body('DELETE'))
+  LOCAL
+    ? loc(localMusic.removeFromPlaylist(id, entryId))
+    : json<PlaylistDetail>(`/api/music/playlists/${id}/tracks/${entryId}`, body('DELETE'))
 export const reorderPlaylist = (id: string, entryIds: string[]) =>
-  json<PlaylistDetail>(`/api/music/playlists/${id}/order`, body('PUT', { entry_ids: entryIds }))
-export const getPlaybackState = () => json<PlaybackSaved>('/api/music/state')
+  LOCAL
+    ? loc(localMusic.reorderPlaylist(id, entryIds))
+    : json<PlaylistDetail>(`/api/music/playlists/${id}/order`, body('PUT', { entry_ids: entryIds }))
+export const getPlaybackState = () =>
+  LOCAL ? loc(localMusic.getPlaybackState()) : json<PlaybackSaved>('/api/music/state')
 export const savePlaybackState = (s: PlaybackSaved) =>
-  json<PlaybackSaved>('/api/music/state', body('PUT', s))
+  LOCAL
+    ? loc(localMusic.savePlaybackState(s))
+    : json<PlaybackSaved>('/api/music/state', body('PUT', s))
 export const getSongLink = (songId: string) =>
-  json<SongAudioLink | null>(`/api/songs/${songId}/audio-link`)
+  LOCAL
+    ? loc(localMusic.getSongLink(songId))
+    : json<SongAudioLink | null>(`/api/songs/${songId}/audio-link`)
 export const saveSongLink = (songId: string, link: Partial<SongAudioLink>) =>
-  json<SongAudioLink | null>(`/api/songs/${songId}/audio-link`, body('PUT', link))
+  LOCAL
+    ? loc(localMusic.saveSongLink(songId, link))
+    : json<SongAudioLink | null>(`/api/songs/${songId}/audio-link`, body('PUT', link))
 
 // ---------------------------------------------------------------- phonetics (all local, no internet)
 export const getPhoneticsStatus = () =>

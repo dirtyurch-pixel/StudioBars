@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import * as api from '../api'
+import { LOCAL } from '../api'
 import { ApiFail } from '../api'
 import { useToast } from '../components/toastContext'
 import type { PlaylistDetail, PlaylistSummary, Track } from '../types'
@@ -179,9 +180,9 @@ function TracksTab() {
             onChange={(e) => setConsentSaved(e.target.checked)}
           />
           <span>
-            Copy the files I choose into Studio Bars’ private storage on <b>this computer</b>. They
-            are never uploaded to the internet and stay out of GitHub. Only use music you have the
-            right to play.
+            Copy the files I choose into Studio Bars’ private storage on{' '}
+            <b>{LOCAL ? 'this device' : 'this computer'}</b>. They are never uploaded to the
+            internet and stay out of GitHub. Only use music you have the right to play.
           </span>
         </label>
         <label htmlFor="music-files" className="label">
@@ -199,8 +200,9 @@ function TracksTab() {
           }}
         />
         <p className="hint">
-          On a computer you can also drag files here. Music saved on your PC is not automatically on
-          your phone: import it on each device.
+          {LOCAL
+            ? 'Music added here stays on this device (it is not part of “Back up all songs”). Music on your PC is not automatically here: add it on each device.'
+            : 'On a computer you can also drag files here. Music saved on your PC is not automatically on your phone: import it on each device.'}
         </p>
         {busy && <p role="status">Importing “{busy}”…</p>}
         {results.length > 0 && (

@@ -304,9 +304,11 @@ const dump = async () => {
   }
 
   // ---------------------------------------------------------------- phone
-  const phone = await browser.newContext({ viewport: { width: 390, height: 780 }, hasTouch: true, isMobile: true })
+  // SAME_DEVICE=1 (the phone version): music lives in this browser, so the phone check uses the same browser storage
+  const phone = process.env.SAME_DEVICE ? ctx : await browser.newContext({ viewport: { width: 390, height: 780 }, hasTouch: true, isMobile: true })
   await phone.addInitScript(() => {})
   const m = await phone.newPage()
+  await m.setViewportSize({ width: 390, height: 780 })
   const url = page.url()
   await m.goto(url)
   await line(m, 1).waitFor()
@@ -317,7 +319,7 @@ const dump = async () => {
   check('phone: player bar sits at the bottom of the screen', Math.abs(barBox.y + barBox.height - 780) < 3, JSON.stringify(barBox))
   await m.getByLabel('Next track').scrollIntoViewIfNeeded()
   // keyboard open on a phone: viewport shrinks, bar collapses to essentials, line stays visible above it
-  await line(m, 4).tap()
+  await (process.env.SAME_DEVICE ? line(m, 4).click() : line(m, 4).tap())
   await m.setViewportSize({ width: 390, height: 400 })
   await m.waitForTimeout(700)
   const compact = await m.getByLabel('Music player').evaluate((el) => el.classList.contains('compact'))

@@ -37,8 +37,8 @@ export default function App() {
         )}
         <PlayerProvider>
           {route.name === 'song' ? <SongEditor key={route.id} id={route.id} /> : <Dashboard />}
-          {!LOCAL && <MusicDrawer />}
-          {!LOCAL && <PlayerBar />}
+          <MusicDrawer />
+          <PlayerBar />
         </PlayerProvider>
       </ToastProvider>
     </AuthGate>

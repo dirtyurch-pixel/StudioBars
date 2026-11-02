@@ -21,6 +21,21 @@ let CURRENT = null
   page.on('request', (r) => {
     if (new URL(r.url()).pathname.includes('/api/')) apiCalls.push(r.url())
   })
+  // a stand-in for Datamuse, so the test never contacts the real service
+  const dm = []
+  let dmDown = false
+  await ctx.route('https://api.datamuse.com/**', async (route) => {
+    const u = new URL(route.request().url())
+    dm.push({ path: u.pathname + u.search, headers: Object.keys(await route.request().allHeaders()) })
+    if (dmDown) return route.fulfill({ status: 503, body: 'down' })
+    const q = Object.fromEntries(u.searchParams)
+    const body = u.pathname === '/sug' ? [{ word: 'umbrella', score: 9 }, { word: 'umber', score: 5 }]
+      : q.ml ? [{ word: 'money', score: 100 }, { word: 'river', score: 90 }]
+      : q.sl ? [{ word: 'banc', score: 50 }, { word: 'bang', score: 40 }]
+      : q.rel_trg ? [{ word: 'account', score: 80 }]
+      : [{ word: 'thank', score: 70 }]
+    await route.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(body) })
+  })
   const margin = async (n) => (await page.locator('.pad-line').nth(n - 1).locator('.pad-num').innerText()).trim()
   const waitMargin = (n, re, t = 20000) =>
     page.waitForFunction(([n, src]) => new RegExp(src).test(document.querySelectorAll('.pad-line')[n - 1]?.querySelector('.pad-num')?.textContent.trim() ?? ''), [n, re.source], { timeout: t })
@@ -76,7 +91,6 @@ let CURRENT = null
   const words = await page.locator('.chip-word').allInnerTexts()
   check('rhymes for "shade" include made, grade and fade', ['made', 'grade', 'fade'].every((w) => words.some((x) => x.startsWith(w))), JSON.stringify(words.slice(0, 15)))
   check('rhymes are about sound: "said" is not offered', !words.some((x) => x.startsWith('said')))
-  check('no online rhymes section on the phone', (await page.getByText('Online rhymes (optional)').count()) === 0)
   await page.getByLabel('Part of speech').selectOption('noun')
   await page.getByText(/usually used as a noun/).waitFor({ timeout: 90000 })
   check('part-of-speech filter works on the phone (WordNet loaded on the device)', true)
@@ -105,7 +119,52 @@ let CURRENT = null
   await page.getByLabel('About bank').waitFor({ timeout: 60000 })
   check('word meanings load on the phone (WordNet)', (await page.getByRole('article').count()) >= 3)
   check('WordNet is credited', (await page.getByText(/WordNet 3\.0/).count()) >= 1)
-  check('no online ideas tab on the phone', (await page.getByRole('tab', { name: 'Online ideas' }).count()) === 0)
+
+  // optional online helper (Datamuse): off by default, one word only, saved answers, autocomplete
+  check('nothing was sent to the online service while it is off', dm.length === 0, JSON.stringify(dm))
+  await page.getByRole('tab', { name: 'Online ideas' }).click()
+  const box = page.getByRole('checkbox', { name: /Use the online word helper/ })
+  await box.waitFor()
+  check('online helper is OFF by default on the phone', !(await box.isChecked()))
+  check('it warns about the API key needed from 1 February 2027', await page.getByText(/API key will be required from 1 February 2027/).isVisible())
+  await box.click()
+  const res = page.getByLabel('Online results')
+  await res.getByText('money').waitFor({ timeout: 10000 })
+  check('after switching on, online results appear', /Only the word “bank” was sent/.test(await res.innerText()))
+  check('exactly one request, with only the word, and no cookies', dm.length === 1 && dm[0].path === '/words?ml=bank&max=30' && !dm[0].headers.includes('cookie'), JSON.stringify(dm))
+  await page.getByRole('button', { name: 'Sounds like' }).click()
+  await res.getByText('banc').waitFor({ timeout: 10000 })
+  check('"Sounds like" asks Datamuse for words that sound alike', dm.some((d) => d.path === '/words?sl=bank&max=30'))
+  await page.getByRole('button', { name: 'Related words' }).click()
+  await res.getByText('money').waitFor()
+  check('going back uses the saved answer (no new request)', dm.filter((d) => d.path.startsWith('/words?ml=bank')).length === 1)
+  // autocomplete: only while typing in the box, after a pause, and saved
+  const before = dm.length
+  const input = page.getByLabel('Word to look up')
+  await input.fill('')
+  await input.pressSequentially('umbr', { delay: 40 })
+  await page.waitForFunction(() => [...document.querySelectorAll('#words-word-sug option')].some((o) => o.value === 'umbrella'), null, { timeout: 5000 })
+  const sugs = dm.slice(before).filter((d) => d.path.startsWith('/sug'))
+  check('autocomplete suggests words while typing (one request after a pause, not one per letter)', sugs.length === 1 && sugs[0].path === '/sug?s=umbr&max=8', JSON.stringify(sugs))
+  // the service is down: plain message, saved answers still work
+  dmDown = true
+  await input.fill('cloud')
+  await page.getByRole('button', { name: 'Look up' }).click()
+  await page.getByRole('alert').filter({ hasText: /Cannot reach|problem|Nothing saved/ }).first().waitFor({ timeout: 10000 })
+  check('when the service is down it says so plainly', true)
+  await input.fill('bank')
+  await page.getByRole('button', { name: 'Look up' }).click()
+  await res.getByText('money').waitFor({ timeout: 10000 })
+  check('a saved word still works while the service is down', true)
+  dmDown = false
+  await page.getByRole('checkbox', { name: /Use the online word helper/ }).click()
+  await page.waitForFunction(() => !document.querySelector('.online-switch input[type=checkbox]').checked)
+  const afterOff = dm.length
+  await page.getByRole('tab', { name: 'Meanings' }).click()
+  await input.fill('storm')
+  await page.getByRole('button', { name: 'Look up' }).click()
+  await page.getByLabel('About storm').waitFor({ timeout: 30000 })
+  check('after switching off, nothing more is sent', dm.length === afterOff)
 
   // phrase bank
   await page.getByRole('tab', { name: 'My phrases' }).click()
@@ -130,6 +189,7 @@ let CURRENT = null
   const sw = await page.evaluate(() => [document.documentElement.scrollWidth, window.innerWidth])
   check('phone: no sideways scrolling', sw[0] <= sw[1], JSON.stringify(sw))
   check('no server was asked for anything', apiCalls.length === 0, JSON.stringify(apiCalls.slice(0, 5)))
+  check('the online service was only contacted while it was switched on', dm.length === afterOff)
   check('no uncaught page errors', errors.length === 0, errors.join(' | '))
 
   await browser.close()

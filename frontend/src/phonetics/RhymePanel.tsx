@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import * as api from '../api'
-import { LOCAL } from '../api'
 import { ApiFail } from '../api'
 import { useToast } from '../components/toastContext'
 import type { CustomPron, PhoneticsStatus, RhymeResponse, RhymeResult, WordInfo } from '../types'
 import { OnlineResults } from '../words/OnlineHelper'
 import { PhraseRhymePane } from './PhraseRhymePane'
+import { useSuggestions } from '../words/useSuggestions'
 
 type Props = {
   suggested: { word: string; nonce: number } | null
@@ -30,6 +30,9 @@ function WordRhymes({ suggested, onCustomChanged }: Props) {
   const toast = useToast()
   const [status, setStatus] = useState<PhoneticsStatus | null>(null)
   const [typed, setTyped] = useState('')
+  // suggestions only while YOU type in this box (and only if the online helper is on)
+  const [typingHere, setTypingHere] = useState(false)
+  const suggestions = useSuggestions(typingHere ? typed : '')
   const [word, setWord] = useState('')
   const [quals, setQuals] = useState<Record<string, boolean>>({
     perfect: true,
@@ -166,7 +169,16 @@ function WordRhymes({ suggested, onCustomChanged }: Props) {
           placeholder="Type a word, or tap a line"
           maxLength={40}
           onChange={(e) => setTyped(e.target.value)}
+          onFocus={() => setTypingHere(true)}
+          onBlur={() => setTypingHere(false)}
+          list="rhyme-word-sug"
+          autoComplete="off"
         />
+        <datalist id="rhyme-word-sug">
+          {suggestions.map((w) => (
+            <option key={w} value={w} />
+          ))}
+        </datalist>
         <button className="btn btn-primary" disabled={!typed.trim()}>
           Look up
         </button>
@@ -481,12 +493,10 @@ function WordRhymes({ suggested, onCustomChanged }: Props) {
               {n}
             </small>
           ))}
-          {!LOCAL && (
-            <details className="customs">
-              <summary>Online rhymes (optional)</summary>
-              <OnlineResults word={word} kinds={['rhymes', 'near-rhymes']} />
-            </details>
-          )}
+          <details className="customs">
+            <summary>Online rhymes (optional)</summary>
+            <OnlineResults word={word} kinds={['rhymes', 'near-rhymes']} />
+          </details>
         </>
       )}
 

@@ -224,7 +224,7 @@ export type OnlineStatus = {
   sends: string
   key_notice: string
 }
-export type OnlineKind = 'related' | 'associated' | 'rhymes' | 'near-rhymes'
+export type OnlineKind = 'related' | 'associated' | 'sounds-like' | 'rhymes' | 'near-rhymes'
 export type OnlineResult = {
   source: string
   online: boolean

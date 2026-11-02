@@ -32,8 +32,14 @@ import (txt/md/json), export, backup/restore, works offline, installable to the 
 - The dictionaries are copied unmodified into the phone build (`frontend/phone-data.mjs`) with their licences:
   CMU dictionary and the familiarity list (~1.2 MB to download) are stored for offline use when the app is first opened;
   WordNet (~8 MB) downloads the first time the Words tab or the part-of-speech filter is used, then works offline.
-- The online helper (Datamuse) is not offered on the phone.
-- The database moved to version 2 (adds your pronunciations and phrases); songs from step 1 are kept (tested).
+- The optional online helper (Datamuse) works on the phone too, calling api.datamuse.com straight from the browser
+  (Datamuse allows this). Same rules as the PC: OFF by default, only the one word you look up is sent, no cookies,
+  4-second timeout, rate limit, answers saved on the device for 7 days, saved answers shown when the service is down.
+  Added on the owner's request: "Sounds like" (`sl`) results, and autocomplete in the lookup boxes (`/sug`) that runs
+  only while you type in that box with the helper on, waits for a 300 ms pause, and saves answers.
+  "Spelled like" (`sp`) is not offered: it needs wildcard patterns, not a single word.
+  Datamuse: 100,000 free requests a day today; an API key is announced from 1 February 2027.
+- The database moved to version 3 (adds your pronunciations, phrases, settings and saved online answers); songs from step 1 are kept (tested).
 
 ## Not yet (later steps)
 3. AI helper (direct from the phone with the owner's key), Craft and Melody tabs.

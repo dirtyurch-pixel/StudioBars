@@ -6,6 +6,7 @@ import type { OnlineKind, OnlineResult, OnlineStatus } from '../types'
 const KIND_LABEL: Record<OnlineKind, string> = {
   related: 'Related words',
   associated: 'Often used with',
+  'sounds-like': 'Sounds like',
   rhymes: 'Rhymes',
   'near-rhymes': 'Near rhymes',
 }

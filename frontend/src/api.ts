@@ -47,6 +47,7 @@ const BASE =
 import { ApiFail } from './apiFail'
 import * as local from './local/localApi'
 import * as localWords from './local/localWords'
+import * as localOnline from './local/localOnline'
 export { ApiFail }
 
 /** Phone version: everything is kept on this device and there is no server. */
@@ -314,15 +315,23 @@ export const getMeanings = (word: string, context: string, around = '', signal?:
 }
 
 // ---------------------------------------------------------------- optional online helper
-export const getOnlineStatus = () => json<OnlineStatus>('/api/lexicon/online/status')
+export const getOnlineStatus = () =>
+  LOCAL ? loc(localOnline.onlineStatus()) : json<OnlineStatus>('/api/lexicon/online/status')
 export const setOnlineEnabled = (enabled: boolean) =>
-  json<OnlineStatus>('/api/lexicon/online/settings', body('PUT', { enabled }))
+  LOCAL
+    ? loc(localOnline.setOnlineEnabled(enabled))
+    : json<OnlineStatus>('/api/lexicon/online/settings', body('PUT', { enabled }))
+/** Autocomplete for the lookup boxes (phone version only, and only when the online helper is on). */
+export const suggestWords = (prefix: string): Promise<string[]> =>
+  LOCAL ? localOnline.suggestWords(prefix).catch(() => []) : Promise.resolve([])
 export const getOnlineWords = (word: string, kind: OnlineKind, signal?: AbortSignal) =>
-  json<OnlineResult>(
-    `/api/lexicon/online/words?word=${encodeURIComponent(word)}&kind=${kind}`,
-    undefined,
-    signal,
-  )
+  LOCAL
+    ? loc(localOnline.onlineWords(word, kind))
+    : json<OnlineResult>(
+        `/api/lexicon/online/words?word=${encodeURIComponent(word)}&kind=${kind}`,
+        undefined,
+        signal,
+      )
 
 // ---------------------------------------------------------------- phrase bank
 export const listPhrases = (q = '', tag = '', signal?: AbortSignal) => {

@@ -26,7 +26,13 @@ from urllib.parse import urlparse
 from ..db import tx
 from ..service import ApiError, now
 
-KINDS = {"related": "ml", "associated": "rel_trg", "rhymes": "rel_rhy", "near-rhymes": "rel_nry"}
+KINDS = {
+    "related": "ml",
+    "associated": "rel_trg",
+    "sounds-like": "sl",
+    "rhymes": "rel_rhy",
+    "near-rhymes": "rel_nry",
+}
 FRESH_DAYS = 7
 MAX_CACHE = 5000
 TIMEOUT_SECONDS = 4.0

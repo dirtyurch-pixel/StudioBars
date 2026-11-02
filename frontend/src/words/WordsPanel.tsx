@@ -1,10 +1,10 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import * as api from '../api'
-import { LOCAL } from '../api'
 import { ApiFail } from '../api'
 import type { Chip, Meanings, Sense, Synonym, WordInfo } from '../types'
 import { OnlineResults } from './OnlineHelper'
 import { PhraseBank } from './PhraseBank'
+import { useSuggestions } from './useSuggestions'
 
 type Props = {
   suggested: { word: string; nonce: number } | null
@@ -151,6 +151,9 @@ export function WordsPanel({
   const around = useSettled(liveAround, contextKey)
   const [view, setView] = useState<'meanings' | 'phrases' | 'online'>('meanings')
   const [typed, setTyped] = useState('')
+  // suggestions only while YOU type in this box (and only if the online helper is on)
+  const [typingHere, setTypingHere] = useState(false)
+  const suggestions = useSuggestions(typingHere ? typed : '')
   const [word, setWord] = useState('')
   const [data, setData] = useState<Meanings | null>(null)
   const [sound, setSound] = useState<WordInfo | null>(null)
@@ -219,19 +222,17 @@ export function WordsPanel({
             ['phrases', 'My phrases'],
             ['online', 'Online ideas'],
           ] as const
-        )
-          .filter(([k]) => !(LOCAL && k === 'online')) // the phone version works offline only
-          .map(([k, label]) => (
-            <button
-              key={k}
-              role="tab"
-              aria-selected={view === k}
-              className={view === k ? 'on' : ''}
-              onClick={() => setView(k)}
-            >
-              {label}
-            </button>
-          ))}
+        ).map(([k, label]) => (
+          <button
+            key={k}
+            role="tab"
+            aria-selected={view === k}
+            className={view === k ? 'on' : ''}
+            onClick={() => setView(k)}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {view !== 'phrases' && (
@@ -246,7 +247,16 @@ export function WordsPanel({
             placeholder="Type a word, or tap a line"
             maxLength={40}
             onChange={(e) => setTyped(e.target.value)}
+            onFocus={() => setTypingHere(true)}
+            onBlur={() => setTypingHere(false)}
+            list="words-word-sug"
+            autoComplete="off"
           />
+          <datalist id="words-word-sug">
+            {suggestions.map((w) => (
+              <option key={w} value={w} />
+            ))}
+          </datalist>
           <button className="btn btn-primary" disabled={!typed.trim()}>
             Look up
           </button>
@@ -363,7 +373,9 @@ export function WordsPanel({
 
       {view === 'phrases' && <PhraseBank onLookup={pick} onPhraseRhymes={onPhraseRhymes} />}
 
-      {view === 'online' && <OnlineResults word={word} kinds={['related', 'associated']} />}
+      {view === 'online' && (
+        <OnlineResults word={word} kinds={['related', 'associated', 'sounds-like']} />
+      )}
     </div>
   )
 }

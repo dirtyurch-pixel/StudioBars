@@ -13,7 +13,7 @@ function initialWave(): boolean {
   } catch {
     /* storage blocked: fall back to the screen size */
   }
-  return !window.matchMedia?.('(max-width: 860px)').matches
+  return true // on phones it only shows in the full player, so it can be on by default
 }
 const TEXT_FIELD =
   'input[data-line-input], textarea, input:not([type]), input[type="text"], input[type="search"]'
@@ -23,6 +23,18 @@ export function PlayerBar() {
   const ref = useRef<HTMLElement>(null)
   const [typing, setTyping] = useState(false)
   const [showWave, setShowWave] = useState(initialWave)
+  // phones: a slim bar; the full player (waveform, loop, speed, library) opens as a full screen
+  const [expanded, setExpanded] = useState(false)
+  useEffect(() => {
+    if (!expanded) return
+    const esc = (e: KeyboardEvent) => e.key === 'Escape' && setExpanded(false)
+    document.addEventListener('keydown', esc)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', esc)
+      document.body.style.overflow = ''
+    }
+  }, [expanded])
   useEffect(() => {
     const on = (e: Event) => setShowWave(Boolean((e as CustomEvent<boolean>).detail))
     window.addEventListener('sb-wave', on)
@@ -71,8 +83,10 @@ export function PlayerBar() {
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const set = () =>
+    const set = () => {
+      if (el.classList.contains('expanded')) return // full screen: keep the slim bar's height for the page
       document.documentElement.style.setProperty('--player-h', `${el.offsetHeight}px`)
+    }
     set()
     if (typeof ResizeObserver === 'undefined') return
     const ro = new ResizeObserver(set)
@@ -90,13 +104,31 @@ export function PlayerBar() {
   return (
     <section
       ref={ref}
-      className={`player${typing ? ' compact' : ''}`}
+      className={`player${typing ? ' compact' : ''}${expanded ? ' expanded' : ''}`}
       aria-label="Music player"
       // keep the keyboard and text cursor where they are when a transport button is pressed
       onMouseDown={(e) => {
         if ((e.target as HTMLElement).closest('button')) e.preventDefault()
       }}
     >
+      {p.track && !expanded && (
+        <span className="pl-progress" style={{ width: `${pct(p.time)}%` }} aria-hidden="true" />
+      )}
+      <div className="pl-sheet-head">
+        <button className="icon-btn" onClick={() => setExpanded(false)} aria-label="Close player">
+          ⌄
+        </button>
+        <b>Now playing</b>
+        <button
+          className="btn btn-sm"
+          onClick={() => {
+            setExpanded(false)
+            p.setDrawerOpen(true)
+          }}
+        >
+          Library
+        </button>
+      </div>
       <div className="pl-main">
         <button className="pl-btn" aria-label="Previous track" onClick={p.prev} disabled={!p.track}>
           ⏮
@@ -142,6 +174,16 @@ export function PlayerBar() {
         >
           ♪ Library
         </button>
+        {p.track && (
+          <button
+            className="icon-btn pl-expand"
+            onClick={() => setExpanded(true)}
+            aria-label="Open player"
+            aria-expanded={expanded}
+          >
+            ⌃
+          </button>
+        )}
       </div>
 
       {p.error && (

@@ -154,7 +154,7 @@ const dump = async () => {
   await page.waitForFunction(() => window.__audios.some((a) => a.currentSrc && !a.paused && a.currentTime > 0.3), null, { timeout: 15000 })
   const s1 = await A()
   check('playlist plays: audio is really running', !s1.paused && s1.t > 0.3)
-  check('player shows the track and position in the playlist', /01 Slow Tide/.test(await barText()) && /1 of 5/.test(await barText()))
+  check('player shows the track and position in the playlist', /01 Slow Tide/i.test(await barText()) && /1 of 5/i.test(await barText()))
 
   // type, switch sections, lock, open tools, snapshot: music must not blink
   const before = await A()
@@ -200,24 +200,24 @@ const dump = async () => {
   check('seek moves the playhead', Math.abs((await A()).t - 9) < 0.5)
   // playlist order is: 01 Slow Tide, 03 Night Drive, 02 Short One, 04 Low Light, 01 Slow Tide
   await page.getByLabel('Next track').click()
-  await page.waitForFunction(() => /03 Night Drive/.test(document.querySelector('[aria-label="Music player"]').innerText))
+  await page.waitForFunction(() => /03 Night Drive/i.test(document.querySelector('[aria-label=\"Music player\"]').innerText))
   { const bt = await barText(); check('Next goes to the next track in the playlist', /2 of 5/.test(bt), JSON.stringify(bt)) }
   await page.getByLabel('Previous track').click()
-  await page.waitForFunction(() => /01 Slow Tide/.test(document.querySelector('[aria-label="Music player"]').innerText))
-  check('Previous within 3 s goes back to the previous track', /1 of 5/.test(await barText()))
+  await page.waitForFunction(() => /01 Slow Tide/i.test(document.querySelector('[aria-label=\"Music player\"]').innerText))
+  check('Previous within 3 s goes back to the previous track', /1 of 5/i.test(await barText()))
   await page.getByLabel('Next track').click()
-  await page.waitForFunction(() => /03 Night Drive/.test(document.querySelector('[aria-label="Music player"]').innerText))
+  await page.waitForFunction(() => /03 Night Drive/i.test(document.querySelector('[aria-label=\"Music player\"]').innerText))
   // auto-advance when a track ends
   await seekTo(7.3)
-  await page.waitForFunction(() => /02 Short One/.test(document.querySelector('[aria-label="Music player"]').innerText), null, { timeout: 10000 })
-  check('a track that ends moves on to the next one by itself', /3 of 5/.test(await barText()))
+  await page.waitForFunction(() => /02 Short One/i.test(document.querySelector('[aria-label=\"Music player\"]').innerText), null, { timeout: 10000 })
+  check('a track that ends moves on to the next one by itself', /3 of 5/i.test(await barText()))
   // repeat one
   await page.getByLabel(/^Repeat: /).click() // all
   await page.getByLabel(/^Repeat: /).click() // one
   check('repeat cycles off → all → one', (await page.getByLabel('Repeat: one').count()) === 1)
   await seekTo(2.5)
   await sleep(1500)
-  check('repeat one replays the same track', /02 Short One/.test(await barText()) && (await A()).t < 2.4)
+  check('repeat one replays the same track', /02 Short One/i.test(await barText()) && (await A()).t < 2.4)
   await page.getByLabel('Repeat: one').click() // off
   // shuffle
   await page.getByLabel('Shuffle').click()
@@ -241,7 +241,7 @@ const dump = async () => {
 
   // ---------------------------------------------------------------- A–B loop
   await page.getByLabel('Next track').click()
-  await page.waitForFunction(() => /04 Low Light/.test(document.querySelector('[aria-label="Music player"]').innerText))
+  await page.waitForFunction(() => /04 Low Light/i.test(document.querySelector('[aria-label=\"Music player\"]').innerText))
   await seekTo(2)
   await sleep(200)
   await page.getByLabel('Set loop start (A) here').click()
@@ -279,8 +279,8 @@ const dump = async () => {
   await page.waitForFunction(() => window.__audios.some((a) => a.currentSrc), null, { timeout: 15000 })
   await sleep(800)
   const re = await A()
-  check('after reload the linked music is loaded but NOT auto-playing', re.paused && /04 Low Light/.test(await barText()))
-  check('after reload the saved loop is restored', /Looping 0:0[12]–0:0[34]/.test(await barText()))
+  check('after reload the linked music is loaded but NOT auto-playing', re.paused && /04 Low Light/i.test(await barText()))
+  check('after reload the saved loop is restored', /Looping 0:0[12]–0:0[34]/i.test(await barText()))
   check('after reload the saved speed is restored', Math.abs(re.rate - 0.85) < 0.001)
 
   // ---------------------------------------------------------------- missing file + relink
@@ -319,7 +319,12 @@ const dump = async () => {
   check('phone: no sideways scrolling with the player bar', sw[0] <= sw[1], JSON.stringify(sw))
   const barBox = await m.getByLabel('Music player').boundingBox()
   check('phone: player bar sits at the bottom of the screen', Math.abs(barBox.y + barBox.height - 780) < 3, JSON.stringify(barBox))
-  await m.getByLabel('Next track').scrollIntoViewIfNeeded()
+  // a phone gets a slim bar; the full player opens on top and closes again
+  await m.getByLabel('Open player').click()
+  await m.getByLabel('Next track').waitFor()
+  check('phone: the full player opens with all the controls', await m.getByLabel('Seek').isVisible() && await m.getByLabel('Playback speed').isVisible())
+  await m.getByLabel('Close player').click()
+  check('phone: the bar is slim again after closing the full player', !(await m.getByLabel('Seek').isVisible()))
   // keyboard open on a phone: viewport shrinks, bar collapses to essentials, line stays visible above it
   await (process.env.SAME_DEVICE ? line(m, 4).click() : line(m, 4).tap())
   await m.setViewportSize({ width: 390, height: 400 })

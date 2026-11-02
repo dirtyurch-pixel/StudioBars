@@ -2437,3 +2437,122 @@ input.file-hidden:focus-visible + .file-pick {
     display: inline-grid;
   }
 }
+
+/* ------------------------------------------------------------------ music player (Design A, stage 6) */
+.player {
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+.pl-play {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+.pl-info .pl-title {
+  font: 700 16px/1.15 var(--font-condensed);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.pl-progress {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  height: 3px;
+  background: var(--accent);
+  pointer-events: none;
+}
+.pl-sheet-head,
+.pl-expand {
+  display: none;
+}
+@media (max-width: 860px) {
+  /* slim bar: play, title and time, a thin progress line on top; everything else in the full player */
+  .player:not(.expanded) {
+    padding-top: 6px;
+    padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+  }
+  .player:not(.expanded) .pl-seek,
+  .player:not(.expanded) .pl-wave,
+  .player:not(.expanded) .pl-extra,
+  .player:not(.expanded) [aria-label='Previous track'],
+  .player:not(.expanded) [aria-label='Next track'] {
+    display: none;
+  }
+  .player:not(.expanded) .pl-play {
+    width: 44px;
+    height: 44px;
+  }
+  .pl-expand {
+    display: inline-grid;
+    border-color: transparent;
+    font-size: 20px;
+  }
+  .player:not(.expanded) .pl-error:not([role='alert']) {
+    display: none;
+  }
+
+  /* the full player */
+  .player.expanded {
+    top: 0;
+    z-index: 70;
+    overflow: auto;
+    align-content: start;
+    gap: 18px;
+    padding: calc(10px + env(safe-area-inset-top, 0px)) 16px
+      calc(24px + env(safe-area-inset-bottom, 0px));
+    background: var(--bg);
+    border: 0;
+  }
+  .player.expanded .pl-sheet-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .player.expanded .pl-sheet-head b {
+    flex: 1;
+    text-align: center;
+    font: 700 14px/1 var(--font-condensed);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+  .player.expanded .pl-sheet-head .icon-btn {
+    border-color: transparent;
+    font-size: 22px;
+  }
+  .player.expanded .pl-main {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-areas: 'info info info' 'prev play next';
+    justify-items: center;
+    row-gap: 18px;
+    margin-top: 12px;
+  }
+  .player.expanded .pl-info {
+    grid-area: info;
+    text-align: center;
+  }
+  .player.expanded .pl-info .pl-title {
+    font: 400 26px/1.1 var(--font-display);
+  }
+  .player.expanded [aria-label='Previous track'] {
+    grid-area: prev;
+    justify-self: end;
+  }
+  .player.expanded .pl-play {
+    grid-area: play;
+    width: 68px;
+    height: 68px;
+    font-size: 26px;
+  }
+  .player.expanded [aria-label='Next track'] {
+    grid-area: next;
+    justify-self: start;
+  }
+  .player.expanded .pl-lib,
+  .player.expanded .pl-expand {
+    display: none;
+  }
+  .player.expanded .pl-extra {
+    justify-content: center;
+  }
+}

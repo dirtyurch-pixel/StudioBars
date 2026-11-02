@@ -32,6 +32,10 @@ function wav(seconds, rate = 8000) {
   const errors = []
   page.on('pageerror', (e) => errors.push(String(e)))
   const player = page.getByLabel('Music player')
+  // phones have a slim bar; the waveform, loop and speed live in the full player
+  const openPlayer = async () => {
+    if (process.env.PHONE) await page.getByLabel('Open player').click({ timeout: 15000 })
+  }
 
   await page.goto(APP)
   await page.getByText(/Import your own tracks|No music loaded|Music library/).first().waitFor()
@@ -47,6 +51,7 @@ function wav(seconds, rate = 8000) {
   await page.getByLabel('Close music library').click().catch(() => {})
   await player.getByLabel('Pause').waitFor({ timeout: 10000 })
   await player.getByLabel('Pause').click()
+  await openPlayer()
 
   // waveform
   const wavePressed = await player.getByLabel('Show waveform and beats').getAttribute('aria-pressed')
@@ -113,6 +118,7 @@ function wav(seconds, rate = 8000) {
 
   // kept after reload
   await page.reload()
+  await openPlayer()
   await player.getByLabel('Show waveform and beats').waitFor({ timeout: 15000 })
   await page.waitForFunction(() => /120 BPM/.test(document.querySelector('.pl-beat-text')?.textContent || ''), null, { timeout: 15000 })
   check('the tempo and beat 1 are kept after a reload', true)
@@ -121,6 +127,7 @@ function wav(seconds, rate = 8000) {
   await player.getByLabel('Show waveform and beats').click()
   check('the waveform can be hidden', (await canvas.count()) === 0)
   await page.reload()
+  await openPlayer()
   await player.getByLabel('Show waveform and beats').waitFor({ timeout: 15000 })
   check('hiding it is remembered', (await player.getByLabel('Show waveform and beats').getAttribute('aria-pressed')) === 'false')
   await player.getByLabel('Show waveform and beats').click()
@@ -129,6 +136,7 @@ function wav(seconds, rate = 8000) {
   await player.getByLabel('Clear beat markers').click()
   await page.waitForFunction(() => /Tap along/.test(document.querySelector('.pl-beat-text')?.textContent || ''))
   await page.reload()
+  await openPlayer()
   await player.getByLabel('Tempo (BPM)').waitFor({ timeout: 15000 })
   await sleep(800)
   check('clearing the beats is kept too', (await player.getByLabel('Tempo (BPM)').inputValue()) === '')

@@ -52,6 +52,15 @@ export { ApiFail }
 /** Phone version: everything is kept on this device and there is no server. */
 export const LOCAL = import.meta.env.VITE_LOCAL === '1'
 
+/** Phone version: turn any unexpected problem into a plain message that says what happened. */
+function loc<T>(p: Promise<T>): Promise<T> {
+  return p.catch((e: unknown) => {
+    if (e instanceof ApiFail) throw e
+    const why = e instanceof Error ? e.message : String(e)
+    throw new ApiFail(`Something went wrong on this device: ${why}`, { code: 'DEVICE_ERROR' })
+  })
+}
+
 async function request(
   path: string,
   init: RequestInit = {},
@@ -105,67 +114,69 @@ const body = (method: string, data?: unknown): RequestInit => ({
 })
 
 export async function fetchHealth(signal?: AbortSignal): Promise<Health> {
-  if (LOCAL) return local.health()
+  if (LOCAL) return loc(local.health())
   return json<Health>('/health', undefined, signal)
 }
 
 export const listSongs = (trash = false, signal?: AbortSignal) =>
   LOCAL
-    ? local.listSongs(trash)
+    ? loc(local.listSongs(trash))
     : json<SongSummary[]>(`/api/songs${trash ? '?trash=true' : ''}`, undefined, signal)
 export const getSong = (id: string, signal?: AbortSignal) =>
-  LOCAL ? local.getSong(id) : json<Song>(`/api/songs/${id}`, undefined, signal)
+  LOCAL ? loc(local.getSong(id)) : json<Song>(`/api/songs/${id}`, undefined, signal)
 export const createSong = (data: {
   title: string
   genres: Genre[]
   bpm?: number | null
   time_signature?: string | null
   template: 'blank' | 'verse-chorus'
-}) => (LOCAL ? local.createSong(data) : json<Song>('/api/songs', body('POST', data)))
+}) => (LOCAL ? loc(local.createSong(data)) : json<Song>('/api/songs', body('POST', data)))
 export const patchSong = (
   id: string,
   data: Partial<Pick<Song, 'title' | 'genres' | 'bpm' | 'time_signature'>>,
-) => (LOCAL ? local.patchSong(id, data) : json<Song>(`/api/songs/${id}`, body('PATCH', data)))
+) => (LOCAL ? loc(local.patchSong(id, data)) : json<Song>(`/api/songs/${id}`, body('PATCH', data)))
 export const deleteSong = async (id: string) => {
-  if (LOCAL) return local.deleteSong(id)
+  if (LOCAL) return loc(local.deleteSong(id))
   await request(`/api/songs/${id}`, body('DELETE'))
 }
 export const undeleteSong = (id: string) =>
-  LOCAL ? local.undeleteSong(id) : json<Song>(`/api/songs/${id}/undelete`, body('POST'))
+  LOCAL ? loc(local.undeleteSong(id)) : json<Song>(`/api/songs/${id}/undelete`, body('POST'))
 export const saveContent = (id: string, baseVersion: number, content: Content) =>
   LOCAL
-    ? local.saveContent(id, baseVersion, content)
+    ? loc(local.saveContent(id, baseVersion, content))
     : json<Song>(
         `/api/songs/${id}/content`,
         body('PUT', { base_version: baseVersion, sections: toPayload(content) }),
       )
 export const lockLine = (lineId: string, locked: boolean) =>
   LOCAL
-    ? local.lockLine(lineId, locked)
+    ? loc(local.lockLine(lineId, locked))
     : json<Song>(`/api/lines/${lineId}/${locked ? 'lock' : 'unlock'}`, body('POST'))
 export const addComment = (lineId: string, text: string) =>
   LOCAL
-    ? local.addComment(lineId, text)
+    ? loc(local.addComment(lineId, text))
     : json<Song>(`/api/lines/${lineId}/comments`, body('POST', { body: text }))
 export const editComment = (id: string, text: string) =>
   LOCAL
-    ? local.editComment(id, text)
+    ? loc(local.editComment(id, text))
     : json<Song>(`/api/comments/${id}`, body('PATCH', { body: text }))
 export const deleteComment = (id: string) =>
-  LOCAL ? local.deleteComment(id) : json<Song>(`/api/comments/${id}`, body('DELETE'))
+  LOCAL ? loc(local.deleteComment(id)) : json<Song>(`/api/comments/${id}`, body('DELETE'))
 export const listRevisions = (id: string) =>
-  LOCAL ? local.listRevisions(id) : json<Revision[]>(`/api/songs/${id}/revisions`)
+  LOCAL ? loc(local.listRevisions(id)) : json<Revision[]>(`/api/songs/${id}/revisions`)
 export const createRevision = (id: string, description: string) =>
   LOCAL
-    ? local.createRevision(id, description)
+    ? loc(local.createRevision(id, description))
     : json<Revision[]>(`/api/songs/${id}/revisions`, body('POST', { description }))
 export const restoreRevision = (revId: string) =>
-  LOCAL ? local.restoreRevision(revId) : json<Song>(`/api/revisions/${revId}/restore`, body('POST'))
+  LOCAL
+    ? loc(local.restoreRevision(revId))
+    : json<Song>(`/api/revisions/${revId}/restore`, body('POST'))
 
 export type ImportFormat = 'json' | 'txt' | 'md'
 export const previewImport = (format: ImportFormat, content: string, title?: string) =>
   LOCAL
-    ? local.previewImport(format, content, title)
+    ? loc(local.previewImport(format, content, title))
     : json<ImportPreview>(
         '/api/import/preview',
         body('POST', { format, content, title: title || null }),
@@ -177,11 +188,11 @@ export const commitImport = (
   genres: Genre[] = [],
 ) =>
   LOCAL
-    ? local.commitImport(format, content, title, genres)
+    ? loc(local.commitImport(format, content, title, genres))
     : json<Song>('/api/import', body('POST', { format, content, title: title || null, genres }))
 
 export async function exportSong(id: string, format: ImportFormat) {
-  if (LOCAL) return local.exportSong(id, format)
+  if (LOCAL) return loc(local.exportSong(id, format))
   const res = await request(`/api/songs/${id}/export?format=${format}`)
   const disp = res.headers.get('Content-Disposition') ?? ''
   const name = /filename="([^"]+)"/.exec(disp)?.[1] ?? `song.${format}`
@@ -244,14 +255,14 @@ export const saveSongLink = (songId: string, link: Partial<SongAudioLink>) =>
 
 // ---------------------------------------------------------------- phonetics (all local, no internet)
 export const getPhoneticsStatus = () =>
-  LOCAL ? localWords.phoneticsStatus() : json<PhoneticsStatus>('/api/phonetics/status')
+  LOCAL ? loc(localWords.phoneticsStatus()) : json<PhoneticsStatus>('/api/phonetics/status')
 export const analyzeLines = (lines: string[], signal?: AbortSignal) =>
   LOCAL
-    ? localWords.analyzeLines(lines)
+    ? loc(localWords.analyzeLines(lines))
     : json<Analysis>('/api/phonetics/analyze', body('POST', { lines }), signal)
 export const lookupWord = (word: string, signal?: AbortSignal) =>
   LOCAL
-    ? localWords.lookupWord(word)
+    ? loc(localWords.lookupWord(word))
     : json<WordInfo>(`/api/phonetics/word?word=${encodeURIComponent(word)}`, undefined, signal)
 export type RhymeQuery = {
   word: string
@@ -265,7 +276,7 @@ export type RhymeQuery = {
   limit: number
 }
 export const searchRhymes = (q: RhymeQuery, signal?: AbortSignal) => {
-  if (LOCAL) return localWords.searchRhymes(q)
+  if (LOCAL) return loc(localWords.searchRhymes(q))
   const p = new URLSearchParams({
     word: q.word,
     qualities: q.qualities.join(','),
@@ -280,22 +291,22 @@ export const searchRhymes = (q: RhymeQuery, signal?: AbortSignal) => {
   return json<RhymeResponse>(`/api/phonetics/rhymes?${p}`, undefined, signal)
 }
 export const listCustomPron = () =>
-  LOCAL ? localWords.listCustomPron() : json<CustomPron[]>('/api/phonetics/custom')
+  LOCAL ? loc(localWords.listCustomPron()) : json<CustomPron[]>('/api/phonetics/custom')
 export const saveCustomPron = (
   word: string,
   data: { sounds_like?: string; phones?: string; note?: string },
 ) =>
   LOCAL
-    ? localWords.saveCustomPron(word, data)
+    ? loc(localWords.saveCustomPron(word, data))
     : json<CustomPron>(`/api/phonetics/custom/${encodeURIComponent(word)}`, body('PUT', data))
 export const deleteCustomPron = async (word: string) => {
-  if (LOCAL) return localWords.deleteCustomPron(word)
+  if (LOCAL) return loc(localWords.deleteCustomPron(word))
   await request(`/api/phonetics/custom/${encodeURIComponent(word)}`, body('DELETE'))
 }
 
 // ---------------------------------------------------------------- meanings (WordNet, local)
 export const getMeanings = (word: string, context: string, around = '', signal?: AbortSignal) => {
-  if (LOCAL) return localWords.getMeanings(word, context, around)
+  if (LOCAL) return loc(localWords.getMeanings(word, context, around))
   const p = new URLSearchParams({ word })
   if (context.trim()) p.set('context', context.slice(0, 600))
   if (around.trim()) p.set('around', around.slice(0, 600))
@@ -315,27 +326,29 @@ export const getOnlineWords = (word: string, kind: OnlineKind, signal?: AbortSig
 
 // ---------------------------------------------------------------- phrase bank
 export const listPhrases = (q = '', tag = '', signal?: AbortSignal) => {
-  if (LOCAL) return localWords.listPhrases(q, tag)
+  if (LOCAL) return loc(localWords.listPhrases(q, tag))
   const p = new URLSearchParams({ limit: '200' })
   if (q.trim()) p.set('q', q.trim())
   if (tag) p.set('tag', tag)
   return json<{ total: number; items: PhraseItem[] }>(`/api/phrases?${p}`, undefined, signal)
 }
 export const listPhraseTags = () =>
-  LOCAL ? localWords.listPhraseTags() : json<{ tag: string; count: number }[]>('/api/phrases/tags')
+  LOCAL
+    ? loc(localWords.listPhraseTags())
+    : json<{ tag: string; count: number }[]>('/api/phrases/tags')
 export type PhraseInput = { phrase: string; meaning: string; sounds_like: string; tags: string[] }
 export const createPhrase = (data: PhraseInput) =>
-  LOCAL ? localWords.createPhrase(data) : json<PhraseItem>('/api/phrases', body('POST', data))
+  LOCAL ? loc(localWords.createPhrase(data)) : json<PhraseItem>('/api/phrases', body('POST', data))
 export const updatePhrase = (id: string, data: Partial<PhraseInput>) =>
   LOCAL
-    ? localWords.updatePhrase(id, data)
+    ? loc(localWords.updatePhrase(id, data))
     : json<PhraseItem>(`/api/phrases/${id}`, body('PATCH', data))
 export const deletePhrase = async (id: string) => {
-  if (LOCAL) return localWords.deletePhrase(id)
+  if (LOCAL) return loc(localWords.deletePhrase(id))
   await request(`/api/phrases/${id}`, body('DELETE'))
 }
 export const exportPhrases = async () => {
-  if (LOCAL) return localWords.exportPhrases()
+  if (LOCAL) return loc(localWords.exportPhrases())
   const res = await request('/api/phrases/export')
   return res.blob()
 }
@@ -346,7 +359,7 @@ export const phraseRhymes = (
   signal?: AbortSignal,
 ) =>
   LOCAL
-    ? localWords.phraseRhymes(phrase, syllables, qualities)
+    ? loc(localWords.phraseRhymes(phrase, syllables, qualities))
     : json<PhraseRhymes>(
         `/api/phonetics/phrase-rhymes?${new URLSearchParams({ phrase, syllables: String(syllables), qualities: qualities.join(','), limit: '80' })}`,
         undefined,

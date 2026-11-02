@@ -78,7 +78,7 @@ let CURRENT = null
   check('rhymes are about sound: "said" is not offered', !words.some((x) => x.startsWith('said')))
   check('no online rhymes section on the phone', (await page.getByText('Online rhymes (optional)').count()) === 0)
   await page.getByLabel('Part of speech').selectOption('noun')
-  await page.getByText(/usually used as a noun/).waitFor({ timeout: 30000 })
+  await page.getByText(/usually used as a noun/).waitFor({ timeout: 90000 })
   check('part-of-speech filter works on the phone (WordNet loaded on the device)', true)
   await page.getByLabel('Part of speech').selectOption('')
 

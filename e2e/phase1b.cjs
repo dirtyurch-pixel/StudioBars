@@ -103,7 +103,6 @@ const dump = async () => {
     const onDisk = fs.readdirSync(MEDIA_DIR).filter((f) => !f.startsWith('.'))
     check('only the 10 good files were copied to private storage', onDisk.length === 10 && !fs.readdirSync(MEDIA_DIR).some((f) => f.startsWith('.incoming')), JSON.stringify(onDisk))
   }
-  await page.getByLabel('Rename 01 Slow Tide').click().catch(() => {})
   // rename a track
   await page.locator('.trk', { hasText: '02 Short One' }).getByRole('button', { name: 'Rename' }).click()
   await page.getByLabel('Track title').fill('02 Short One (edited)')
@@ -116,14 +115,16 @@ const dump = async () => {
   await page.getByPlaceholder('New playlist name').fill('Writing night')
   await page.getByRole('button', { name: 'Create playlist' }).click()
   const add = async (title) => page.locator('#pl-add').selectOption({ label: title })
-  for (const t of ['01 Slow Tide', '02 Short One (edited)', '03 Night Drive', '04 Low Light', '01 Slow Tide']) {
-    await add(t)
-    await page.waitForTimeout(150)
+  const titles = ['01 Slow Tide', '02 Short One (edited)', '03 Night Drive', '04 Low Light', '01 Slow Tide']
+  for (let i = 0; i < titles.length; i++) {
+    await add(titles[i])
+    // wait for the server to confirm each one (a fixed pause was too short on slow machines)
+    await page.waitForFunction((n) => document.querySelectorAll('ol.tracks .trk-title').length >= n, i + 1)
   }
   let rows = await page.locator('ol.tracks .trk-title').allInnerTexts()
   check('playlist keeps repeated tracks on purpose', rows.length === 5 && rows[0] === rows[4], JSON.stringify(rows))
   await page.getByLabel('Move 03 Night Drive up').click()
-  await page.waitForTimeout(250)
+  await page.waitForFunction(() => document.querySelectorAll('ol.tracks .trk-title')[1]?.textContent?.includes('03 Night Drive'), null, { timeout: 5000 }).catch(() => {})
   rows = await page.locator('ol.tracks .trk-title').allInnerTexts()
   check('reordering a playlist works', rows[1] === '03 Night Drive' && rows[2] === '02 Short One (edited)', JSON.stringify(rows))
   await page.getByRole('button', { name: '← All playlists' }).click()

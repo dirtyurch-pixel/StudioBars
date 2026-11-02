@@ -190,7 +190,8 @@ describe('SongEditor locks', () => {
       return s
     })
     fireEvent.change(line1, { target: { value: 'first typed' } })
-    fireEvent.click(screen.getByLabelText('Lock line 1'))
+    fireEvent.focus(line1)
+    fireEvent.click(screen.getByRole('button', { name: 'Lock line' }))
     await waitFor(() => expect(screen.getByLabelText('Line 1 (locked)')).toBeInTheDocument())
     expect(order).toEqual(['save', 'lock'])
     expect(screen.getByLabelText('Line 1 (locked)')).toHaveValue('first typed')

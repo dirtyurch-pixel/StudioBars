@@ -62,9 +62,11 @@ const dump = async () => {
 
   // 3. lock two lines (verse 1, lines 1 and 2)
   await page.getByRole('tab', { name: 'Verse 1' }).click()
-  await page.getByLabel('Lock line 1').click()
+  await line(page, 1).click()
+  await page.getByRole('button', { name: 'Lock line', exact: true }).click()
   await page.getByLabel('Unlock line 1').waitFor()
-  await page.getByLabel('Lock line 2').click()
+  await line(page, 2).click()
+  await page.getByRole('button', { name: 'Lock line', exact: true }).click()
   await page.getByLabel('Unlock line 2').waitFor()
   check('two lines locked', (await page.getByLabel(/^Unlock line/).count()) === 2)
 
@@ -122,7 +124,8 @@ const dump = async () => {
   check('locked lines still intact after all that', (await line(page, 1).inputValue()) === verse[0] && (await line(page, 2).inputValue()) === verse[1])
 
   // 7. notes (comments) incl. on a locked line
-  await page.getByLabel(/^Notes for line 1 /).click()
+  await line(page, 1).click()
+  await page.getByRole('button', { name: 'Notes', exact: true }).click()
   await page.getByLabel('Add a note').fill('make this punchier')
   await page.getByRole('button', { name: 'Add note' }).click()
   await page.getByText('make this punchier').waitFor()

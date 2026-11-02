@@ -51,7 +51,8 @@ let CURRENT = null
   check('a locked line cannot be typed over', (await page.getByLabel('Line 1 (locked)').inputValue()) === 'Written on my phone')
 
   // note
-  await page.getByRole('button', { name: /^Notes for line 2/ }).click()
+  await line(page, 2).click()
+  await page.getByRole('button', { name: 'Notes', exact: true }).click()
   await page.getByRole('tab', { name: 'Notes' }).click()
   const box = page.locator('textarea:not([data-line-input])').first()
   await box.fill('say this softer')

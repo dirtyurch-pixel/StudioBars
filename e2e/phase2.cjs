@@ -64,7 +64,7 @@ const dump = async () => {
   check('a line with an unknown word is marked as a guess with ~', (await margin(4)) === '~5')
   const tip = await page.locator('.pad-line').nth(2).locator('.pad-num').getAttribute('title')
   check('hover text explains the range and which word causes it', /every \(2–3\)/i.test(tip), tip)
-  check('the margin is labelled as syllables, not bar numbers', await page.getByText(/estimated syllables, not bar numbers/).isVisible())
+  check('the syllable numbers are labelled as syllables, not bar numbers', await page.getByText(/estimated syllables \(not bars\)/).isVisible())
   check('lines keep exactly the typed text', (await line(page, 4).inputValue()) === 'zorblax in the dark')
 
   // ---------------------------------------------------------------- rhyme colours
@@ -166,7 +166,8 @@ const dump = async () => {
   check('removing it goes back to a flagged guess', (await margin(4)).startsWith('~'))
 
   // ---------------------------------------------------------------- locked lines still get analysed
-  await page.getByLabel('Lock line 1').click()
+  await line(page, 1).click()
+  await page.getByRole('button', { name: 'Lock line', exact: true }).click()
   await page.getByLabel('Unlock line 1').waitFor()
   check('locked lines still show syllables', (await margin(1)) === '4')
 

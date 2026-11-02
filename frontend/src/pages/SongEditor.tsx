@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import * as api from '../api'
 import { ApiFail, LOCAL } from '../api'
 import { GenrePicker } from '../components/GenrePicker'
+import { Menu } from '../components/Menu'
 import { Modal } from '../components/Modal'
 import { Pad, type FocusRequest } from '../components/Pad'
 import { FilesPanel, HistoryPanel, NotesPanel } from '../components/SidePanels'
@@ -42,6 +43,7 @@ import {
   SECTION_TYPES,
   type Content,
   type Line,
+  GENRES,
   type Genre,
   type Revision,
   type SectionType,
@@ -563,28 +565,39 @@ export default function SongEditor({ id }: { id: string }) {
     <div className={`editor${focusMode ? ' focus' : ''}`}>
       <header className="ed-top">
         <button
-          className="btn btn-ghost"
+          className="icon-btn ed-back"
           onClick={async () => {
             await saveNow()
             goHome()
           }}
           aria-label="Back to my songs"
+          title="My songs"
         >
-          ←
+          ‹
         </button>
-        <input
-          className="title-input"
-          aria-label="Song title"
-          value={meta.title}
-          maxLength={200}
-          onChange={(e) => changeMeta({ title: e.target.value })}
-          onBlur={() => !meta.title.trim() && load()}
-        />
-        <span className={`save save-${status}`} role="status" aria-live="polite">
-          {STATUS_TEXT[status]}
-        </span>
+        <div className="ed-titlebox">
+          <input
+            className="title-input"
+            aria-label="Song title"
+            value={meta.title}
+            maxLength={200}
+            onChange={(e) => changeMeta({ title: e.target.value })}
+            onBlur={() => !meta.title.trim() && load()}
+          />
+          <span className="ed-sub">
+            {[
+              ...meta.genres.map((g) => GENRES.find((x) => x.id === g)?.label ?? g),
+              ...(meta.bpm ? [`${meta.bpm} BPM`] : []),
+            ].map((x) => (
+              <span key={x}>{x} · </span>
+            ))}
+            <span className={`save save-${status}`} role="status" aria-live="polite">
+              {STATUS_TEXT[status]}
+            </span>
+          </span>
+        </div>
         <button
-          className="btn btn-ghost"
+          className="icon-btn"
           onClick={undo}
           disabled={!hist.canUndo}
           aria-label="Undo"
@@ -593,7 +606,7 @@ export default function SongEditor({ id }: { id: string }) {
           ↶
         </button>
         <button
-          className="btn btn-ghost"
+          className="icon-btn"
           onClick={redo}
           disabled={!hist.canRedo}
           aria-label="Redo"
@@ -601,22 +614,20 @@ export default function SongEditor({ id }: { id: string }) {
         >
           ↷
         </button>
-        <button
-          className={`btn btn-ghost${focusMode ? ' on' : ''}`}
-          onClick={() => setFocusMode((v) => !v)}
-          aria-pressed={focusMode}
-          title="Focus Mode (Alt+F)"
-        >
-          {focusMode ? 'Exit focus' : 'Focus'}
-        </button>
-        <button
-          className="btn btn-ghost"
-          onClick={() => setShowHelp(true)}
-          aria-label="Keyboard shortcuts"
-          title="Shortcuts (Ctrl+/)"
-        >
-          ⌨
-        </button>
+        <Menu
+          label="Song menu"
+          items={[
+            {
+              label: focusMode ? 'Leave Focus Mode' : 'Focus Mode',
+              onSelect: () => setFocusMode((v) => !v),
+            },
+            {
+              label: optsOpen ? 'Hide song details' : 'Song details',
+              onSelect: () => setOptsOpen((v) => !v),
+            },
+            { label: 'Keyboard shortcuts', onSelect: () => setShowHelp(true) },
+          ]}
+        />
       </header>
 
       {status === 'conflict' && (
@@ -655,14 +666,6 @@ export default function SongEditor({ id }: { id: string }) {
       <div className="ed-grid">
         <section className="ed-main" aria-label="Lyrics">
           <div className="opts hide-focus">
-            <button
-              type="button"
-              className="btn btn-ghost opts-toggle"
-              aria-expanded={optsOpen}
-              onClick={() => setOptsOpen((v) => !v)}
-            >
-              {optsOpen ? 'Hide' : 'Show'} song &amp; section options
-            </button>
             {optsOpen && (
               <>
                 <div className="meta-row hide-focus">
@@ -898,9 +901,41 @@ export default function SongEditor({ id }: { id: string }) {
               setToolsOpen(true)
             }}
           />
-          <div className="line-actions hide-focus">
+          <div className="line-actions hide-focus" role="toolbar" aria-label="This line">
             <button
-              className="btn"
+              className="btn btn-sm"
+              disabled={!activeLine}
+              onClick={() => activeLine && void toggleLock(activeLine.line.id)}
+            >
+              <span aria-hidden="true">{activeLine?.line.is_locked ? '🔓' : '🔒'}</span>{' '}
+              {activeLine?.line.is_locked ? 'Unlock line' : 'Lock line'}
+            </button>
+            <button
+              className="btn btn-sm"
+              disabled={!activeLine}
+              onClick={() => {
+                if (!activeLine) return
+                setTool('notes')
+                setToolsOpen(true)
+              }}
+            >
+              <span aria-hidden="true">💬</span> Notes
+              {activeLine?.line.comments.length ? ` (${activeLine.line.comments.length})` : ''}
+            </button>
+            <button
+              className="btn btn-sm"
+              disabled={!activeLine}
+              onClick={() => {
+                const w = activeLine ? lastWord(activeLine.line.text) : ''
+                if (w) setLookup({ word: w, nonce: Date.now() })
+                setTool('rhymes')
+                setToolsOpen(true)
+              }}
+            >
+              Rhymes
+            </button>
+            <button
+              className="btn btn-sm"
               disabled={!activeLine}
               onClick={() =>
                 activeLine && applyEdit(addLineAfter(contentRef.current, activeLine.line.id))
@@ -909,7 +944,7 @@ export default function SongEditor({ id }: { id: string }) {
               + Line below
             </button>
             <button
-              className="btn"
+              className="btn btn-sm btn-ghost"
               disabled={!activeLine || activeLine.line.is_locked || section.lines.length <= 1}
               onClick={() => {
                 if (activeLine) {
@@ -919,18 +954,11 @@ export default function SongEditor({ id }: { id: string }) {
             >
               Delete line
             </button>
-            <button
-              className="btn"
-              disabled={!activeLine}
-              onClick={() => activeLine && void toggleLock(activeLine.line.id)}
-            >
-              {activeLine?.line.is_locked ? 'Unlock line' : 'Lock line'}
-            </button>
           </div>
           <p className="hint hide-focus">
             {syllableDisplay === 'syllables'
-              ? 'Margin numbers are estimated syllables, not bar numbers. A range means the line can be said more than one way; ~ means a guess.'
-              : 'Margin numbers are line positions, not bar numbers.'}
+              ? 'Numbers on the right are estimated syllables (not bars). A range means it can be said more than one way; ~ means a guess.'
+              : 'Syllable counts are hidden. Turn them on in Song details.'}
           </p>
           {analysis.failed && !LOCAL && (
             <p className="hint hide-focus" role="status">

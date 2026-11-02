@@ -134,7 +134,11 @@ export function Pad(p: Props) {
   }
 
   return (
-    <div className="pad" role="group" aria-label={`${p.section.label} lyrics`}>
+    <div
+      className={`pad${mode === 'numbers' ? ' numbers' : ''}`}
+      role="group"
+      aria-label={`${p.section.label} lyrics`}
+    >
       {p.section.lines.map((l, i) => {
         const res = p.analysis?.byId.get(l.id)
         const fresh = !!res && res.text === l.text
@@ -159,13 +163,12 @@ export function Pad(p: Props) {
                   : '·'
                 : label.text
         return (
-          <div key={l.id} className={`pad-line${p.activeLineId === l.id ? ' active' : ''}`}>
-            <span
-              className={`pad-num${mode === 'syllables' ? ' syl' : ''}${mode === 'syllables' && res && !fresh ? ' stale' : ''}${res?.syllables.guessed && mode === 'syllables' ? ' guess' : ''}`}
-              title={mode === 'syllables' ? label.title : `Line ${i + 1}`}
-              aria-hidden="true"
-            >
-              {margin}
+          <div
+            key={l.id}
+            className={`pad-line${p.activeLineId === l.id ? ' active' : ''}${l.is_locked ? ' locked' : ''}`}
+          >
+            <span className="pad-no" aria-hidden="true">
+              {String(i + 1).padStart(2, '0')}
             </span>
             <span id={`syl-${l.id}`} className="sr">
               {mode === 'syllables' && !empty ? label.title : ''}
@@ -238,23 +241,35 @@ export function Pad(p: Props) {
                 onPaste={(e) => onPaste(e, l.id, l.is_locked)}
               />
             </div>
-            <button
-              type="button"
-              className={`pad-btn${l.comments.length ? ' has' : ''}`}
-              aria-label={`Notes for line ${i + 1} (${l.comments.length})`}
-              onClick={() => p.onNotes(l.id)}
+            <span
+              className={`pad-num${mode === 'syllables' ? ' syl' : ''}${mode === 'syllables' && res && !fresh ? ' stale' : ''}${res?.syllables.guessed && mode === 'syllables' ? ' guess' : ''}`}
+              title={mode === 'syllables' ? label.title : `Line ${i + 1}`}
+              aria-hidden="true"
             >
-              💬{l.comments.length > 0 && <sup>{l.comments.length}</sup>}
-            </button>
-            <button
-              type="button"
-              className={`pad-btn lock${l.is_locked ? ' on' : ''}`}
-              aria-pressed={l.is_locked}
-              aria-label={`${l.is_locked ? 'Unlock' : 'Lock'} line ${i + 1}`}
-              onClick={() => p.onToggleLock(l.id)}
-            >
-              {l.is_locked ? '🔒' : '🔓'}
-            </button>
+              {margin}
+            </span>
+            {l.comments.length > 0 && (
+              <button
+                type="button"
+                className="pad-ind"
+                aria-label={`Notes for line ${i + 1} (${l.comments.length})`}
+                onClick={() => p.onNotes(l.id)}
+              >
+                💬<sup>{l.comments.length}</sup>
+              </button>
+            )}
+            {l.is_locked && (
+              <button
+                type="button"
+                className="pad-ind lock"
+                aria-pressed={true}
+                aria-label={`Unlock line ${i + 1}`}
+                title="Locked. Tap to unlock."
+                onClick={() => p.onToggleLock(l.id)}
+              >
+                🔒
+              </button>
+            )}
           </div>
         )
       })}

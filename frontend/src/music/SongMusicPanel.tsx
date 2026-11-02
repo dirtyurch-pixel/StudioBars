@@ -2,6 +2,7 @@ import { formatTime, loopActive } from './logic'
 import { usePlayer } from './playerContext'
 import { useLinkedName } from './useLinkedName'
 import type { SongLinkApi } from './useSongLink'
+import { HERE } from '../where'
 
 export function SessionStrip({ songLink }: { songLink: SongLinkApi }) {
   const p = usePlayer()
@@ -38,8 +39,8 @@ export function SongMusicPanel({ songLink }: { songLink: SongLinkApi }) {
     <div className="panel-body">
       <p className="hint">
         Link music to this song. When you open the song again, its music is loaded (paused) with the
-        same loop, speed and position. Your audio stays on this computer; the link is not part of
-        exports.
+        same loop, speed and position. Your audio stays on {HERE}. The link is not part of
+        single-song exports.
       </p>
       {l === undefined && <p className="hint">Loading…</p>}
       {l && name ? (

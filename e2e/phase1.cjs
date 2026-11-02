@@ -202,9 +202,19 @@ const dump = async () => {
   await page.getByText(/changed in another window or tab/).waitFor({ timeout: 10000 })
   check('second window: conflict detected instead of overwriting', true)
   await other.close()
+  await page.getByRole('button', { name: 'Keep my version as a copy' }).click()
+  await page.getByRole('button', { name: 'Open my copy' }).waitFor()
+  check('conflict: my version can be kept as a copy before loading the latest', true)
   await page.getByRole('button', { name: /Load the latest/ }).click()
   await page.getByRole('tab', { name: 'Chorus' }).click()
   check('after reload the other window’s text is there', (await line(page, 1).inputValue()) === 'written in window two')
+  const p2 = await ctx.newPage()
+  await p2.goto(url.replace(/#.*$/, '#/'))
+  await p2.getByText(/\(my copy\)/).first().click()
+  await p2.getByRole('tab', { name: 'Chorus' }).click()
+  const copied = await line(p2, 3).inputValue()
+  check('the copy holds what I typed in this window', copied === 'written in window one', copied)
+  await p2.close()
 
   // 13. phone layout
   const phone = await browser.newContext({ viewport: { width: 390, height: 780 }, hasTouch: true, isMobile: true })
@@ -225,7 +235,7 @@ const dump = async () => {
 
   // 14. delete -> trash -> restore
   await page.getByLabel('Back to my songs').click()
-  await page.getByLabel('Delete E2E Rain (imported)').click()
+  await page.getByLabel('Delete E2E Rain (imported)', { exact: true }).click()
   await page.getByRole('button', { name: 'Yes, delete' }).click()
   await page.getByRole('button', { name: /Show trash/ }).click()
   await page.getByRole('button', { name: 'Restore' }).click()

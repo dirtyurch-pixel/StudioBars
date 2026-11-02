@@ -168,15 +168,25 @@ export function AiSetup({ status, onStatus, onClose }: Props) {
         </>
       ) : (
         <>
-          <p className="muted">
-            Works with any server that speaks the OpenAI chat format, like <strong>Ollama</strong>{' '}
-            running on this computer (free, nothing leaves your machine).
-          </p>
+          {LOCAL ? (
+            <p className="muted">
+              Works with any server that speaks the OpenAI chat format, like <strong>Ollama</strong>{' '}
+              on your computer. On the phone it must have an <strong>https://</strong> address this
+              phone can reach (for example through Tailscale), and the server must allow this site.
+              “localhost” would mean the phone itself, and phone browsers block plain http://
+              addresses from this page.
+            </p>
+          ) : (
+            <p className="muted">
+              Works with any server that speaks the OpenAI chat format, like <strong>Ollama</strong>{' '}
+              running on this computer (free, nothing leaves your machine).
+            </p>
+          )}
           <label className="ai-field">
             <span>Server address</span>
             <input
               className="input"
-              placeholder="http://localhost:11434/v1"
+              placeholder={LOCAL ? 'https://my-pc.example.ts.net/v1' : 'http://localhost:11434/v1'}
               value={baseUrl}
               onChange={(e) => setBaseUrl(e.target.value)}
             />

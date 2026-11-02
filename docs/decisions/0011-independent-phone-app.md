@@ -91,6 +91,16 @@ import (txt/md/json), export, backup/restore, works offline, installable to the 
 - The PC version already did this inside one SQLite transaction.
 - Tested: `localApi.test.ts` "saving is all-or-nothing" (simulated storage failure half-way).
 
+## Phone fixes (reliability phase, step 3)
+- Lyric lines wrap: each line is an auto-growing `<textarea rows=1>` that grows by whole ruled lines, so a long bar
+  stays ONE musical line (one syllable count, one lock) without sideways scrolling. A phone keyboard's Enter arriving
+  as a typed newline is treated as "new line here". Up/Down move between rows of a wrapped line first.
+- Wording: recordings, phrase bank, My style and song–music links say "this device" on the phone (`src/where.ts`).
+  The Ollama option explains that on the phone it needs an https:// address the phone can reach (localhost means
+  the phone; http:// is blocked from an https page). A failed audio file no longer mentions a server on the phone.
+- Conflicts: "Keep my version as a copy" saves what is on screen as a new song "(my copy)" before "Load the latest".
+- Tested: phone_local (wrapping), phase1 (conflict copy).
+
 ## Waveform and beat markers (PC and phone)
 - The player can show the track's waveform (`src/music/Waveform.tsx`, maths in `src/music/wave.ts`). The browser decodes
   the audio once and draws the loudest point of 800 slices; tap it to jump. Files over 80 MB are not drawn (memory on

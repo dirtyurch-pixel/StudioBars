@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import * as api from '../api'
+import { LOCAL } from '../api'
 import { useToast } from '../components/toastContext'
 import type { PlaybackSaved, RepeatMode, Track } from '../types'
 import { loopActive, loopJump, makeOrder, nextPos, prevPos, setLoopPoint, type Loop } from './logic'
@@ -416,7 +417,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       setError(
         code === 4
           ? "This browser can't play that file, or the file is missing. Open the library to relink it."
-          : 'The audio could not be loaded. Check that the Studio Bars server is running.',
+          : LOCAL
+            ? 'The audio could not be loaded on this device. Try removing the track and adding it again.'
+            : 'The audio could not be loaded. Check that the Studio Bars server is running.',
       )
       void refreshLibrary()
     }

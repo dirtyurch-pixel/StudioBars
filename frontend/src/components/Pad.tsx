@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ClipboardEvent, type KeyboardEvent } from 'react'
+import { useEffect, useLayoutEffect, useRef, type ClipboardEvent, type KeyboardEvent } from 'react'
 import type { Section } from '../types'
 import { MAX_LINE_CHARS } from '../types'
 import {
@@ -34,16 +34,46 @@ type Props = {
 }
 
 export function Pad(p: Props) {
-  const refs = useRef(new Map<string, HTMLInputElement>())
+  const refs = useRef(new Map<string, HTMLTextAreaElement>())
   const hlRefs = useRef(new Map<string, HTMLDivElement>())
   const mode = p.syllableDisplay ?? 'numbers'
 
-  /** Keep the highlight layer lined up when a long line scrolls sideways inside its box. */
+  /** Keep the highlight layer lined up with its box (it wraps the same way). */
   function syncScroll(id: string) {
     const input = refs.current.get(id)
     const hl = hlRefs.current.get(id)
-    if (input && hl) hl.scrollLeft = input.scrollLeft
+    if (input && hl) hl.scrollTop = input.scrollTop
   }
+
+  /**
+   * A long line wraps onto the next ruled lines instead of scrolling sideways. It is still ONE musical line:
+   * the box just grows by whole ruled lines.
+   */
+  function fit(el: HTMLTextAreaElement) {
+    const rule = parseFloat(getComputedStyle(el).lineHeight) || 40
+    el.style.height = `${rule}px`
+    const rows = Math.max(1, Math.ceil((el.scrollHeight - 4) / rule))
+    el.style.height = `${rows * rule}px`
+    const field = el.parentElement
+    if (field) field.style.height = el.style.height
+  }
+  useLayoutEffect(() => {
+    for (const el of refs.current.values()) fit(el)
+  })
+  useEffect(() => {
+    if (typeof ResizeObserver === 'undefined') return
+    let w = 0
+    const ro = new ResizeObserver((es) => {
+      const nw = es[0]?.contentRect.width ?? 0
+      if (Math.abs(nw - w) < 1) return
+      w = nw
+      for (const el of refs.current.values()) fit(el)
+    })
+    const first = refs.current.values().next().value
+    const pad = first?.closest('.pad')
+    if (pad) ro.observe(pad)
+    return () => ro.disconnect()
+  }, [])
 
   useEffect(() => {
     if (!p.focusReq) return
@@ -61,17 +91,19 @@ export function Pad(p: Props) {
     if (next) refs.current.get(next.id)?.focus()
   }
 
-  function onKeyDown(e: KeyboardEvent<HTMLInputElement>, id: string, locked: boolean) {
+  function onKeyDown(e: KeyboardEvent<HTMLTextAreaElement>, id: string, locked: boolean) {
     const el = e.currentTarget
     const start = el.selectionStart ?? 0
     const end = el.selectionEnd ?? start
+    const wrapped = el.scrollHeight > parseFloat(getComputedStyle(el).lineHeight || '40') * 1.5
     if (e.key === 'Enter') {
       e.preventDefault()
       p.onSplit(id, start, end)
-    } else if (e.key === 'ArrowUp') {
+    } else if (e.key === 'ArrowUp' && (!wrapped || (start === 0 && end === 0))) {
+      // inside a wrapped line the arrow first moves between its rows, then to the line above
       e.preventDefault()
       move(id, -1)
-    } else if (e.key === 'ArrowDown') {
+    } else if (e.key === 'ArrowDown' && (!wrapped || start === el.value.length)) {
       e.preventDefault()
       move(id, 1)
     } else if (e.key === 'Backspace' && !locked && start === 0 && end === 0) {
@@ -88,7 +120,7 @@ export function Pad(p: Props) {
     }
   }
 
-  function onPaste(e: ClipboardEvent<HTMLInputElement>, id: string, locked: boolean) {
+  function onPaste(e: ClipboardEvent<HTMLTextAreaElement>, id: string, locked: boolean) {
     const text = e.clipboardData.getData('text')
     if (locked) {
       e.preventDefault()
@@ -166,12 +198,13 @@ export function Pad(p: Props) {
                   ))}
                 </div>
               )}
-              <input
+              <textarea
                 ref={(el) => {
                   if (el) refs.current.set(l.id, el)
                   else refs.current.delete(l.id)
                 }}
                 data-line-input
+                rows={1}
                 className="pad-input"
                 value={l.text}
                 readOnly={l.is_locked}
@@ -182,7 +215,15 @@ export function Pad(p: Props) {
                 autoComplete="off"
                 spellCheck
                 enterKeyHint="next"
-                onChange={(e) => p.onText(l.id, e.target.value)}
+                onChange={(e) => {
+                  const v = e.target.value
+                  const nl = v.search(/[\r\n]/)
+                  if (nl < 0) return p.onText(l.id, v)
+                  // a phone keyboard's Enter can arrive as a typed newline: treat it as "new line here"
+                  const without = v.replace(/[\r\n]+/g, '')
+                  if (without === l.text) p.onSplit(l.id, nl, nl)
+                  else p.onText(l.id, v.replace(/[\r\n]+/g, ' '))
+                }}
                 onFocus={() => p.onActive(l.id)}
                 onKeyDown={(e) => onKeyDown(e, l.id, l.is_locked)}
                 onKeyUp={() => syncScroll(l.id)}

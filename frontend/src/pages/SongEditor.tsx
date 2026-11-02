@@ -24,6 +24,7 @@ import {
   setLineText,
   setSectionType,
   splitLine,
+  newId,
   type Edit,
 } from '../editor/content'
 import { useHistory } from '../editor/useHistory'
@@ -36,7 +37,7 @@ import { AiPanel } from '../ai/AiPanel'
 import { CraftPanel } from '../craft/CraftPanel'
 import { useLineAnalysis } from '../phonetics/useLineAnalysis'
 import { useSongLink } from '../music/useSongLink'
-import { goHome } from '../route'
+import { goHome, goSong } from '../route'
 import {
   SECTION_TYPES,
   type Content,
@@ -68,6 +69,8 @@ export default function SongEditor({ id }: { id: string }) {
   const [phase, setPhase] = useState<Phase>('loading')
   const [loadError, setLoadError] = useState('')
   const [meta, setMeta] = useState<Meta | null>(null)
+  const [copying, setCopying] = useState(false)
+  const [copyId, setCopyId] = useState<string | null>(null)
   const hist = useHistory([])
   const [status, setStatus] = useState<SaveStatus>('saved')
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null)
@@ -231,6 +234,7 @@ export default function SongEditor({ id }: { id: string }) {
           return false
         }
         if (fail.code === 'VERSION_CONFLICT') {
+          setCopyId(null)
           setSaveStatus('conflict')
           return false
         }
@@ -522,6 +526,33 @@ export default function SongEditor({ id }: { id: string }) {
   const activeLine = activeLineId ? findLine(content, activeLineId) : null
   const sectionIdx = content.findIndex((s) => s.id === section.id)
 
+  /** Rescue: save what is on screen as a NEW song, so nothing typed here is lost in a conflict. */
+  async function keepCopy() {
+    if (!meta) return
+    setCopying(true)
+    try {
+      const copy = await api.createSong({
+        title: `${meta.title} (my copy)`.slice(0, 200),
+        genres: meta.genres,
+        bpm: meta.bpm,
+        time_signature: meta.time_signature,
+        template: 'blank',
+      })
+      const fresh = contentRef.current.map((sec) => ({
+        ...sec,
+        id: newId(),
+        lines: sec.lines.map((l) => ({ ...l, id: newId(), is_locked: false, comments: [] })),
+      }))
+      await api.saveContent(copy.id, copy.version, fresh)
+      setCopyId(copy.id)
+      toast(`Your version was saved as a new song: “${meta.title} (my copy)”.`, 'success')
+    } catch (e) {
+      toast(e instanceof ApiFail ? e.message : 'Could not make the copy.', 'error')
+    } finally {
+      setCopying(false)
+    }
+  }
+
   return (
     <div className={`editor${focusMode ? ' focus' : ''}`}>
       <header className="ed-top">
@@ -584,11 +615,28 @@ export default function SongEditor({ id }: { id: string }) {
 
       {status === 'conflict' && (
         <div className="banner banner-error" role="alert">
-          This song was changed in another window or tab, so saving is paused to avoid overwriting
-          it.
-          <button className="btn" onClick={() => void load()}>
-            Load the latest (discard what I typed here)
-          </button>
+          <span>
+            This song was changed in another window or tab, so saving is paused to avoid overwriting
+            it. Nothing you typed here is lost yet.
+          </span>
+          <div className="actions">
+            {copyId ? (
+              <button className="btn btn-primary" onClick={() => goSong(copyId)}>
+                Open my copy
+              </button>
+            ) : (
+              <button
+                className="btn btn-primary"
+                disabled={copying}
+                onClick={() => void keepCopy()}
+              >
+                Keep my version as a copy
+              </button>
+            )}
+            <button className="btn" onClick={() => void load()}>
+              {copyId ? 'Load the latest here' : 'Load the latest (discard what I typed here)'}
+            </button>
+          </div>
         </div>
       )}
       {status === 'offline' && (

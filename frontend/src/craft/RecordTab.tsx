@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import * as api from '../api'
 import { usePlayer } from '../music/playerContext'
 import { msg, recordingSupported, useLoad, type CraftProps } from './shared'
+import { HERE } from '../where'
 
 const MAX_SECONDS = 600
 
@@ -96,9 +97,9 @@ export function RecordTab({ songId }: CraftProps) {
   return (
     <div className="ai-panel">
       <p className="muted ai-note">
-        Record a rough vocal against the song. Recordings stay on the computer running Studio Bars
-        and are never sent anywhere. Timing is approximate: it notes where the music was when you
-        pressed record, and you can nudge it.
+        Record a rough vocal against the song. Recordings stay on {HERE} and are never sent
+        anywhere. Timing is approximate: it notes where the music was when you pressed record, and
+        you can nudge it.
       </p>
       {!support.ok ? (
         <p className="warn" role="status">

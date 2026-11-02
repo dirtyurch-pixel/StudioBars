@@ -2,6 +2,7 @@ import { useState } from 'react'
 import * as api from '../api'
 import type { Dna } from '../types'
 import { msg, useLoad, type CraftProps } from './shared'
+import { HERE } from '../where'
 
 export function DnaTab({ songId }: CraftProps) {
   const approved = useLoad(() => api.getDnaApproved(), [])
@@ -33,9 +34,8 @@ export function DnaTab({ songId }: CraftProps) {
   return (
     <div className="ai-panel">
       <p className="muted ai-note">
-        Your writing habits, worked out on this computer from songs <strong>you approve</strong>.
-        Only approve songs you wrote yourself. It is never stored as a file and is never sent to the
-        AI.
+        Your writing habits, worked out on {HERE} from songs <strong>you approve</strong>. Only
+        approve songs you wrote yourself. It is never stored as a file and is never sent to the AI.
       </p>
       <button className="btn" aria-pressed={included} onClick={() => void toggle()}>
         {included ? 'Remove this song from my style' : 'Include this song in my style'}

@@ -3,6 +3,7 @@ import * as api from '../api'
 import { ApiFail } from '../api'
 import { useToast } from '../components/toastContext'
 import type { PhraseItem } from '../types'
+import { HERE } from '../where'
 
 const splitTags = (s: string) =>
   s
@@ -103,8 +104,7 @@ export function PhraseBank({
   return (
     <div className="phrase-bank">
       <p className="hint">
-        Your own phrases and slang: what they mean, how they sound, and tags. Stored only on this
-        computer.
+        Your own phrases and slang: what they mean, how they sound, and tags. Stored only on {HERE}.
       </p>
       <div className="inline-form">
         <label htmlFor="phrase-search" className="sr">

@@ -53,11 +53,19 @@ let CURRENT = null
   // note
   await page.getByRole('button', { name: /^Notes for line 2/ }).click()
   await page.getByRole('tab', { name: 'Notes' }).click()
-  const box = page.locator('textarea').first()
+  const box = page.locator('textarea:not([data-line-input])').first()
   await box.fill('say this softer')
   await page.getByRole('button', { name: /^Add note/ }).click()
   await page.getByText('say this softer').first().waitFor()
   check('notes can be added to a line', true)
+
+  // long lines wrap onto the next ruled lines (no sideways scrolling) but stay ONE line
+  const longText = 'I been running through the city with the lights low chasing every dream until the night goes'
+  await line(page, 3).fill(longText)
+  const dims = await line(page, 3).evaluate((el) => [el.offsetHeight, el.scrollWidth <= el.clientWidth + 1])
+  check('a long line wraps instead of scrolling sideways', dims[0] >= 80 && dims[1], JSON.stringify(dims))
+  check('a wrapped line is still one line', (await line(page, 3).inputValue()) === longText && (await line(page, 4).inputValue()) !== longText)
+  await line(page, 3).fill('')
 
   // reload: everything persists on the device
   await page.getByText('Saved', { exact: true }).first().waitFor()

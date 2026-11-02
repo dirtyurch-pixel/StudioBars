@@ -185,11 +185,9 @@ function TracksTab() {
             internet and stay out of GitHub. Only use music you have the right to play.
           </span>
         </label>
-        <label htmlFor="music-files" className="label">
-          Add audio files (mp3, wav, flac, ogg, opus, m4a, aac)
-        </label>
         <input
           id="music-files"
+          className="file-hidden"
           type="file"
           multiple
           disabled={!consent || busy !== null}
@@ -199,6 +197,15 @@ function TracksTab() {
             e.target.value = ''
           }}
         />
+        <label
+          htmlFor="music-files"
+          className={`btn btn-primary file-pick${!consent || busy !== null ? ' off' : ''}`}
+        >
+          📂 {LOCAL ? 'Choose music from this device' : 'Choose music files'}
+        </label>
+        <p className="hint">
+          {consent ? 'mp3, wav, flac, ogg, opus, m4a or aac.' : 'Tick the box above first.'}
+        </p>
         <p className="hint">
           {LOCAL
             ? 'Music added here stays on this device (it is not part of “Back up all songs”). Music on your PC is not automatically here: add it on each device.'

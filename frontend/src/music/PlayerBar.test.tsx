@@ -268,7 +268,7 @@ describe('import', () => {
   it('needs explicit consent before any file can be chosen', async () => {
     setup()
     fireEvent.click(await screen.findByLabelText('Music library and playlists'))
-    const input = await screen.findByLabelText(/Add audio files/)
+    const input = await screen.findByLabelText(/Choose music/)
     expect(input).toBeDisabled()
     await userEvent.click(screen.getByRole('checkbox'))
     expect(input).toBeEnabled()
@@ -287,7 +287,7 @@ describe('import', () => {
     fireEvent.click(await screen.findByLabelText('Music library and playlists'))
     await userEvent.click(await screen.findByRole('checkbox'))
     const user = userEvent.setup({ applyAccept: false })
-    await user.upload(screen.getByLabelText(/Add audio files/), [
+    await user.upload(screen.getByLabelText(/Choose music/), [
       file('notes.txt'),
       file('good.wav'),
       file('damaged.wav'),

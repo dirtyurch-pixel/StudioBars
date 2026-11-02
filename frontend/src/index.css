@@ -1666,3 +1666,27 @@ label.chip-btn:focus-within {
 .phone-note p {
   margin: 0;
 }
+
+/* a real, easy-to-tap button for picking music files (the browser's own control is hidden) */
+.file-pick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  margin-top: 4px;
+  cursor: pointer;
+}
+.file-pick.off {
+  opacity: 0.45;
+  pointer-events: none;
+}
+.file-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+input.file-hidden:focus-visible + .file-pick {
+  outline: 3px solid var(--accent);
+}

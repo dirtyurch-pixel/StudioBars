@@ -15,6 +15,11 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - run: ruff check . && ruff format --check .
       - run: pytest -q
+      # the phone version's copy of the writing logic must still match TODAY's Python answers
+      - name: Phone/PC parity fixture is up to date
+        run: |
+          PYTHONPATH=. python ../scripts/make_phone_parity.py
+          git diff --exit-code ../frontend/src/local/parity.fixture.json
   frontend:
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: frontend } }

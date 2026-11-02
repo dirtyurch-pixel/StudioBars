@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ApiFail, deleteSong, listSongs, undeleteSong } from '../api'
+import { ApiFail, LOCAL, deleteSong, listSongs, undeleteSong } from '../api'
 import { ImportDialog } from '../components/ImportDialog'
 import { NewSongDialog } from '../components/NewSongDialog'
+import { PhoneBackup } from '../local/PhoneBackup'
 import { useToast } from '../components/toastContext'
 import { goSong } from '../route'
 import { ago } from '../time'
@@ -73,6 +74,7 @@ export default function Dashboard() {
         </div>
       </header>
 
+      {LOCAL && <PhoneBackup onRestored={() => void load()} />}
       {error && (
         <div className="state state-error" role="alert">
           <p>

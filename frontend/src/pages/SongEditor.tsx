@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import * as api from '../api'
-import { ApiFail } from '../api'
+import { ApiFail, LOCAL } from '../api'
 import { GenrePicker } from '../components/GenrePicker'
 import { Modal } from '../components/Modal'
 import { Pad, type FocusRequest } from '../components/Pad'
@@ -110,7 +110,10 @@ export default function SongEditor({ id }: { id: string }) {
   const [lookup, setLookup] = useState<{ word: string; nonce: number } | null>(null)
   const [phraseReq, setPhraseReq] = useState<{ phrase: string; nonce: number } | null>(null)
   const clearPhraseReq = useCallback(() => setPhraseReq(null), [])
-  const analysis = useLineAnalysis(section?.lines ?? NO_LINES, analysisNonce)
+  // the phone version has no rhyme engine yet (step 2), so it does not ask for analysis
+  const analysis = useLineAnalysis(LOCAL ? NO_LINES : (section?.lines ?? NO_LINES), analysisNonce)
+  const syllableDisplay = LOCAL ? 'numbers' : pad.syllableDisplay
+  const highlight = LOCAL ? 'off' : pad.highlight
   // the line being written, and (separately) the lines beside it
   const { lineContext, aroundContext } = useMemo(() => {
     const ls = section?.lines ?? NO_LINES
@@ -267,7 +270,7 @@ export default function SongEditor({ id }: { id: string }) {
   useEffect(() => {
     const onOnline = () => void flushRef.current()
     const onOffline = () => {
-      if (dirty.current) setSaveStatus('offline')
+      if (dirty.current && !LOCAL) setSaveStatus('offline') // the phone version saves on the device
     }
     const onHide = () => {
       if (document.visibilityState === 'hidden') void flushRef.current()
@@ -767,7 +770,7 @@ export default function SongEditor({ id }: { id: string }) {
               )}
             </div>
           )}
-          {optsOpen && (
+          {optsOpen && !LOCAL && (
             <div className="pad-tools hide-focus" role="group" aria-label="Pad display">
               <span className="seg" role="group" aria-label="Margin numbers">
                 <button
@@ -831,8 +834,8 @@ export default function SongEditor({ id }: { id: string }) {
               if (w) setLookup({ word: w, nonce: Date.now() })
             }}
             analysis={analysis}
-            syllableDisplay={pad.syllableDisplay}
-            highlight={pad.highlight}
+            syllableDisplay={syllableDisplay}
+            highlight={highlight}
             onSelectWord={(w) => setLookup({ word: w, nonce: Date.now() })}
             onToggleLock={(lid) => void toggleLock(lid)}
             onBlocked={blocked}
@@ -872,7 +875,7 @@ export default function SongEditor({ id }: { id: string }) {
             </button>
           </div>
           <p className="hint hide-focus">
-            {pad.syllableDisplay === 'syllables'
+            {syllableDisplay === 'syllables'
               ? 'Margin numbers are estimated syllables, not bar numbers. A range means the line can be said more than one way; ~ means a guess.'
               : 'Margin numbers are line positions, not bar numbers.'}
           </p>
@@ -902,7 +905,18 @@ export default function SongEditor({ id }: { id: string }) {
         <aside className={`ed-side hide-focus${toolsOpen ? ' open' : ''}`} aria-label="Tools">
           <div className="side-tabs" role="tablist">
             {(
-              ['notes', 'rhymes', 'words', 'ai', 'craft', 'music', 'history', 'files'] as Tool[]
+              (LOCAL
+                ? ['notes', 'history', 'files']
+                : [
+                    'notes',
+                    'rhymes',
+                    'words',
+                    'ai',
+                    'craft',
+                    'music',
+                    'history',
+                    'files',
+                  ]) as Tool[]
             ).map((t) => (
               <button
                 key={t}

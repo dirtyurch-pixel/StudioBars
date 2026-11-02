@@ -1611,3 +1611,18 @@ label.chip-btn:focus-within {
 .mel-cell.on.head {
   background: var(--accent);
 }
+
+/* ---------------------------------------------------------------- phone version */
+.phone-note {
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin: 0 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.phone-note p {
+  margin: 0;
+}

@@ -1,0 +1,46 @@
+# Publishes the independent phone version (songs saved on the device, no server) to GitHub Pages:
+#   https://dirtyurch-pixel.github.io/StudioBars/
+# One-time setup by the owner: Settings > Pages > Source: "GitHub Actions".
+name: Phone app (GitHub Pages)
+on:
+  push:
+    branches: [main, claude/new-session-q0jfb4]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+        working-directory: frontend
+      - run: node node_modules/vite/bin/vite.js build --outDir dist-phone
+        working-directory: frontend
+        env:
+          VITE_LOCAL: '1'
+          VITE_BASE: /StudioBars/
+      - run: cp frontend/dist-phone/index.html frontend/dist-phone/404.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist-phone
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

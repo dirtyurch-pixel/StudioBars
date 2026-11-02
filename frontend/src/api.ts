@@ -44,37 +44,23 @@ export type Health = { status: string; service: string; version: string }
 const BASE =
   import.meta.env.VITE_API_URL ?? `${window.location.protocol}//${window.location.hostname}:8000`
 
-/** A failed API call. `network` is true when the server could not be reached at all. */
-export class ApiFail extends Error {
-  status: number
-  code: string
-  network: boolean
-  lineIds: string[]
-  currentVersion?: number
-  constructor(
-    message: string,
-    opts: {
-      status?: number
-      code?: string
-      network?: boolean
-      lineIds?: string[]
-      currentVersion?: number
-    } = {},
-  ) {
-    super(message)
-    this.status = opts.status ?? 0
-    this.code = opts.code ?? 'ERROR'
-    this.network = opts.network ?? false
-    this.lineIds = opts.lineIds ?? []
-    this.currentVersion = opts.currentVersion
-  }
-}
+import { ApiFail } from './apiFail'
+import * as local from './local/localApi'
+export { ApiFail }
+
+/** Phone version: everything is kept on this device and there is no server. */
+export const LOCAL = import.meta.env.VITE_LOCAL === '1'
 
 async function request(
   path: string,
   init: RequestInit = {},
   signal?: AbortSignal,
 ): Promise<Response> {
+  if (LOCAL)
+    throw new ApiFail('This part is not in the phone version yet.', {
+      status: 501,
+      code: 'NOT_IN_PHONE',
+    })
   let res: Response
   try {
     res = await fetch(`${BASE}${path}`, {
@@ -118,60 +104,83 @@ const body = (method: string, data?: unknown): RequestInit => ({
 })
 
 export async function fetchHealth(signal?: AbortSignal): Promise<Health> {
+  if (LOCAL) return local.health()
   return json<Health>('/health', undefined, signal)
 }
 
 export const listSongs = (trash = false, signal?: AbortSignal) =>
-  json<SongSummary[]>(`/api/songs${trash ? '?trash=true' : ''}`, undefined, signal)
+  LOCAL
+    ? local.listSongs(trash)
+    : json<SongSummary[]>(`/api/songs${trash ? '?trash=true' : ''}`, undefined, signal)
 export const getSong = (id: string, signal?: AbortSignal) =>
-  json<Song>(`/api/songs/${id}`, undefined, signal)
+  LOCAL ? local.getSong(id) : json<Song>(`/api/songs/${id}`, undefined, signal)
 export const createSong = (data: {
   title: string
   genres: Genre[]
   bpm?: number | null
   time_signature?: string | null
   template: 'blank' | 'verse-chorus'
-}) => json<Song>('/api/songs', body('POST', data))
+}) => (LOCAL ? local.createSong(data) : json<Song>('/api/songs', body('POST', data)))
 export const patchSong = (
   id: string,
   data: Partial<Pick<Song, 'title' | 'genres' | 'bpm' | 'time_signature'>>,
-) => json<Song>(`/api/songs/${id}`, body('PATCH', data))
+) => (LOCAL ? local.patchSong(id, data) : json<Song>(`/api/songs/${id}`, body('PATCH', data)))
 export const deleteSong = async (id: string) => {
+  if (LOCAL) return local.deleteSong(id)
   await request(`/api/songs/${id}`, body('DELETE'))
 }
-export const undeleteSong = (id: string) => json<Song>(`/api/songs/${id}/undelete`, body('POST'))
+export const undeleteSong = (id: string) =>
+  LOCAL ? local.undeleteSong(id) : json<Song>(`/api/songs/${id}/undelete`, body('POST'))
 export const saveContent = (id: string, baseVersion: number, content: Content) =>
-  json<Song>(
-    `/api/songs/${id}/content`,
-    body('PUT', { base_version: baseVersion, sections: toPayload(content) }),
-  )
+  LOCAL
+    ? local.saveContent(id, baseVersion, content)
+    : json<Song>(
+        `/api/songs/${id}/content`,
+        body('PUT', { base_version: baseVersion, sections: toPayload(content) }),
+      )
 export const lockLine = (lineId: string, locked: boolean) =>
-  json<Song>(`/api/lines/${lineId}/${locked ? 'lock' : 'unlock'}`, body('POST'))
+  LOCAL
+    ? local.lockLine(lineId, locked)
+    : json<Song>(`/api/lines/${lineId}/${locked ? 'lock' : 'unlock'}`, body('POST'))
 export const addComment = (lineId: string, text: string) =>
-  json<Song>(`/api/lines/${lineId}/comments`, body('POST', { body: text }))
+  LOCAL
+    ? local.addComment(lineId, text)
+    : json<Song>(`/api/lines/${lineId}/comments`, body('POST', { body: text }))
 export const editComment = (id: string, text: string) =>
-  json<Song>(`/api/comments/${id}`, body('PATCH', { body: text }))
-export const deleteComment = (id: string) => json<Song>(`/api/comments/${id}`, body('DELETE'))
-export const listRevisions = (id: string) => json<Revision[]>(`/api/songs/${id}/revisions`)
+  LOCAL
+    ? local.editComment(id, text)
+    : json<Song>(`/api/comments/${id}`, body('PATCH', { body: text }))
+export const deleteComment = (id: string) =>
+  LOCAL ? local.deleteComment(id) : json<Song>(`/api/comments/${id}`, body('DELETE'))
+export const listRevisions = (id: string) =>
+  LOCAL ? local.listRevisions(id) : json<Revision[]>(`/api/songs/${id}/revisions`)
 export const createRevision = (id: string, description: string) =>
-  json<Revision[]>(`/api/songs/${id}/revisions`, body('POST', { description }))
+  LOCAL
+    ? local.createRevision(id, description)
+    : json<Revision[]>(`/api/songs/${id}/revisions`, body('POST', { description }))
 export const restoreRevision = (revId: string) =>
-  json<Song>(`/api/revisions/${revId}/restore`, body('POST'))
+  LOCAL ? local.restoreRevision(revId) : json<Song>(`/api/revisions/${revId}/restore`, body('POST'))
 
 export type ImportFormat = 'json' | 'txt' | 'md'
 export const previewImport = (format: ImportFormat, content: string, title?: string) =>
-  json<ImportPreview>(
-    '/api/import/preview',
-    body('POST', { format, content, title: title || null }),
-  )
+  LOCAL
+    ? local.previewImport(format, content, title)
+    : json<ImportPreview>(
+        '/api/import/preview',
+        body('POST', { format, content, title: title || null }),
+      )
 export const commitImport = (
   format: ImportFormat,
   content: string,
   title?: string,
   genres: Genre[] = [],
-) => json<Song>('/api/import', body('POST', { format, content, title: title || null, genres }))
+) =>
+  LOCAL
+    ? local.commitImport(format, content, title, genres)
+    : json<Song>('/api/import', body('POST', { format, content, title: title || null, genres }))
 
 export async function exportSong(id: string, format: ImportFormat) {
+  if (LOCAL) return local.exportSong(id, format)
   const res = await request(`/api/songs/${id}/export?format=${format}`)
   const disp = res.headers.get('Content-Disposition') ?? ''
   const name = /filename="([^"]+)"/.exec(disp)?.[1] ?? `song.${format}`

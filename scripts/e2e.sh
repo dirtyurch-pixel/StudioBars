@@ -21,7 +21,7 @@ cleanup() {
     echo "=== e2e failed (exit $code): backend log tail ==="; tail -40 "$TMP/back.log" 2>/dev/null || true
     echo "=== fake online service log ==="; tail -5 "$TMP/fake.log" 2>/dev/null || true
   fi
-  kill ${PHONE:-} ${BACK:-} ${FRONT:-} ${FAKE:-} ${FAKEAI:-} 2>/dev/null || true; rm -rf "$TMP"
+  kill ${PREVIEW:-} ${PHONE:-} ${BACK:-} ${FRONT:-} ${FAKE:-} ${FAKEAI:-} 2>/dev/null || true; rm -rf "$TMP"
 }
 trap cleanup EXIT
 node "$ROOT/e2e/fake_datamuse.cjs" 8765 >"$TMP/fake.log" 2>&1 &
@@ -46,6 +46,11 @@ cd "$ROOT/backend"
 STUDIO_BARS_DB="$TMP/phone.db" STUDIO_BARS_ACCESS_PIN=246810 STUDIO_BARS_SERVE_FRONTEND="$TMP/web" \
   uvicorn app.main:app --host 127.0.0.1 --port 8100 >"$TMP/phone.log" 2>&1 & PHONE=$!
 for i in $(seq 1 40); do curl -sf localhost:8100/health >/dev/null && break; sleep 0.5; done
+# the independent phone version: plain files, NO server; songs live in the browser
+cd "$ROOT/frontend"
+VITE_LOCAL=1 VITE_BASE=/StudioBars/ node node_modules/vite/bin/vite.js build --outDir "$TMP/phone-local" --emptyOutDir >"$TMP/build-local.log" 2>&1
+node node_modules/vite/bin/vite.js preview --outDir "$TMP/phone-local" --base /StudioBars/ --port 4174 --strictPort >"$TMP/preview.log" 2>&1 & PREVIEW=$!
+for i in $(seq 1 40); do curl -sf http://127.0.0.1:4174/StudioBars/ >/dev/null && break; sleep 0.5; done
 cd "$ROOT/e2e"
 run() { if [ -d node_modules ]; then node "$1"; else NODE_PATH="${NODE_PATH:-$(npm root -g)}" node "$1"; fi; }
 run phase1.cjs
@@ -57,3 +62,4 @@ run phase5.cjs
 run phase6.cjs
 run phase8.cjs
 run phase7.cjs
+run phone_local.cjs

@@ -29,6 +29,8 @@ type Props = {
   // Phase 2 (all optional)
   analysis?: AnalysisState
   syllableDisplay?: SyllableDisplay
+  /** Syllable target for this section (lines outside it are marked). */
+  sylTarget?: { min: number; max: number } | null
   highlight?: HighlightMode
   onSelectWord?: (word: string) => void
 }
@@ -152,6 +154,18 @@ export function Pad(p: Props) {
         const drawn = segs.some((x) => x.family !== null || x.guess)
         const label = syllableLabel(res?.syllables, fresh ? res?.words : [])
         const empty = l.text.trim() === ''
+        const t = p.sylTarget
+        const off =
+          t && mode === 'syllables' && res && fresh && !empty
+            ? res.syllables.min > t.max
+              ? 'over'
+              : res.syllables.max < t.min
+                ? 'under'
+                : null
+            : null
+        const offText = off
+          ? ` ${off === 'over' ? 'Over' : 'Under'} the target of ${t!.min === t!.max ? t!.min : `${t!.min}–${t!.max}`}.`
+          : ''
         const margin =
           mode === 'numbers'
             ? String(i + 1)
@@ -171,7 +185,7 @@ export function Pad(p: Props) {
               {String(i + 1).padStart(2, '0')}
             </span>
             <span id={`syl-${l.id}`} className="sr">
-              {mode === 'syllables' && !empty ? label.title : ''}
+              {mode === 'syllables' && !empty ? label.title + offText : ''}
             </span>
             <div className="pad-field">
               {drawn && (
@@ -242,8 +256,8 @@ export function Pad(p: Props) {
               />
             </div>
             <span
-              className={`pad-num${mode === 'syllables' ? ' syl' : ''}${mode === 'syllables' && res && !fresh ? ' stale' : ''}${res?.syllables.guessed && mode === 'syllables' ? ' guess' : ''}`}
-              title={mode === 'syllables' ? label.title : `Line ${i + 1}`}
+              className={`pad-num${mode === 'syllables' ? ' syl' : ''}${mode === 'syllables' && res && !fresh ? ' stale' : ''}${res?.syllables.guessed && mode === 'syllables' ? ' guess' : ''}${off ? ` off-target ${off}` : ''}`}
+              title={mode === 'syllables' ? label.title + offText : `Line ${i + 1}`}
               aria-hidden="true"
             >
               {margin}

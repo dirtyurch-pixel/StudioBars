@@ -155,6 +155,17 @@ describe('Pad', () => {
       expect(container.querySelector('.pad-num')).toHaveClass('stale')
     })
 
+    it('marks lines outside the section syllable target', () => {
+      const { container } = draw({
+        analysis: analysis('free line'),
+        syllableDisplay: 'syllables',
+        sylTarget: { min: 6, max: 8 },
+      })
+      const n = container.querySelector('.pad-num')!
+      expect(n).toHaveClass('off-target', 'under')
+      expect(n.getAttribute('title')).toMatch(/Under the target of 6–8/)
+    })
+
     it('says so when the server cannot be reached', () => {
       const { container } = draw({
         analysis: { byId: new Map(), families: [], unknown: [], failed: true },

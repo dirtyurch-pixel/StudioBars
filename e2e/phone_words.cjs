@@ -88,14 +88,19 @@ let CURRENT = null
   // the rhyme strip: rhymes for the line above appear by themselves on the next line
   await line(page, 3).click()
   const strip = page.getByRole('group', { name: /^Rhymes for/ })
-  await strip.getByRole('button').first().waitFor({ timeout: 20000 })
+  await strip.getByRole('button', { name: 'made', exact: true }).waitFor({ timeout: 20000 })
   const stripName = await strip.getAttribute('aria-label')
-  const stripWords = await strip.getByRole('button').allInnerTexts()
+  const stripWords = await strip.locator('.rs-word').allInnerTexts()
   check('moving to the next line shows rhymes for the line above, without pressing anything', stripName === 'Rhymes for shade' && stripWords.includes('made'), JSON.stringify([stripName, stripWords.slice(0, 8)]))
   const before3 = await line(page, 3).inputValue()
   await strip.getByRole('button', { name: 'made', exact: true }).click()
   check('tapping a rhyme adds it to the line and keeps typing going', (await line(page, 3).inputValue()).endsWith('made') && (await page.evaluate(() => document.activeElement?.matches('[data-line-input]'))), await line(page, 3).inputValue())
   await line(page, 3).fill(before3)
+  // tap the label to rhyme with this line instead
+  await line(page, 2).click()
+  await strip.getByRole('button', { name: /Tap to rhyme with this line/ }).click()
+  await page.getByRole('group', { name: 'Rhymes for shade' }).waitFor()
+  check('tapping the label switches the strip to rhyme with this line', (await page.getByRole('button', { name: /Rhyming with this line/ }).count()) === 1)
 
   // rhymes
   // on a phone: tap the line, then Rhymes in its toolbar (looks up the line's last word)

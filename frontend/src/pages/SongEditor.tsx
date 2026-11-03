@@ -4,6 +4,7 @@ import { ApiFail, LOCAL } from '../api'
 import { GenrePicker } from '../components/GenrePicker'
 import { Menu } from '../components/Menu'
 import { SongsSidebar } from '../components/SongsSidebar'
+import { PerformView } from '../components/PerformView'
 import { Modal } from '../components/Modal'
 import { Pad, type FocusRequest } from '../components/Pad'
 import { FilesPanel, HistoryPanel, NotesPanel } from '../components/SidePanels'
@@ -112,6 +113,27 @@ export default function SongEditor({ id }: { id: string }) {
   const [loadError, setLoadError] = useState('')
   const [meta, setMeta] = useState<Meta | null>(null)
   const [copying, setCopying] = useState(false)
+  // syllable targets per section (a display aid, kept on this device)
+  const targetsKey = `sb-syl-targets:${id}`
+  const [sylTargets, setSylTargets] = useState<Record<string, { min: number; max: number }>>(() => {
+    try {
+      return JSON.parse(localStorage.getItem(`sb-syl-targets:${id}`) ?? '{}')
+    } catch {
+      return {}
+    }
+  })
+  const setSylTarget = (sectionId: string, t: { min: number; max: number } | null) =>
+    setSylTargets((cur) => {
+      const next = { ...cur }
+      if (t) next[sectionId] = t
+      else delete next[sectionId]
+      try {
+        localStorage.setItem(targetsKey, JSON.stringify(next))
+      } catch {
+        /* not remembered */
+      }
+      return next
+    })
   const writing = useWritingMode()
   const player = useContext(PlayerContext) // the music bar steps aside while writing; play/pause stays here
   const [copyId, setCopyId] = useState<string | null>(null)
@@ -144,6 +166,16 @@ export default function SongEditor({ id }: { id: string }) {
     }
   }
   const [focusMode, setFocusMode] = useState(false)
+  const [performing, setPerforming] = useState(false)
+  // full page: tell the rest of the app (the music bar steps aside; music keeps playing)
+  useEffect(() => {
+    const root = document.documentElement
+    if (focusMode) root.dataset.focus = '1'
+    else delete root.dataset.focus
+    return () => {
+      delete root.dataset.focus
+    }
+  }, [focusMode])
   const [showHelp, setShowHelp] = useState(false)
   const [revisions, setRevisions] = useState<Revision[] | null>(null)
   const [renaming, setRenaming] = useState<string | null>(null)
@@ -595,15 +627,12 @@ export default function SongEditor({ id }: { id: string }) {
     )
 
   const activeLine = activeLineId ? findLine(content, activeLineId) : null
-  // the word you are rhyming with: the end of the nearest line above with words (else this line's own end)
-  const rhymeTarget = (() => {
+  // the line you are rhyming with: the nearest line above that has words
+  const rhymeAbove = (() => {
     if (!activeLine) return ''
     const lines = content[activeLine.s].lines
-    for (let j = activeLine.i - 1; j >= 0; j--) {
-      const w = lastWord(lines[j].text)
-      if (w) return w
-    }
-    return lastWord(activeLine.line.text)
+    for (let j = activeLine.i - 1; j >= 0; j--) if (lastWord(lines[j].text)) return lines[j].text
+    return ''
   })()
   /** Put a word from the rhyme strip at the cursor (or at the end of the line), keeping the keyboard open. */
   const pickRhyme = (w: string) => {
@@ -702,16 +731,31 @@ export default function SongEditor({ id }: { id: string }) {
         >
           ↷
         </button>
+        <button
+          className="icon-btn"
+          onClick={() => setFocusMode(true)}
+          aria-label="Full page lyrics"
+          title="Full page (Alt+F)"
+        >
+          ⤢
+        </button>
         <Menu
           label="Song menu"
           items={[
             {
-              label: focusMode ? 'Leave Focus Mode' : 'Focus Mode',
+              label: focusMode ? 'Leave full page' : 'Full page lyrics',
               onSelect: () => setFocusMode((v) => !v),
             },
             {
               label: optsOpen ? 'Hide song details' : 'Song details',
               onSelect: () => setOptsOpen((v) => !v),
+            },
+            {
+              label: 'Performance mode (rehearse)',
+              onSelect: () => {
+                void saveNow()
+                setPerforming(true)
+              },
             },
             { label: 'Keyboard shortcuts', onSelect: () => setShowHelp(true) },
           ]}
@@ -912,6 +956,10 @@ export default function SongEditor({ id }: { id: string }) {
               >
                 →
               </button>
+              <SylTargetEditor
+                value={sylTargets[section.id] ?? null}
+                onChange={(t) => setSylTarget(section.id, t)}
+              />
               {confirmDelSection ? (
                 <span className="confirm">
                   Delete this section?
@@ -1000,6 +1048,7 @@ export default function SongEditor({ id }: { id: string }) {
             }}
             analysis={analysis}
             syllableDisplay={syllableDisplay}
+            sylTarget={sylTargets[section.id] ?? null}
             highlight={highlight}
             onSelectWord={(w) => setLookup({ word: w, nonce: Date.now() })}
             onToggleLock={(lid) => void toggleLock(lid)}
@@ -1019,7 +1068,8 @@ export default function SongEditor({ id }: { id: string }) {
           >
             {activeLine && (
               <RhymeStrip
-                word={rhymeTarget}
+                aboveText={rhymeAbove}
+                thisText={activeLine.line.text}
                 disabled={activeLine.line.is_locked}
                 onPick={pickRhyme}
               />
@@ -1267,9 +1317,22 @@ export default function SongEditor({ id }: { id: string }) {
       </div>
 
       {focusMode && (
-        <button className="btn focus-exit" onClick={() => setFocusMode(false)}>
-          Exit focus (Esc)
+        <button
+          className="icon-btn focus-exit"
+          onClick={() => setFocusMode(false)}
+          aria-label="Exit full page"
+          title="Exit full page (Esc)"
+        >
+          ⤡
         </button>
+      )}
+      {performing && (
+        <PerformView
+          title={meta.title}
+          content={content}
+          startSectionId={section.id}
+          onClose={() => setPerforming(false)}
+        />
       )}
       {showHelp && (
         <Modal title="Keyboard shortcuts" onClose={() => setShowHelp(false)}>
@@ -1288,5 +1351,53 @@ export default function SongEditor({ id }: { id: string }) {
         </Modal>
       )}
     </div>
+  )
+}
+
+/** "Syllables per line" for a section: lines outside the range get an orange count. */
+function SylTargetEditor({
+  value,
+  onChange,
+}: {
+  value: { min: number; max: number } | null
+  onChange: (t: { min: number; max: number } | null) => void
+}) {
+  const [min, setMin] = useState(value ? String(value.min) : '')
+  const [max, setMax] = useState(value ? String(value.max) : '')
+  useEffect(() => {
+    setMin(value ? String(value.min) : '')
+    setMax(value ? String(value.max) : '')
+  }, [value])
+  const commit = (a: string, b: string) => {
+    const lo = Number(a)
+    const hi = Number(b || a)
+    if (!a.trim() && !b.trim()) return onChange(null)
+    if (!Number.isInteger(lo) || !Number.isInteger(hi) || lo < 1 || hi > 40) return
+    onChange({ min: Math.min(lo, hi), max: Math.max(lo, hi) })
+  }
+  const field = (
+    v: string,
+    set: (x: string) => void,
+    label: string,
+    other: () => [string, string],
+  ) => (
+    <input
+      className="input input-sm syl-target-in"
+      inputMode="numeric"
+      aria-label={label}
+      value={v}
+      placeholder="–"
+      onChange={(e) => set(e.target.value.replace(/\D/g, '').slice(0, 2))}
+      onBlur={() => commit(...other())}
+      onKeyDown={(e) => e.key === 'Enter' && (e.target as HTMLInputElement).blur()}
+    />
+  )
+  return (
+    <span className="syl-target" role="group" aria-label="Syllable target for this section">
+      Syllables per line
+      {field(min, setMin, 'Syllable target from', () => [min, max])}
+      to
+      {field(max, setMax, 'Syllable target to', () => [min, max])}
+    </span>
   )
 }

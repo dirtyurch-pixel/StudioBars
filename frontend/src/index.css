@@ -2748,3 +2748,174 @@ input.file-hidden:focus-visible + .file-pick {
   font-size: 13px;
   color: var(--text-muted);
 }
+
+/* ------------------------------------------------------------------ full-page lyrics */
+:root[data-focus] .player {
+  display: none;
+}
+.editor.focus .ed-top {
+  display: none;
+}
+.editor.focus .ed-grid {
+  padding-top: 10px;
+  padding-bottom: 24px;
+}
+/* keep the section tabs so you can move between verse and chorus, but nothing else */
+.editor.focus .ed-main > .tabs.hide-focus {
+  display: flex !important;
+  padding-right: 52px;
+}
+.editor.focus .ed-main > .tabs > .tab:not([role='tab']),
+.editor.focus .ed-main > .tabs > form {
+  display: none;
+}
+/* while typing in full page on a phone, the rhyme strip and line toolbar still sit on the keyboard */
+.editor.focus.writing .write-dock.hide-focus {
+  display: grid !important;
+}
+.editor.focus.writing .ed-grid {
+  padding-bottom: 124px;
+}
+.focus-exit {
+  position: fixed;
+  top: calc(8px + env(safe-area-inset-top, 0px));
+  right: max(8px, env(safe-area-inset-right, 0px));
+  bottom: auto;
+  z-index: 50;
+  background: var(--surface);
+  font-size: 20px;
+}
+@media (max-width: 860px) {
+  .editor.focus .ed-grid {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+}
+.editor.focus .pad {
+  min-height: calc(100dvh - 90px);
+}
+.rhyme-strip .rs-label {
+  display: grid;
+  gap: 1px;
+  text-align: left;
+  border: 0;
+  background: none;
+  padding: 0 4px 0 0;
+  min-height: 40px;
+  cursor: pointer;
+}
+.rhyme-strip .rs-label:disabled {
+  cursor: default;
+}
+.rhyme-strip .rs-label small {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+/* syllable targets */
+.syl-target {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.syl-target-in {
+  width: 52px !important;
+  text-align: center;
+}
+.pad .pad-num.off-target {
+  color: var(--accent-deep);
+  font-weight: 700;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------------ performance mode */
+.perform {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: var(--bg);
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.perform-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+}
+.perform-top .icon-btn {
+  border-color: transparent;
+}
+.perform-title {
+  flex: 1;
+  min-width: 0;
+  font: 700 18px/1.1 var(--font-condensed);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.perform-sections {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 0 12px 8px;
+  scrollbar-width: none;
+}
+.perform-sections .chip {
+  flex: none;
+  min-height: 36px;
+}
+.perform-lyrics {
+  overflow-y: auto;
+  padding: 8px max(16px, 5vw) 0;
+  line-height: 1.35;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.perform-lyrics h3 {
+  margin: 0.8em 0 0.3em;
+  font: 700 0.55em/1 var(--font-condensed);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+.perform-lyrics p {
+  margin: 0 0 0.45em;
+}
+.perform-end {
+  height: 60vh;
+}
+.perform-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+.perform-play {
+  width: 56px;
+  height: 52px;
+  font-size: 22px;
+  border-radius: var(--radius-pill);
+}
+.perform-hint {
+  font-size: 13px;
+}
+.perform-speed {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+:root:has(.perform) .player {
+  display: none;
+}

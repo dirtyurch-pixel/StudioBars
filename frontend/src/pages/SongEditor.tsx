@@ -35,6 +35,7 @@ import { SessionStrip, SongMusicPanel } from '../music/SongMusicPanel'
 import { lastWord } from '../phonetics/highlight'
 import { usePadSettings } from '../phonetics/padSettings'
 import { RhymePanel } from '../phonetics/RhymePanel'
+import { RhymeStrip } from '../phonetics/RhymeStrip'
 import { WordsPanel } from '../words/WordsPanel'
 import { AiPanel } from '../ai/AiPanel'
 import { CraftPanel } from '../craft/CraftPanel'
@@ -594,6 +595,31 @@ export default function SongEditor({ id }: { id: string }) {
     )
 
   const activeLine = activeLineId ? findLine(content, activeLineId) : null
+  // the word you are rhyming with: the end of the nearest line above with words (else this line's own end)
+  const rhymeTarget = (() => {
+    if (!activeLine) return ''
+    const lines = content[activeLine.s].lines
+    for (let j = activeLine.i - 1; j >= 0; j--) {
+      const w = lastWord(lines[j].text)
+      if (w) return w
+    }
+    return lastWord(activeLine.line.text)
+  })()
+  /** Put a word from the rhyme strip at the cursor (or at the end of the line), keeping the keyboard open. */
+  const pickRhyme = (w: string) => {
+    if (!activeLine) return
+    if (activeLine.line.is_locked) return blocked()
+    const text = activeLine.line.text
+    const el = document.activeElement as HTMLTextAreaElement | null
+    const inLine = !!el?.matches?.('[data-line-input]') && el.value === text
+    const at = inLine ? (el!.selectionEnd ?? text.length) : text.length
+    const before = text.slice(0, at)
+    const after = text.slice(at)
+    const pre = before && !/\s$/.test(before) ? ' ' : ''
+    const post = after && !/^\s/.test(after) ? ' ' : ''
+    onText(activeLine.line.id, before + pre + w + post + after)
+    setFocusReq({ id: activeLine.line.id, caret: (before + pre + w).length, n: Date.now() })
+  }
   const sectionIdx = content.findIndex((s) => s.id === section.id)
 
   /** Rescue: save what is on screen as a NEW song, so nothing typed here is lost in a conflict. */
@@ -985,91 +1011,98 @@ export default function SongEditor({ id }: { id: string }) {
             }}
           />
           <div
-            className="line-actions hide-focus"
-            role="toolbar"
-            aria-label="This line"
+            className="write-dock hide-focus"
             // keep the keyboard open: tapping these never takes the cursor out of the line
             onPointerDown={(e) => {
               if ((e.target as HTMLElement).closest('button')) e.preventDefault()
             }}
           >
-            <button
-              className="btn btn-sm"
-              disabled={!activeLine}
-              onClick={() => activeLine && void toggleLock(activeLine.line.id)}
-            >
-              <span aria-hidden="true">{activeLine?.line.is_locked ? '🔓' : '🔒'}</span>{' '}
-              {activeLine?.line.is_locked ? 'Unlock line' : 'Lock line'}
-            </button>
-            <button
-              className="btn btn-sm"
-              disabled={!activeLine}
-              onClick={() => {
-                if (!activeLine) return
-                ;(document.activeElement as HTMLElement | null)?.blur?.()
-                setTool('notes')
-                setToolsOpen(true)
-              }}
-            >
-              <span aria-hidden="true">💬</span> Notes
-              {activeLine?.line.comments.length ? ` (${activeLine.line.comments.length})` : ''}
-            </button>
-            <button
-              className="btn btn-sm"
-              disabled={!activeLine}
-              onClick={() => {
-                const w = activeLine ? lastWord(activeLine.line.text) : ''
-                if (w) setLookup({ word: w, nonce: Date.now() })
-                ;(document.activeElement as HTMLElement | null)?.blur?.()
-                setTool('rhymes')
-                setToolsOpen(true)
-              }}
-            >
-              Rhymes
-            </button>
-            <button
-              className="btn btn-sm"
-              disabled={!activeLine}
-              onClick={() =>
-                activeLine && applyEdit(addLineAfter(contentRef.current, activeLine.line.id))
-              }
-            >
-              + Line below
-            </button>
-            <button
-              className="btn btn-sm btn-ghost"
-              disabled={!activeLine || activeLine.line.is_locked || section.lines.length <= 1}
-              onClick={() => {
-                if (activeLine) {
-                  applyEdit(removeLine(contentRef.current, activeLine.line.id))
-                }
-              }}
-            >
-              Delete line
-            </button>
-            {writing && player?.track && (
-              <button
-                className="btn btn-sm w-only"
-                onClick={player.toggle}
-                aria-label={player.playing ? 'Pause music' : 'Play music'}
-              >
-                {player.playing ? '⏸' : '▶'}
-              </button>
+            {activeLine && (
+              <RhymeStrip
+                word={rhymeTarget}
+                disabled={activeLine.line.is_locked}
+                onPick={pickRhyme}
+              />
             )}
-            <button
-              className="btn btn-sm btn-ghost w-only"
-              onClick={undo}
-              disabled={!hist.canUndo}
-              aria-label="Undo last change"
-            >
-              ↶
-            </button>
-            <button
-              className="btn btn-sm btn-primary w-only"
-              onClick={() => (document.activeElement as HTMLElement | null)?.blur?.()}
-            >
-              Done
-            </button>
+            <div className="line-actions" role="toolbar" aria-label="This line">
+              <button
+                className="btn btn-sm"
+                disabled={!activeLine}
+                onClick={() => activeLine && void toggleLock(activeLine.line.id)}
+              >
+                <span aria-hidden="true">{activeLine?.line.is_locked ? '🔓' : '🔒'}</span>{' '}
+                {activeLine?.line.is_locked ? 'Unlock line' : 'Lock line'}
+              </button>
+              <button
+                className="btn btn-sm"
+                disabled={!activeLine}
+                onClick={() => {
+                  if (!activeLine) return
+                  ;(document.activeElement as HTMLElement | null)?.blur?.()
+                  setTool('notes')
+                  setToolsOpen(true)
+                }}
+              >
+                <span aria-hidden="true">💬</span> Notes
+                {activeLine?.line.comments.length ? ` (${activeLine.line.comments.length})` : ''}
+              </button>
+              <button
+                className="btn btn-sm"
+                disabled={!activeLine}
+                onClick={() => {
+                  const w = activeLine ? lastWord(activeLine.line.text) : ''
+                  if (w) setLookup({ word: w, nonce: Date.now() })
+                  ;(document.activeElement as HTMLElement | null)?.blur?.()
+                  setTool('rhymes')
+                  setToolsOpen(true)
+                }}
+              >
+                Rhymes
+              </button>
+              <button
+                className="btn btn-sm"
+                disabled={!activeLine}
+                onClick={() =>
+                  activeLine && applyEdit(addLineAfter(contentRef.current, activeLine.line.id))
+                }
+              >
+                + Line below
+              </button>
+              <button
+                className="btn btn-sm btn-ghost"
+                disabled={!activeLine || activeLine.line.is_locked || section.lines.length <= 1}
+                onClick={() => {
+                  if (activeLine) {
+                    applyEdit(removeLine(contentRef.current, activeLine.line.id))
+                  }
+                }}
+              >
+                Delete line
+              </button>
+              {writing && player?.track && (
+                <button
+                  className="btn btn-sm w-only"
+                  onClick={player.toggle}
+                  aria-label={player.playing ? 'Pause music' : 'Play music'}
+                >
+                  {player.playing ? '⏸' : '▶'}
+                </button>
+              )}
+              <button
+                className="btn btn-sm btn-ghost w-only"
+                onClick={undo}
+                disabled={!hist.canUndo}
+                aria-label="Undo last change"
+              >
+                ↶
+              </button>
+              <button
+                className="btn btn-sm btn-primary w-only"
+                onClick={() => (document.activeElement as HTMLElement | null)?.blur?.()}
+              >
+                Done
+              </button>
+            </div>
           </div>
           <p className="hint hide-focus">
             {syllableDisplay === 'syllables'

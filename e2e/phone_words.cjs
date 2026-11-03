@@ -85,6 +85,18 @@ let CURRENT = null
   check('rhyme colours appear on the rhyming line endings', marked.includes('grade') && marked.includes('shade'), JSON.stringify(marked))
   check('no "server cannot be reached" message', (await page.getByText(/server cannot be reached/).count()) === 0)
 
+  // the rhyme strip: rhymes for the line above appear by themselves on the next line
+  await line(page, 3).click()
+  const strip = page.getByRole('group', { name: /^Rhymes for/ })
+  await strip.getByRole('button').first().waitFor({ timeout: 20000 })
+  const stripName = await strip.getAttribute('aria-label')
+  const stripWords = await strip.getByRole('button').allInnerTexts()
+  check('moving to the next line shows rhymes for the line above, without pressing anything', stripName === 'Rhymes for shade' && stripWords.includes('made'), JSON.stringify([stripName, stripWords.slice(0, 8)]))
+  const before3 = await line(page, 3).inputValue()
+  await strip.getByRole('button', { name: 'made', exact: true }).click()
+  check('tapping a rhyme adds it to the line and keeps typing going', (await line(page, 3).inputValue()).endsWith('made') && (await page.evaluate(() => document.activeElement?.matches('[data-line-input]'))), await line(page, 3).inputValue())
+  await line(page, 3).fill(before3)
+
   // rhymes
   // on a phone: tap the line, then Rhymes in its toolbar (looks up the line's last word)
   await line(page, 2).click()

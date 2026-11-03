@@ -2294,9 +2294,14 @@ input.file-hidden:focus-visible + .file-pick {
   display: none !important;
 }
 .editor.writing .ed-grid {
-  padding-bottom: 76px;
+  padding-bottom: 124px;
 }
-.editor.writing .line-actions {
+.write-dock {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.editor.writing .write-dock {
   position: fixed;
   left: 0;
   right: 0;
@@ -2324,7 +2329,7 @@ input.file-hidden:focus-visible + .file-pick {
   right: 0;
 }
 :root[data-writing] .toasts {
-  bottom: calc(var(--kb, 0px) + 72px);
+  bottom: calc(var(--kb, 0px) + 120px);
 }
 .editor.writing .line-actions .w-only.btn-primary {
   box-shadow: -12px 0 10px var(--surface);
@@ -2685,4 +2690,52 @@ input.file-hidden:focus-visible + .file-pick {
   .toasts {
     bottom: calc(66px + var(--player-h, 0px) + env(safe-area-inset-bottom, 0px));
   }
+}
+
+/* the rhyme strip: rhymes for the line above, always one glance away */
+.rhyme-strip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  min-height: 40px;
+}
+.rhyme-strip::-webkit-scrollbar {
+  display: none;
+}
+.rs-label {
+  flex: none;
+  font: 600 12px/1.1 var(--font-condensed);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rs-label b {
+  color: var(--accent-soft);
+}
+.rs-note {
+  color: var(--text-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+.rs-word {
+  flex: none;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line-strong);
+  background: var(--surface-raised);
+  color: var(--text);
+  font-size: 15px;
+}
+.rs-word.perfect {
+  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+}
+.rs-word:disabled {
+  opacity: 0.45;
 }

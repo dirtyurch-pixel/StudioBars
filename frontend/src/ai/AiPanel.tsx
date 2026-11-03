@@ -44,8 +44,21 @@ export function AiPanel(p: Props) {
   const [persona, setPersona] = useState('co_writer')
   const [prepared, setPrepared] = useState<{ req: AiRequest; data: AiPrepared } | null>(null)
   const [busy, setBusy] = useState<'prepare' | 'send' | null>(null)
+  // when the AI answers (or something fails), bring it into view: on a phone it is below the form
+  const answerRef = useRef<HTMLDivElement>(null)
+  const failRef = useRef<HTMLParagraphElement>(null)
   const [result, setResult] = useState<AiResult | null>(null)
   const [fail, setFail] = useState('')
+  useEffect(() => {
+    if (!result) return
+    const el = answerRef.current
+    if (!el) return
+    el.scrollIntoView?.({ block: 'start', behavior: 'smooth' })
+    el.focus({ preventScroll: true }) // screen readers move to the answer too
+  }, [result])
+  useEffect(() => {
+    if (fail) failRef.current?.scrollIntoView?.({ block: 'center', behavior: 'smooth' })
+  }, [fail])
   const abort = useRef<AbortController | null>(null)
 
   const refresh = useCallback(async () => {
@@ -299,7 +312,7 @@ export function AiPanel(p: Props) {
       </button>
 
       {fail && (
-        <p className="ai-err" role="alert">
+        <p className="ai-err" role="alert" ref={failRef}>
           {fail}
         </p>
       )}
@@ -351,7 +364,7 @@ export function AiPanel(p: Props) {
       )}
 
       {result && result.kind === 'notes' && (
-        <div className="ai-results" aria-label="AI notes">
+        <div className="ai-results" aria-label="AI notes" ref={answerRef} tabIndex={-1}>
           <h4 className="ai-h">AI notes (advice only)</h4>
           <ul>
             {result.notes.map((n, i) => (
@@ -366,7 +379,7 @@ export function AiPanel(p: Props) {
       )}
 
       {result && result.kind === 'lines' && (
-        <div className="ai-results" aria-label="AI suggestions">
+        <div className="ai-results" aria-label="AI suggestions" ref={answerRef} tabIndex={-1}>
           <h4 className="ai-h">AI suggestions</h4>
           {result.suggestions.map((c) => (
             <Candidate

@@ -76,6 +76,13 @@
       "whole": true,
       "ask": "Give practical suggestions about the song's structure (sections, order, length, where energy rises or drops). Do not write lyrics."
     },
+    "improve": {
+      "label": "Improve my lines",
+      "kind": "lines",
+      "target": false,
+      "improve": true,
+      "ask": "Read the current section and pick the lines that would gain most from a rewrite: cliché, vague, filler, awkward rhythm or a forced rhyme. For each one, write ONE improved version that keeps its meaning, the rhyme sound at its end and roughly its syllable count. Never pick lines marked [LOCKED] or empty lines."
+    },
     "critique": {
       "label": "Critique",
       "kind": "notes",
@@ -108,6 +115,7 @@
   },
   "LINES_FORMAT": "Answer with JSON only, exactly in this shape: {\"suggestions\":[{\"text\":\"one line of lyrics\",\"reason\":\"a few words on why it works\"}]}",
   "NOTES_FORMAT": "Answer with JSON only, exactly in this shape: {\"notes\":[\"one short, specific point\",\"another point\"]}",
+  "IMPROVE_FORMAT": "Answer with JSON only, exactly in this shape: {\"suggestions\":[{\"line\":3,\"text\":\"the improved line\",\"reason\":\"a few words on what is better\"}]} where \"line\" is the number of the line in the current section.",
   "MAX_CONTEXT_CHARS": 12000,
   "MODELS": {
     "claude-haiku-5-5": {

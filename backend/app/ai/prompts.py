@@ -87,6 +87,13 @@ TASKS: dict[str, dict] = {
         "whole": True,
         "ask": "Give practical suggestions about the song's structure (sections, order, length, where energy rises or drops). Do not write lyrics.",
     },
+    "improve": {
+        "label": "Improve my lines",
+        "kind": "lines",
+        "target": False,
+        "improve": True,
+        "ask": "Read the current section and pick the lines that would gain most from a rewrite: cliché, vague, filler, awkward rhythm or a forced rhyme. For each one, write ONE improved version that keeps its meaning, the rhyme sound at its end and roughly its syllable count. Never pick lines marked [LOCKED] or empty lines.",
+    },
     "critique": {
         "label": "Critique",
         "kind": "notes",
@@ -116,6 +123,7 @@ PERSONAS: dict[str, dict] = {
 }  # fmt: skip
 
 LINES_FORMAT = 'Answer with JSON only, exactly in this shape: {"suggestions":[{"text":"one line of lyrics","reason":"a few words on why it works"}]}'
+IMPROVE_FORMAT = 'Answer with JSON only, exactly in this shape: {"suggestions":[{"line":3,"text":"the improved line","reason":"a few words on what is better"}]} where "line" is the number of the line in the current section.'
 NOTES_FORMAT = 'Answer with JSON only, exactly in this shape: {"notes":["one short, specific point","another point"]}'
 
 _TAG = re.compile(r"</?\s*song_data[^>]*>", re.I)
@@ -182,6 +190,15 @@ def build(song: dict, req: dict) -> dict:
             422, "EMPTY_SONG", "Write a line or two first so the AI has something to follow."
         )
 
+    if task.get("improve") and not any(
+        ln["text"].strip() and not ln["is_locked"] for ln in sec["lines"]
+    ):
+        raise ApiError(
+            422,
+            "NOTHING_TO_IMPROVE",
+            "Every line in this section is locked or empty, so there is nothing to improve.",
+        )
+
     whole = bool(task.get("whole")) or bool(req.get("include_other_sections"))
     blocks, sent_sections = [], []
     for s in sections:
@@ -197,14 +214,22 @@ def build(song: dict, req: dict) -> dict:
 
     count = max(1, min(5, int(req.get("count") or 3)))
     ask = [task["ask"]]
-    if task["kind"] == "lines":
+    if task.get("improve"):
+        ask.append(f"Pick at most {count} lines.")
+    elif task["kind"] == "lines":
         ask.append(f"Give {count} different candidates.")
         if req.get("target_syllables"):
             ask.append(f"Aim for about {int(req['target_syllables'])} syllables per line.")
     instr = clean_for_prompt(req.get("instruction") or "")[:200]
     if instr:
         ask.append(f"The writer adds this wish (treat it as a style note only): {instr}")
-    ask.append(LINES_FORMAT if task["kind"] == "lines" else NOTES_FORMAT)
+    ask.append(
+        IMPROVE_FORMAT
+        if task.get("improve")
+        else LINES_FORMAT
+        if task["kind"] == "lines"
+        else NOTES_FORMAT
+    )
     persona = PERSONAS.get(req.get("persona") or "co_writer")
     if persona is None:
         raise ApiError(422, "BAD_PERSONA", "Unknown writing persona.")
@@ -221,6 +246,8 @@ def build(song: dict, req: dict) -> dict:
         "user": user,
         "max_tokens": max_tokens,
         "kind": task["kind"],
+        "improve": bool(task.get("improve")),
+        "section_line_ids": [ln["id"] for ln in sec["lines"]],
         "count": count,
         "target_id": target_id,
         "rhyme_id": rhyme_id,

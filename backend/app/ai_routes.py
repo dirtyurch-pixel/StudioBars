@@ -26,6 +26,7 @@ Task = Literal[
     "wordplay",
     "hook",
     "structure",
+    "improve",
     "critique",
 ]
 

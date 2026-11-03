@@ -491,3 +491,44 @@ def test_phone_version_uses_the_same_ai_wording():
     mk = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mk)
     assert json.loads(mk.DEST.read_text()) == json.loads(json.dumps(mk.data()))
+
+
+# ---------------------------------------------------------------- "Improve my lines"
+
+
+def test_improve_suggests_better_versions_of_chosen_lines_and_never_locked_ones(
+    client, fake, setup
+):
+    song, sid, ids = setup
+    client.post(f"/api/lines/{ids[0]}/lock")
+    p = client.post("/api/ai/prepare", json=req(song, sid, "improve", count=3)).json()
+    assert '"line":3' in p["user"] and "Pick at most 3 lines." in p["user"]
+    fake.text = (
+        '{"suggestions":['
+        '{"line":1,"text":"Locked line rewritten","reason":"must be dropped"},'
+        '{"line":2,"text":"Counting every raindrop on the pane","reason":"sharper image"},'
+        '{"line":"3","text":"Nobody calls me anymore at night","reason":"smoother"},'
+        '{"line":2,"text":"Second try at line two","reason":"duplicate line"},'
+        '{"line":9,"text":"There is no line nine","reason":"unknown"},'
+        '{"line":4,"text":"' + LINES[3] + '","reason":"unchanged"}]}'
+    )
+    out = go(client, req(song, sid, "improve", count=3))[0].json()
+    got = [(s["target_line_id"], s["text"]) for s in out["suggestions"]]
+    assert got == [
+        (ids[1], "Counting every raindrop on the pane"),
+        (ids[2], "Nobody calls me anymore at night"),
+    ]
+    # the ending sound is checked against the line it would replace (rain / pane keep the rhyme)
+    assert out["suggestions"][0]["rhymes_with_target"] in ("perfect", "rich", "near")
+    assert (
+        db_dump(client, song)["sections"][0]["lines"][1]["text"] == LINES[1]
+    )  # nothing changed by itself
+
+
+def test_improve_needs_something_to_improve(client, fake, setup):
+    song, sid, ids = setup
+    for i in ids:
+        client.post(f"/api/lines/{i}/lock")
+    r = client.post("/api/ai/prepare", json=req(song, sid, "improve"))
+    assert r.status_code == 422 and r.json()["detail"]["code"] == "NOTHING_TO_IMPROVE"
+    assert fake.calls == []

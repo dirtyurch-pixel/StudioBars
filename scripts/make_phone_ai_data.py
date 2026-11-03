@@ -17,6 +17,7 @@ def data() -> dict:
         "PERSONAS": prompts.PERSONAS,
         "LINES_FORMAT": prompts.LINES_FORMAT,
         "NOTES_FORMAT": prompts.NOTES_FORMAT,
+        "IMPROVE_FORMAT": prompts.IMPROVE_FORMAT,
         "MAX_CONTEXT_CHARS": prompts.MAX_CONTEXT_CHARS,
         "MODELS": pricing.MODELS,
         "DEFAULT_MODEL": pricing.DEFAULT_MODEL,

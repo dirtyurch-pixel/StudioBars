@@ -235,7 +235,11 @@ def suggest(conn, req: dict, ack_hash: str) -> dict:
 
     lines = {ln["id"]: ln for s_ in song["sections"] for ln in s_["lines"]}
     existing = {ln["text"] for ln in lines.values()}
-    cands = validate.parse_lines(reply.text, existing, p["count"])
+    if p.get("improve"):
+        sec_lines = [lines[i] for i in p["section_line_ids"]]
+        cands = validate.parse_improvements(reply.text, sec_lines, p["count"])
+    else:
+        cands = validate.parse_lines(reply.text, existing, p["count"])
     if not cands:
         raise ApiError(
             502,
@@ -245,9 +249,13 @@ def suggest(conn, req: dict, ack_hash: str) -> dict:
         )
     ref_id = p["rhyme_id"] or p["target_id"]
     ref_text = lines[ref_id]["text"] if ref_id else None
-    info = _analyse(
-        conn, [c["text"] for c in cands], ref_text
-    )  # numbers computed HERE, never trusted from the AI
+    if p.get("improve"):
+        # each improvement is compared with the line it replaces (does it keep the rhyme sound?)
+        info = [_analyse(conn, [c["text"]], lines[c["line_id"]]["text"])[0] for c in cands]
+    else:
+        info = _analyse(
+            conn, [c["text"] for c in cands], ref_text
+        )  # numbers computed HERE, never trusted from the AI
     ctx = prompts.prompt_hash(s["provider"], s["model"], s["base_url"], p)
     out = []
     with tx(conn):
@@ -255,9 +263,12 @@ def suggest(conn, req: dict, ack_hash: str) -> dict:
             sid = new_id()
             conn.execute(
                 "INSERT INTO ai_suggestions (id,song_id,section_id,target_line_id,task,provider,model,context_hash,text,reason,settings_json,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-                (sid, req["song_id"], req["section_id"], p["target_id"], req["task"], s["provider"], s["model"], ctx, c["text"], c["reason"], json.dumps({"count": p["count"]}), now()),
+                (sid, req["song_id"], req["section_id"], c.get("line_id") or p["target_id"], req["task"], s["provider"], s["model"], ctx, c["text"], c["reason"], json.dumps({"count": p["count"]}), now()),
             )  # fmt: skip
-            out.append({"id": sid, **c, **a})
+            item = {"id": sid, "text": c["text"], "reason": c["reason"], **a}
+            if c.get("line_id"):
+                item["target_line_id"] = c["line_id"]
+            out.append(item)
     return {**base, "suggestions": out, "notes": [], "target_line_id": p["target_id"]}
 
 

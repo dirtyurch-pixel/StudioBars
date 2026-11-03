@@ -108,7 +108,7 @@ const dump = async () => {
   check('syllable filter limits results to two-syllable rhymes', true)
   await page.getByLabel('Fewest syllables').selectOption('')
   await page.getByLabel('Most syllables').selectOption('')
-  await page.getByRole('button', { name: /^made/ }).first().click()
+  await page.locator('.rhyme-panel').getByRole('button', { name: /^made/ }).first().click()
   await page.waitForFunction(() => document.querySelector('#rhyme-word').value === 'made')
   check('clicking a rhyme looks that word up', true)
   await page.getByText('Near', { exact: true }).click().catch(() => {})

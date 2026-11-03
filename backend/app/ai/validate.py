@@ -89,3 +89,35 @@ def parse_notes(text: str) -> list[str]:
         if len(out) >= MAX_NOTES:
             break
     return out
+
+
+def parse_improvements(text: str, section_lines: list[dict], limit: int) -> list[dict]:
+    """'Improve my lines' answers: each names a line NUMBER in the current section. Locked, empty, unknown or
+    unchanged lines are dropped; one suggestion per line."""
+    data = extract_json(text)
+    items = data.get("suggestions") if isinstance(data, dict) else None
+    if not isinstance(items, list):
+        return []
+    out: list[dict] = []
+    used: set[str] = set()
+    for it in items:
+        if not isinstance(it, dict):
+            continue
+        n = it.get("line")
+        if isinstance(n, str) and n.strip().isdigit():
+            n = int(n.strip())
+        if not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= len(section_lines):
+            continue
+        ln = section_lines[n - 1]
+        if ln["is_locked"] or not ln["text"].strip() or ln["id"] in used:
+            continue
+        t = clean_line(it.get("text"))
+        if t is None or t.strip().lower() == ln["text"].strip().lower():
+            continue
+        reason = it.get("reason", "")
+        reason = " ".join(reason.split())[:160] if isinstance(reason, str) else ""
+        used.add(ln["id"])
+        out.append({"text": t, "reason": reason, "line_id": ln["id"]})
+        if len(out) >= min(limit, MAX_CANDIDATES):
+            break
+    return out

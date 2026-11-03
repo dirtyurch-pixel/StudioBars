@@ -84,6 +84,17 @@ AI_REQS = [
     {"song_id": "song00000001", "section_id": "sect00000002", "task": "rhyme", "include_other_sections": True},
     {"song_id": "song00000001", "section_id": "sect00000000", "task": "critique", "persona": "critic"},
     {"song_id": "song00000001", "section_id": "sect00000000", "task": "rewrite", "target_line_id": "line00000003"},
+    {"song_id": "song00000001", "section_id": "sect00000000", "task": "improve", "count": 4, "persona": "editor"},
+]
+IMPROVE_ANSWERS = [
+    '{"suggestions":[{"line":1,"text":"A better first line","reason":" tighter   "},{"line":"2","text":"Second line, sharper"},{"line":2,"text":"Again line two"},{"line":0,"text":"no line zero"},{"line":99,"text":"no line 99"},{"line":true,"text":"bool is not a number"},{"line":3,"text":"**markdown**"}]}',
+    "no json",
+]
+IMPROVE_LINES = [
+    {"id": "a1", "text": "First line here", "is_locked": False},
+    {"id": "a2", "text": "Second line", "is_locked": False},
+    {"id": "a3", "text": "Locked one", "is_locked": True},
+    {"id": "a4", "text": "", "is_locked": False},
 ]
 AI_ANSWERS = [
     '```json\n{"suggestions":[{"text":"1. Streetlights hum","reason":"  a   mood "},{"text":"\\"Quoted line\\""},{"text":"Verse 1: nope"},{"text":"**bold**"},{"text":"Walk with me tonight"},{"text":"streetlights hum"}]}\n```',
@@ -113,6 +124,9 @@ out["ai"] = {
     "answers": AI_ANSWERS,
     "lines": [validate.parse_lines(a, {"Walk with me tonight"}, 5) for a in AI_ANSWERS],
     "notes": [validate.parse_notes(a) for a in AI_ANSWERS],
+    "improve_answers": IMPROVE_ANSWERS,
+    "improve_lines": IMPROVE_LINES,
+    "improve": [validate.parse_improvements(a, IMPROVE_LINES, 5) for a in IMPROVE_ANSWERS],
 }
 
 dest = Path(__file__).resolve().parents[1] / "frontend" / "src" / "local" / "parity.fixture.json"

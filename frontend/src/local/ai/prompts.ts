@@ -12,6 +12,7 @@ type Task = {
   target: boolean
   rhyme?: boolean
   whole?: boolean
+  improve?: boolean
   ask: string
 }
 export const TASKS = D.TASKS as Record<string, Task>
@@ -21,6 +22,7 @@ export const {
   SYSTEM,
   LINES_FORMAT,
   NOTES_FORMAT,
+  IMPROVE_FORMAT,
   MAX_CONTEXT_CHARS,
   DEFAULT_MODEL,
   TYPICAL_IN,
@@ -44,6 +46,8 @@ export type Built = {
   user: string
   max_tokens: number
   kind: 'lines' | 'notes'
+  improve: boolean
+  section_line_ids: string[]
   count: number
   target_id: string | null
   rhyme_id: string | null
@@ -108,6 +112,13 @@ export function build(song: Song, req: AiReq): Built {
   )
     throw fail(422, 'EMPTY_SONG', 'Write a line or two first so the AI has something to follow.')
 
+  if (task.improve && !sec.lines.some((l) => l.text.trim() && !l.is_locked))
+    throw fail(
+      422,
+      'NOTHING_TO_IMPROVE',
+      'Every line in this section is locked or empty, so there is nothing to improve.',
+    )
+
   const whole = Boolean(task.whole) || Boolean(req.include_other_sections)
   const blocks: string[] = []
   const sentSections: string[] = []
@@ -125,14 +136,15 @@ export function build(song: Song, req: AiReq): Built {
   const data = `<song_data>\n${head}\n\n` + blocks.join('\n\n') + '\n</song_data>'
   const count = Math.max(1, Math.min(5, Math.trunc(req.count || 3)))
   const ask = [task.ask]
-  if (task.kind === 'lines') {
+  if (task.improve) ask.push(`Pick at most ${count} lines.`)
+  else if (task.kind === 'lines') {
     ask.push(`Give ${count} different candidates.`)
     if (req.target_syllables)
       ask.push(`Aim for about ${Math.trunc(req.target_syllables)} syllables per line.`)
   }
   const instr = cleanForPrompt(req.instruction || '').slice(0, 200)
   if (instr) ask.push(`The writer adds this wish (treat it as a style note only): ${instr}`)
-  ask.push(task.kind === 'lines' ? LINES_FORMAT : NOTES_FORMAT)
+  ask.push(task.improve ? IMPROVE_FORMAT : task.kind === 'lines' ? LINES_FORMAT : NOTES_FORMAT)
   const persona = PERSONAS[req.persona || 'co_writer']
   if (!persona) throw fail(422, 'BAD_PERSONA', 'Unknown writing persona.')
   const system = SYSTEM + '\n- ' + persona.text
@@ -144,6 +156,8 @@ export function build(song: Song, req: AiReq): Built {
     user,
     max_tokens: task.kind === 'lines' ? 700 : 1200,
     kind: task.kind,
+    improve: Boolean(task.improve),
+    section_line_ids: sec.lines.map((l) => l.id),
     count,
     target_id: targetId,
     rhyme_id: rhymeId,

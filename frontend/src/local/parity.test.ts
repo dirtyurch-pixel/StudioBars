@@ -163,7 +163,7 @@ describe('phone version matches the PC version on real data', () => {
 // ---------------------------------------------------------------- step 3: Craft scans and the AI prompt
 import { lineSyllables, rhymeChains, scanStructure, scanText, singability } from './craft/scan'
 import { build } from './ai/prompts'
-import { parseLines, parseNotes } from './ai/validate'
+import { parseImprovements, parseLines, parseNotes } from './ai/validate'
 import type { Song } from '../types'
 
 const C = (fixture as unknown as { craft: Record<string, unknown> }).craft as {
@@ -180,6 +180,9 @@ const A = (fixture as unknown as { ai: Record<string, unknown> }).ai as {
   answers: string[]
   lines: unknown[]
   notes: unknown[]
+  improve_answers: string[]
+  improve_lines: { id: string; text: string; is_locked: boolean }[]
+  improve: unknown[]
 }
 const CHAIN_LINES = [
   'The night light shines so bright',
@@ -226,6 +229,11 @@ describe('phone AI sends exactly what the PC version sends', () => {
     A.answers.forEach((a, i) => {
       expect(parseLines(a, new Set(['Walk with me tonight']), 5)).toEqual(A.lines[i])
       expect(parseNotes(a)).toEqual(A.notes[i])
+    })
+  })
+  it('checks "Improve my lines" answers the same way', () => {
+    A.improve_answers.forEach((a, i) => {
+      expect(parseImprovements(a, A.improve_lines, 5)).toEqual(A.improve[i])
     })
   })
 })

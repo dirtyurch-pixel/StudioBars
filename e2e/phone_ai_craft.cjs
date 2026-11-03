@@ -36,7 +36,10 @@ let CURRENT = null
     const body = JSON.parse(req.postData() || '{}')
     ai.push({ headers: await req.allHeaders(), body })
     if (aiMode === '401') return route.fulfill({ status: 401, headers: { ...cors, 'content-type': 'application/json' }, body: JSON.stringify({ type: 'error', error: { type: 'authentication_error', message: 'invalid x-api-key' } }) })
-    const text = JSON.stringify({ suggestions: [{ text: 'Streetlights hum a lullaby for the lost', reason: 'mood' }, { text: 'Midnight keeps the secrets that I toss', reason: 'rhyme' }] })
+    const improve = JSON.stringify(body.messages || '').includes('Pick at most')
+    const text = improve
+      ? JSON.stringify({ suggestions: [{ line: 1, text: 'This one is locked and must be ignored', reason: 'x' }, { line: 3, text: 'Nobody rings my phone at night', reason: 'plainer, keeps the rhyme' }] })
+      : JSON.stringify({ suggestions: [{ text: 'Streetlights hum a lullaby for the lost', reason: 'mood' }, { text: 'Midnight keeps the secrets that I toss', reason: 'rhyme' }] })
     await route.fulfill({
       status: 200,
       headers: { ...cors, 'content-type': 'application/json' },
@@ -105,6 +108,20 @@ let CURRENT = null
   await openTool(page, 'AI') // on a phone: the line is chosen, now open the AI sheet
   await page.getByRole('button', { name: 'Rewrite this line' }).click()
   check('a locked line cannot be sent for rewriting', await page.getByRole('button', { name: 'Show what will be sent' }).isDisabled())
+
+  // ---- "Improve my lines": the AI picks weaker lines and suggests better ones; locked lines are never offered
+  await openTool(page, 'AI')
+  await page.getByRole('button', { name: '✨ Improve my lines' }).click()
+  await page.getByRole('button', { name: 'Show what will be sent' }).click()
+  await region.getByRole('button', { name: 'Send to AI' }).click()
+  const card = page.locator('.ai-card').filter({ hasText: 'Nobody rings my phone at night' })
+  await card.waitFor({ timeout: 20000 })
+  check('Improve my lines: a better version is suggested next to the line it would replace', (await card.getByText(/Instead of:/).count()) === 1)
+  check('Improve my lines: the locked line is never offered', (await page.getByText('This one is locked and must be ignored').count()) === 0)
+  await card.getByRole('button', { name: 'Replace line…' }).click()
+  await card.getByRole('button', { name: 'Yes, replace it' }).click()
+  await page.getByRole('button', { name: 'Close tools' }).click()
+  check('Improve my lines: Replace puts the better line in place', (await line(page, 3).inputValue()) === 'Nobody rings my phone at night', await line(page, 3).inputValue())
 
   // ---- plain errors
   aiMode = '401'

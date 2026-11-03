@@ -284,6 +284,7 @@ export type AiTaskId =
   | 'wordplay'
   | 'hook'
   | 'structure'
+  | 'improve'
   | 'critique'
 
 export type AiTaskInfo = {
@@ -365,6 +366,8 @@ export type AiCandidate = {
   reason: string
   syllables: { min: number; max: number; exact: boolean; guessed: boolean }
   rhymes_with_target: string | null
+  /** "Improve my lines": the line this suggestion would replace */
+  target_line_id?: string
 }
 
 export type AiResult = {

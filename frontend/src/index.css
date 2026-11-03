@@ -2739,3 +2739,12 @@ input.file-hidden:focus-visible + .file-pick {
 .rs-word:disabled {
   opacity: 0.45;
 }
+.ai-improve {
+  justify-self: start;
+  margin-bottom: 4px;
+}
+.ai-was {
+  margin: 0 0 2px;
+  font-size: 13px;
+  color: var(--text-muted);
+}

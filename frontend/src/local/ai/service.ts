@@ -26,7 +26,7 @@ import {
   type Built,
 } from './prompts'
 import { callAnthropic, callOpenAiCompat, type Reply } from './providers'
-import { parseLines, parseNotes } from './validate'
+import { parseImprovements, parseLines, parseNotes } from './validate'
 
 const fail = (status: number, code: string, message: string, extra: Record<string, unknown> = {}) =>
   Object.assign(new ApiFail(message, { status, code }), extra)
@@ -444,7 +444,13 @@ export async function suggest(
     return { ...base, notes, suggestions: [] }
   }
   const lines = new Map(song.sections.flatMap((x) => x.lines.map((l) => [l.id, l] as const)))
-  const cands = parseLines(reply.text, new Set([...lines.values()].map((l) => l.text)), p.count)
+  const cands: { text: string; reason: string; line_id?: string }[] = p.improve
+    ? parseImprovements(
+        reply.text,
+        p.section_line_ids.map((id) => lines.get(id)!),
+        p.count,
+      )
+    : parseLines(reply.text, new Set([...lines.values()].map((l) => l.text)), p.count)
   if (!cands.length) throw bad()
   const refId = p.rhyme_id || p.target_id
   const refText = refId ? lines.get(refId)!.text : null
@@ -463,15 +469,17 @@ export async function suggest(
     cands.map((x) => x.text),
     r,
   ).lines
-  let refPh: readonly string[] | null = null
-  if (refText) {
-    const toks = tokenize(refText)
-    if (toks.length) {
-      const info = r.lookup(toks[toks.length - 1].norm)
-      refPh = hasPhones(info) ? info.prons[0].phones : null
-    }
+  const endPhones = (text: string | null): readonly string[] | null => {
+    if (!text) return null
+    const toks = tokenize(text)
+    if (!toks.length) return null
+    const info = r.lookup(toks[toks.length - 1].norm)
+    return hasPhones(info) ? info.prons[0].phones : null
   }
+  const sharedRef = endPhones(refText)
   const out = cands.map((c2, i) => {
+    // an improvement is compared with the line it would replace (does it keep the rhyme sound?)
+    const refPh = c2.line_id ? endPhones(lines.get(c2.line_id)!.text) : sharedRef
     let quality: string | null = null
     const toks = tokenize(c2.text)
     if (refPh && toks.length) {
@@ -488,7 +496,14 @@ export async function suggest(
       created_at: nowIso(),
       accepted_at: null,
     })
-    return { id, ...c2, syllables: res[i].syllables, rhymes_with_target: quality }
+    const { line_id, ...rest } = c2
+    return {
+      id,
+      ...rest,
+      ...(line_id ? { target_line_id: line_id } : {}),
+      syllables: res[i].syllables,
+      rhymes_with_target: quality,
+    }
   })
   return {
     ...base,

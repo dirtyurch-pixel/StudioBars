@@ -99,3 +99,38 @@ export function parseNotes(text: string): string[] {
   }
   return out
 }
+
+/**
+ * "Improve my lines" answers: each names a line NUMBER in the current section. Locked, empty, unknown or
+ * unchanged lines are dropped; one suggestion per line. (Same rules as the PC version.)
+ */
+export function parseImprovements(
+  text: string,
+  sectionLines: { id: string; text: string; is_locked: boolean }[],
+  limit: number,
+): { text: string; reason: string; line_id: string }[] {
+  const data = extractJson(text)
+  const items = isObj(data) ? data.suggestions : null
+  if (!Array.isArray(items)) return []
+  const out: { text: string; reason: string; line_id: string }[] = []
+  const used = new Set<string>()
+  for (const it of items) {
+    if (!isObj(it)) continue
+    let n: unknown = it.line
+    if (typeof n === 'string' && /^\d+$/.test(n.trim())) n = Number(n.trim())
+    if (typeof n !== 'number' || !Number.isInteger(n) || n < 1 || n > sectionLines.length) continue
+    const ln = sectionLines[n - 1]
+    if (ln.is_locked || !ln.text.trim() || used.has(ln.id)) continue
+    const t = cleanLine(it.text)
+    if (t === null || t.trim().toLowerCase() === ln.text.trim().toLowerCase()) continue
+    const r = it.reason
+    used.add(ln.id)
+    out.push({
+      text: t,
+      reason: typeof r === 'string' ? r.split(/\s+/).filter(Boolean).join(' ').slice(0, 160) : '',
+      line_id: ln.id,
+    })
+    if (out.length >= Math.min(limit, MAX_CANDIDATES)) break
+  }
+  return out
+}

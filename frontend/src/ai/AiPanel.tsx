@@ -172,6 +172,26 @@ export function AiPanel(p: Props) {
         The AI only suggests. Nothing changes in your song until you press Insert or Replace.
       </p>
 
+      {status.tasks.some((t) => t.id === 'improve') && current.id !== 'improve' && (
+        <button
+          className="btn btn-primary ai-improve"
+          onClick={() => {
+            setTask(status.tasks.find((t) => t.id === 'improve')!)
+            setPrepared(null)
+            setResult(null)
+            setFail('')
+          }}
+        >
+          ✨ Improve my lines
+        </button>
+      )}
+      {current.id === 'improve' && (
+        <p className="muted">
+          The AI reads this section, picks the lines that could be stronger and suggests a better
+          version of each. Locked lines are never touched, and nothing changes until you press
+          Replace.
+        </p>
+      )}
       <div className="chips" role="group" aria-label="What should the AI do?">
         {status.tasks.map((t) => (
           <button
@@ -352,8 +372,8 @@ export function AiPanel(p: Props) {
             <Candidate
               key={c.id}
               c={c}
-              targetId={result.target_line_id ?? null}
-              afterId={p.activeLine?.id ?? p.lastLineId}
+              targetId={c.target_line_id ?? result.target_line_id ?? null}
+              afterId={c.target_line_id ?? p.activeLine?.id ?? p.lastLineId}
               lineText={p.lineText}
               onInsert={p.onInsert}
               onReplace={p.onReplace}
@@ -390,6 +410,11 @@ function Candidate(props: {
 
   return (
     <div className="ai-card">
+      {c.target_line_id && old !== null && (
+        <p className="ai-was">
+          <span className="muted">Instead of: </span>“{old}”
+        </p>
+      )}
       <p className="ai-text">{c.text}</p>
       <p className="ai-meta">
         <span className="ai-tag">AI suggestion</span>
